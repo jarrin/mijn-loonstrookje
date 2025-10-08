@@ -4,10 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
-// Redirect root to login
+// Home page route
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('HomePage');
+})->name('home');
 
 // Authentication routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -10,10 +10,10 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#">Mijn Loonstrookje</a>
+            <a class="navbar-brand" href="{{ route('home') }}">Mijn Loonstrookje</a>
             
-            @auth
-                <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto">
+                @auth
                     <span class="navbar-text me-3">
                         Welkom, {{ auth()->user()->name }}!
                     </span>
@@ -21,8 +21,10 @@
                         @csrf
                         <button type="submit" class="btn btn-outline-light btn-sm">Uitloggen</button>
                     </form>
-                </div>
-            @endauth
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-outline-light">Inloggen</a>
+                @endauth
+            </div>
         </div>
     </nav>
 
