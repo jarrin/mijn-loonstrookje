@@ -1,3 +1,9 @@
+DOCKER SQL SERVER SETUP
+
+STAP 1: INSTALLEER DOCKER-DESKTOP
+
+STAP 2: ENV (voor de zekerheid):
+
 APP_NAME=Mijnloonstrookje
 APP_ENV=local
 APP_KEY=base64:wnC8mHGE516y3yA2ep9XkCLRCy9QQdKFDZa6XBh82F0=
@@ -21,11 +27,12 @@ LOG_DEPRECATIONS_CHANNEL=null
 LOG_LEVEL=debug
 
 DB_CONNECTION=mysql
-DB_HOST=db
+DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=mijnloonstrookje
 DB_USERNAME=root
 DB_PASSWORD=
+
 
 
 SESSION_DRIVER=database
@@ -64,3 +71,44 @@ AWS_BUCKET=
 AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
+
+STAP 3: MAAK docker-compose.yml IN JE ROOT VAN JE PROJECT AAN EN ZET DIT ER IN: 
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mijnloonstrookje_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: mijnloonstrookje
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: mijnloonstrookje_pma
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+
+STAP 4: VOER DAN DEZE COMMANDS UIT:
+
+docker-compose up -d  
+
+php artisan migrate  
+
+php artisan db:seed
+
+php artisan serve
