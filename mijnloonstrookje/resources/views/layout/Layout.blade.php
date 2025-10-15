@@ -14,13 +14,21 @@
             
             <div class="navbar-nav ms-auto">
                 @auth
-                    <span class="navbar-text me-3">
-                        Welkom, {{ auth()->user()->name }}!
-                    </span>
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-light btn-sm">Uitloggen</button>
-                    </form>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                            {{ auth()->user()->name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ route('profile.two-factor-authentication') }}">2FA Instellingen</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Uitloggen</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-outline-light">Inloggen</a>
                 @endauth
