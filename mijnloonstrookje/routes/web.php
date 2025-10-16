@@ -4,7 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 
-// Home page route
+// Website routes 
+Route::get('/website', function () {
+    return view('website.website');
+})->name('website');
+
+// Home page route dashboard
 Route::get('/', function () {
     return view('HomePage');
 })->name('home');
