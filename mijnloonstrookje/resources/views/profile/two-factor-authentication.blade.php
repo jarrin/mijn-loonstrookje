@@ -28,13 +28,13 @@
             
             <form method="POST" action="{{ url('/user/two-factor-recovery-codes') }}">
                 @csrf
-                <button type="submit">Nieuwe herstelcodes genereren</button>
+                <button type="submit" class="border-1 border-gray-500">Nieuwe herstelcodes genereren</button>
             </form>
 
             <form method="POST" action="{{ url('/user/two-factor-authentication') }}">
                 @csrf
                 @method('DELETE')
-                <button type="submit" onclick="return confirm('Weet je zeker dat je twee-factor authenticatie wilt uitschakelen?')">
+                <button class="border-1 border-gray-500 type="submit" onclick="return confirm('Weet je zeker dat je twee-factor authenticatie wilt uitschakelen?')">
                     Twee-factor authenticatie uitschakelen
                 </button>
             </form>

@@ -3,42 +3,25 @@
 @section('title', 'Bevestig Wachtwoord - Mijn Loonstrookje')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0">Bevestig je wachtwoord</h4>
-            </div>
-            <div class="card-body">
-                <p class="text-muted mb-4">
-                    Bevestig je wachtwoord voordat je doorgaat met deze beveiligde actie.
-                </p>
+<section>
+    <h2 class="text-xl mb-4">Bevestig je wachtwoord</h2>
+    <p class="mb-4">Bevestig je wachtwoord voordat je doorgaat met deze beveiligde actie.</p>
 
-                <form method="POST" action="{{ route('password.confirm') }}">
-                    @csrf
+    <form method="POST" action="{{ route('password.confirm') }}">
+        @csrf
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Wachtwoord</label>
-                        <input type="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
-                               id="password" 
-                               name="password" 
-                               required 
-                               autofocus>
-                        @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ url()->previous() }}" class="btn btn-secondary">Annuleren</a>
-                        <button type="submit" class="btn btn-primary">Bevestigen</button>
-                    </div>
-                </form>
-            </div>
+        <div class="mb-4">
+            <label for="password" class="block">Wachtwoord</label>
+            <input type="password" id="password" name="password" required autofocus class="block w-80 p-2">
+            @error('password')
+                <div>{{ $message }}</div>
+            @enderror
         </div>
-    </div>
-</div>
+
+        <div class="flex gap-4">
+            <a href="{{ url()->previous() }}">Annuleren</a>
+            <button type="submit" class="px-4 py-2 cursor-pointer">Bevestigen</button>
+        </div>
+    </form>
+</section>
 @endsection

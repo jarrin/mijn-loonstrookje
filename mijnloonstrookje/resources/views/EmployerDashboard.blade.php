@@ -3,11 +3,8 @@
 @section('title', 'Werkgever Dashboard - Mijn Loonstrookje')
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <h1>Werkgever Dashboard</h1>
-        <p class="lead">Welkom {{ auth()->user()->name }}, beheer hier je medewerkers en loonstrookjes.</p>
-    </div>
-</div>
-
+<section>
+    <h1 class="text-2xl mb-4">Werkgever Dashboard</h1>
+    <p>Welkom {{ auth()->user()->name }}, beheer hier je medewerkers en loonstrookjes.</p>
+</section>
 @endsection
