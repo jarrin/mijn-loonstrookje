@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Subscription;
 
 // Website routes 
 Route::get('/website', function () {
-    return view('website.website');
+    $subscriptions = Subscription::all();
+    return view('website.website', compact('subscriptions'));
 })->name('website');
 
 // Home page route dashboard
