@@ -11,12 +11,8 @@
             <div class="subscription-name">
                 <h2>{{ $subscriptions[0]->name ?? 'N/A' }}</h2>
             </div>
-            <div class="subscription-features">
-                <ul>
-                    <li>{{ $subscriptions[0]->feature_1 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[0]->feature_2 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[0]->feature_3 ?? 'N/A' }}</li>
-                </ul>
+            <div class="subscription-description">
+                <p>{{ $subscriptions[0]->description ?? 'N/A' }}</p>
             </div>
             <div class="subscription-price">
                 <p>€{{ $subscriptions[0]->price ?? '0.00' }}</p>
@@ -27,12 +23,8 @@
             <div class="subscription-name">
                 <h2>{{ $subscriptions[1]->name ?? 'N/A' }}</h2>
             </div>
-            <div class="subscription-features">
-                <ul>
-                    <li>{{ $subscriptions[1]->feature_1 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[1]->feature_2 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[1]->feature_3 ?? 'N/A' }}</li>
-                </ul>
+            <div class="subscription-description">
+                <p>{{ $subscriptions[1]->description ?? 'N/A' }}</p>
             </div>
             <div class="subscription-price">
                 <p>€{{ $subscriptions[1]->price ?? '0.00' }}</p>
@@ -43,12 +35,8 @@
             <div class="subscription-name">
                 <h2>{{ $subscriptions[2]->name ?? 'N/A' }}</h2>
             </div>
-            <div class="subscription-features">
-                <ul>
-                    <li>{{ $subscriptions[2]->feature_1 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[2]->feature_2 ?? 'N/A' }}</li>
-                    <li>{{ $subscriptions[2]->feature_3 ?? 'N/A' }}</li>
-                </ul>
+            <div class="subscription-description">
+                <p>{{ $subscriptions[2]->description ?? 'N/A' }}</p>
             </div>
             <div class="subscription-price">
                 <p>€{{ $subscriptions[2]->price ?? '0.00' }}</p>

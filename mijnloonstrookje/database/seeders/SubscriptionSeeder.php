@@ -15,25 +15,19 @@ class SubscriptionSeeder extends Seeder
         $subscriptions = [
             [
                 'name' => 'simpel plan',
-                'feature_1' => 'Tot 5 werknemers',
-                'feature_2' => 'Automatische loonstroken',
-                'feature_3' => 'Email ondersteuning',
+                'description' => 'Simpel subscription plan with basic features',
                 'price' => 9.99,
                 'subscription_plan' => 'simple',
             ],
             [
                 'name' => 'basic plan',
-                'feature_1' => 'Tot 25 werknemers',
-                'feature_2' => 'Automatische loonstroken en belastingdocumenten',
-                'feature_3' => 'Prioriteit email ondersteuning',
+                'description' => 'Basic subscription with essential features',
                 'price' => 29.99,
                 'subscription_plan' => 'basic',
             ],
             [
                 'name' => 'premium plan',
-                'feature_1' => 'Onbeperkt werknemers',
-                'feature_2' => 'Volledige automatisering en rapportages',
-                'feature_3' => '24/7 telefoon en email ondersteuning',
+                'description' => 'Premium subscription with advanced features and priority support',
                 'price' => 99.99,
                 'subscription_plan' => 'premium',
             ],

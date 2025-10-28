@@ -11,9 +11,7 @@ class Subscription extends Model
 
     protected $fillable = [
         'name',
-        'feature_1',
-        'feature_2',
-        'feature_3',
+        'description',
         'price',
         'mollie_plan_id',
         'subscription_plan',
