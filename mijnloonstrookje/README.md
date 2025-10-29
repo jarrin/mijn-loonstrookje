@@ -59,3 +59,48 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Local Mail Testing (MailHog)
+
+For local development we added a MailHog service to the project's Docker Compose configuration. MailHog captures outgoing SMTP mail so you can view messages in a web UI instead of actually sending them.
+
+Quick steps:
+
+- Start the stack (from the project root):
+
+```powershell
+docker-compose up -d
+```
+
+- The MailHog web UI will be available at: http://localhost:8025
+
+Environment variables (in `.env`) are configured to use MailHog's SMTP. If you
+run your Laravel app on the host (e.g. with `php artisan serve` or your IDE), keep
+MAIL_HOST=127.0.0.1 because the container exposes the SMTP port on the host. If
+your app runs inside Docker on the same compose network (not the common case here),
+you can use `mailhog` as the host.
+
+```
+MAIL_MAILER=smtp
+# For host-based apps (recommended):
+MAIL_HOST=127.0.0.1
+MAIL_PORT=1025
+
+# If Laravel runs in a container on the same docker-compose network:
+# MAIL_HOST=mailhog
+# MAIL_PORT=1025
+```
+
+- Send a test email from the application (example using tinker):
+
+```powershell
+php artisan tinker
+>>> Mail::raw('Test message', function($m){ $m->to('dev@example.com')->subject('Test'); });
+```
+
+Then open http://localhost:8025 to see the captured message.
+
+Notes:
+
+- If ports 1025 or 8025 are already in use on your host, update the `docker-compose.yml` mapping accordingly.
+- This setup is intended for local development only — do not use MailHog in production.
