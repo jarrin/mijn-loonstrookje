@@ -1,0 +1,26 @@
+table{
+    background-color: white;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+}
+
+tr{
+    border-bottom: 1px solid #D4D4D4;
+}
+
+tbody tr:nth-last-child(1){
+    border-bottom: none;
+}
+
+.icon-cell{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
