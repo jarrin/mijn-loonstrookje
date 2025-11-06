@@ -5,7 +5,7 @@
     <div class="buttons">
         <div class="nav-tabs">
             @auth
-                {{-- SuperAdmin only links --}}
+                {{-- SuperAdmin links --}}
                 @if(auth()->user()->hasRole('super_admin'))
                     <a href="{{ route('superadmin.dashboard') }}">Home</a>
                     <a href="{{ route('superadmin.subscriptions') }}">Subscriptions</a>
@@ -13,14 +13,14 @@
                     <a href="{{ route('superadmin.facturation') }}">Facturatie</a>
                 @endif
 
-                {{-- Administratiekantoor only links --}}
+                {{-- Administratiekantoor links --}}
                 @if(auth()->user()->hasRole('administration_office'))
                     <a href="{{ route('superadmin.dashboard') }}">Home</a>
                     <a href="{{ route('superadmin.subscriptions') }}">Subscriptions</a>
                     <a href="{{ route('superadmin.logs') }}">Logs</a>
                 @endif
 
-                {{-- Werkgever only links --}}
+                {{-- Werkgever links --}}
                 @if(auth()->user()->hasRole('employer'))
                 <a href="{{ route('superadmin.facturation') }}">Dashboard</a>
                 <a href="{{ route('admin.logs') }}">Werknemers</a>

@@ -13,21 +13,21 @@ class DashboardController extends Controller
 
     public function employee()
     {
-        return view('EmployeeDashboard');
+        return view('employee.EmployeeDashboard');
     }
 
     public function employer()
     {
-        return view('EmployerDashboard');
+        return view('employer.EmployerDashboard');
     }
 
     public function administration()
     {
-        return view('AdminOfficeDashboard');
+        return view('admin.AdminOfficeDashboard');
     }
 
     public function superAdmin()
     {
-        return view('SuperAdminDashboard');
+        return view('superadmin.SuperAdminDashboard');
     }
 }
