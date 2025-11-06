@@ -24,34 +24,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Employer routes
     Route::get('/employer/dashboard', [DashboardController::class, 'employer'])->name('employer.dashboard');
     Route::get('/employer/employees', function () {
-        return view('EmployerEmployeeList');
+        return view('employee.EmployerEmployeeList');
     })->name('employer.employees');
     Route::get('/employer/documents', function () {
-        return view('EmployerEmployeeDocuments');
+        return view('employee.EmployerEmployeeDocuments');
     })->name('employer.documents');
     Route::get('/employer/admin-offices', function () {
-        return view('EmployerAdminOfficeList');
+        return view('employee.EmployerAdminOfficeList');
     })->name('employer.admin-offices');
     
     // Administration routes
     Route::get('/administration/dashboard', [DashboardController::class, 'administration'])->name('administration.dashboard');
     Route::get('/administration/employees', function () {
-        return view('AdminOfficeEmployeeList');
+        return view('admin.AdminOfficeEmployeeList');
     })->name('administration.employees');
     Route::get('/administration/documents', function () {
-        return view('AdminOfficeDocuments');
+        return view('admin.AdminOfficeDocuments');
     })->name('administration.documents');
     
     // Super Admin routes
     Route::get('/superadmin/dashboard', [DashboardController::class, 'superAdmin'])->name('superadmin.dashboard');
     Route::get('/superadmin/subscriptions', function () {
-        return view('SuperAdminSubs');
+        return view('superadmin.SuperAdminSubs');
     })->name('superadmin.subscriptions');
     Route::get('/superadmin/logs', function () {
-        return view('SuperAdminLogs');
+        return view('superadmin.SuperAdminLogs');
     })->name('superadmin.logs');
     Route::get('/superadmin/facturation', function () {
-        return view('SuperAdminFacturation');
+        return view('superadmin.SuperAdminFacturation');
     })->name('superadmin.facturation');
     
     // Two-factor authentication management
