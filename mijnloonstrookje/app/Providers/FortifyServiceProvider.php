@@ -30,7 +30,7 @@ class FortifyServiceProvider extends ServiceProvider
 
         // Views
         Fortify::loginView(function () {
-            return view('auth.login');
+            return view('auth.Login');
         });
 
         Fortify::confirmPasswordView(function () {
