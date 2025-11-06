@@ -1,0 +1,38 @@
+table{
+    background-color: white;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th{
+    color:#8E8E8E;
+    font-weight: 400;
+    font-size: 13px;
+    padding-block: 8px;
+}
+
+td{
+    font-size: 14px;
+    padding-block: 8px;
+}
+
+th, td {
+    padding-inline: 14px;
+    text-align: left;
+}
+
+tr{
+    border-bottom: 1px solid #D4D4D4;
+}
+
+tbody tr:nth-last-child(1){
+    border-bottom: none;
+}
+
+.icon-cell{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
