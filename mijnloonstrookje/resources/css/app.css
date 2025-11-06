@@ -6,6 +6,7 @@
 @source '../**/*.js';
 
 @import './style.css';
+@import './component/nav.css';
 @import './component/status.css';
 @import './tabellen/employees.css';
 @import './tabellen/log.css';
