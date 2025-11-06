@@ -24,13 +24,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Employer routes
     Route::get('/employer/dashboard', [DashboardController::class, 'employer'])->name('employer.dashboard');
     Route::get('/employer/employees', function () {
-        return view('employee.EmployerEmployeeList');
+        return view('employer.EmployerEmployeeList');
     })->name('employer.employees');
     Route::get('/employer/documents', function () {
-        return view('employee.EmployerEmployeeDocuments');
+        return view('employer.EmployerEmployeeDocuments');
     })->name('employer.documents');
     Route::get('/employer/admin-offices', function () {
-        return view('employee.EmployerAdminOfficeList');
+        return view('employer.EmployerAdminOfficeList');
     })->name('employer.admin-offices');
     
     // Administration routes
