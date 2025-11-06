@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
     public function administration()
     {
-        return view('AdministrationOfficeDashboard');
+        return view('AdminOfficeDashboard');
     }
 
     public function superAdmin()
