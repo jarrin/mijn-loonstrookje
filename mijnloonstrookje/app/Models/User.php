@@ -61,4 +61,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(AuditLog::class);
     }
+
+    // Role checking
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 }
