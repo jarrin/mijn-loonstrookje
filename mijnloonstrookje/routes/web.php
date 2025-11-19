@@ -23,15 +23,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Employer routes
     Route::get('/employer/dashboard', [DashboardController::class, 'employer'])->name('employer.dashboard');
-    Route::get('/employer/employees', function () {
-        return view('employer.EmployerEmployeeList');
-    })->name('employer.employees');
-    Route::get('/employer/documents', function () {
-        return view('employer.EmployerEmployeeDocuments');
-    })->name('employer.documents');
-    Route::get('/employer/admin-offices', function () {
-        return view('employer.EmployerAdminOfficeList');
-    })->name('employer.admin-offices');
+    Route::get('/employer/employees', [DashboardController::class, 'employerEmployees'])->name('employer.employees');
+    Route::get('/employer/employees/{employee}/documents', [DashboardController::class, 'employerEmployeeDocuments'])->name('employer.employee.documents');
+    Route::get('/employer/documents', [DashboardController::class, 'employerDocuments'])->name('employer.documents');
+    Route::get('/employer/admin-offices', [DashboardController::class, 'employerAdminOffices'])->name('employer.admin-offices');
     
     // Administration routes
     Route::get('/administration/dashboard', [DashboardController::class, 'administration'])->name('administration.dashboard');
@@ -54,8 +49,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('superadmin.SuperAdminFacturation');
     })->name('superadmin.facturation');
     
-    // Two-factor authentication management
-    Route::get('/profile/two-factor-authentication', function () {
-        return view('profile.two-factor-authentication');
-    })->name('profile.two-factor-authentication');
+    // Two-factor authentication management - requires password confirmation
+    Route::middleware(['password.confirm'])->group(function () {
+        Route::get('/profile/two-factor-authentication', function () {
+            return view('profile.two-factor-authentication');
+        })->name('profile.two-factor-authentication');
+    });
+});
+
+// Password confirmation routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/confirm-password', function () {
+        return view('auth.confirm-password');
+    })->name('password.confirm');
+    
+    Route::post('/user/confirm-password', function (Illuminate\Http\Request $request) {
+        if (! Hash::check($request->password, $request->user()->password)) {
+            return back()->withErrors(['password' => 'Het opgegeven wachtwoord is onjuist.']);
+        }
+        
+        $request->session()->put('auth.password_confirmed_at', time());
+        
+        return redirect()->intended();
+    });
 });

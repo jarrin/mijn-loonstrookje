@@ -24,21 +24,21 @@
 
                     {{-- Administratiekantoor links --}}
                     @if(auth()->user()->hasRole('administration_office'))
-                        <a href="{{ route('superadmin.dashboard') }}">Home</a>
-                        <a href="{{ route('superadmin.subscriptions') }}">Subscriptions</a>
-                        <a href="{{ route('superadmin.logs') }}">Logs</a>
+                        <a href="{{ route('administration.dashboard') }}">Home</a>
+                        <a href="{{ route('administration.employees') }}">Werknemers</a>
+                        <a href="{{ route('administration.documents') }}">Documenten</a>
                     @endif
 
                     {{-- Werkgever links --}}
                     @if(auth()->user()->hasRole('employer'))
-                    <a href="{{ route('superadmin.facturation') }}">Dashboard</a>
-                    <a href="{{ route('admin.logs') }}">Werknemers</a>
-                    <a href="{{ route('admin.EmployerAdminOfficeList') }}">Administratiebureau's</a>
+                        <a href="{{ route('employer.dashboard') }}">Dashboard</a>
+                        <a href="{{ route('employer.employees') }}">Werknemers</a>
+                        <a href="{{ route('employer.admin-offices') }}">Administratiebureau's</a>
                     @endif
                     
                     {{-- Medewerker links --}}
                     @if(auth()->user()->hasRole('employee'))
-                        <a href="{{ route('payslips.index') }}">Mijn Loonstrookjes</a>
+                        <a href="{{ route('employee.dashboard') }}">Dashboard</a>
                     @endif
                 @endauth
             </div>
