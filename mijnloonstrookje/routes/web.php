@@ -53,6 +53,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/superadmin/facturation', function () {
         return view('superadmin.SuperAdminFacturation');
     })->name('superadmin.facturation');
+    // Super admin user management
+    Route::delete('/superadmin/users/{user}', [DashboardController::class, 'destroyUser'])->name('superadmin.users.destroy');
     
     // Two-factor authentication management
     Route::get('/profile/two-factor-authentication', function () {
