@@ -19,14 +19,28 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Jan Jansen</td>
-                <td>DMG</td>
-                <td>jansen@dmg.nl</td>
-                <td>Admin</td>
-                <td>Actief</td>
-                <td class="icon-cell">{!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}</td>
-            </tr>
+            @forelse($users as $user)
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->company->name ?? '-' }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->role }}</td>
+                    <td>{{ $user->status }}</td>
+                    <td class="icon-cell">
+                        <form action="{{ route('superadmin.users.destroy', $user) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" title="Verwijder gebruiker" class="text-red-600">
+                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="6">Geen gebruikers gevonden.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 </section>
