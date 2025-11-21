@@ -50,9 +50,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/superadmin/logs', function () {
         return view('superadmin.SuperAdminLogs');
     })->name('superadmin.logs');
+
     Route::get('/superadmin/facturation', function () {
-        return view('superadmin.SuperAdminFacturation');
+        $invoices = \App\Models\Invoice::with('company')->orderBy('due_date', 'desc')->get();
+        return view('superadmin.SuperAdminFacturation', compact('invoices'));
     })->name('superadmin.facturation');
+
+    // Facturation management
+    
     // Super admin user management
     Route::delete('/superadmin/users/{user}', [DashboardController::class, 'destroyUser'])->name('superadmin.users.destroy');
     
