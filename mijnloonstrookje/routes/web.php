@@ -69,3 +69,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('profile.two-factor-authentication');
     })->name('profile.two-factor-authentication');
 });
+
+// Password confirmation routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/confirm-password', function () {
+        return view('auth.confirm-password');
+    })->name('password.confirm');
+    
+    Route::post('/user/confirm-password', function (Illuminate\Http\Request $request) {
+        if (! Hash::check($request->password, $request->user()->password)) {
+            return back()->withErrors(['password' => 'Het opgegeven wachtwoord is onjuist.']);
+        }
+        
+        $request->session()->put('auth.password_confirmed_at', time());
+        
+        return redirect()->intended();
+    });
+});
