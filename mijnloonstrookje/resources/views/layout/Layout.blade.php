@@ -9,7 +9,7 @@
 <body>
     <nav class="main-side-nav">
         <div class="logo">
-            <h1>LOGO</h1>
+            <img src="{{ asset('images/loonstrookje-breed-logo-upscale-transparent.png') }}" alt="Mijn Loonstrookje">
         </div>
         <div class="buttons">
             <div class="nav-tabs">
