@@ -40,6 +40,27 @@ class DashboardController extends Controller
         return view('superadmin.SuperAdminDashboard', compact('users'));
     }
 
+    public function editUser(User $user)
+    {
+        $user->load('company');
+
+        return view('superadmin.editUser', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'role' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker bijgewerkt.');
+    }
+
     /**
      * Delete a user (soft delete).
      * Prevent the currently authenticated user from deleting themselves.
@@ -49,10 +70,16 @@ class DashboardController extends Controller
         if (auth()->id() === $user->id) {
             return redirect()->route('superadmin.dashboard')->with('error', 'Je kunt jezelf niet verwijderen.');
         }
+        // Ontkoppel gebruiker van bedrijf, markeer als inactief en als verwijderd
+        $user->company_id = null;
+        $user->status = 'inactive';
+        $user->is_deleted = true;
+        $user->save();
 
+        // Soft delete gebruiker (vult deleted_at)
         $user->delete();
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker verwijderd.');
+        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker verwijderd, ontkoppeld van bedrijf en gemarkeerd als inactief.');
     }
     
     public function employerEmployees()
