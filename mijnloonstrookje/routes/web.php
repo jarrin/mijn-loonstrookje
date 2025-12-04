@@ -51,6 +51,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Super Admin routes
     Route::middleware('role:super_admin')->group(function () {
         Route::get('/superadmin/dashboard', [DashboardController::class, 'superAdmin'])->name('superadmin.dashboard');
+        Route::get('/superadmin/users/{user}/edit', [DashboardController::class, 'editUser'])->name('superadmin.users.edit');
+        Route::put('/superadmin/users/{user}', [DashboardController::class, 'updateUser'])->name('superadmin.users.update');
         Route::get('/superadmin/subscriptions', function () {
             return view('superadmin.SuperAdminSubs');
         })->name('superadmin.subscriptions');

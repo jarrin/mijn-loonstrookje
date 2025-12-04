@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Administratiekantoor Manager',
+            'name' => 'Administratiekantoor',
             'email' => 'admin@test.com',
             'password' => Hash::make('password'),
             'role' => 'administration_office',

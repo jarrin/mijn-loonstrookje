@@ -40,6 +40,27 @@ class DashboardController extends Controller
         return view('superadmin.SuperAdminDashboard', compact('users'));
     }
 
+    public function editUser(User $user)
+    {
+        $user->load('company');
+
+        return view('superadmin.editUser', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'role' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker bijgewerkt.');
+    }
+
     /**
      * Delete a user (soft delete).
      * Prevent the currently authenticated user from deleting themselves.
