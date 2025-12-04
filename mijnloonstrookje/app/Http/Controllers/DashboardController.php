@@ -70,10 +70,16 @@ class DashboardController extends Controller
         if (auth()->id() === $user->id) {
             return redirect()->route('superadmin.dashboard')->with('error', 'Je kunt jezelf niet verwijderen.');
         }
+        // Ontkoppel gebruiker van bedrijf, markeer als inactief en als verwijderd
+        $user->company_id = null;
+        $user->status = 'inactive';
+        $user->is_deleted = true;
+        $user->save();
 
+        // Soft delete gebruiker (vult deleted_at)
         $user->delete();
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker verwijderd.');
+        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker verwijderd, ontkoppeld van bedrijf en gemarkeerd als inactief.');
     }
     
     public function employerEmployees()
