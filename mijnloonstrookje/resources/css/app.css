@@ -14,6 +14,11 @@
 
 :root {
   --font-body: 'body', ui-sans-serif, system-ui, sans-serif;
+.subscription-tile p,
+.subscription-tile input {
+  font-size: 1rem;
+  line-height: 1.5;
+}
   --font-body-medium: 'body-medium', ui-sans-serif, system-ui, sans-serif;
   --font-body-bold: 'body-bold', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'head', ui-sans-serif, system-ui, sans-serif;

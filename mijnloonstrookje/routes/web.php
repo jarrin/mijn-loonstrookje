@@ -54,8 +54,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/superadmin/users/{user}/edit', [DashboardController::class, 'editUser'])->name('superadmin.users.edit');
         Route::put('/superadmin/users/{user}', [DashboardController::class, 'updateUser'])->name('superadmin.users.update');
         Route::get('/superadmin/subscriptions', function () {
-            return view('superadmin.SuperAdminSubs');
+            $subscriptions = Subscription::all();
+            return view('superadmin.SuperAdminSubs', compact('subscriptions'));
         })->name('superadmin.subscriptions');
+        
+        // Edit subscription
+        Route::put('/superadmin/subscriptions/{subscription}', function (\App\Models\Subscription $subscription, \Illuminate\Http\Request $request) {
+            $data = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'feature_1' => ['nullable', 'string', 'max:255'],
+                'feature_2' => ['nullable', 'string', 'max:255'],
+                'feature_3' => ['nullable', 'string', 'max:255'],
+                'price' => ['required', 'numeric'],
+                'subscription_plan' => ['required', 'string', 'max:255'],
+            ]);
+
+            $subscription->update($data);
+
+            return redirect()->route('superadmin.subscriptions')->with('status', 'Abonnement bijgewerkt.');
+        })->name('superadmin.subscriptions.update');
+
         Route::get('/superadmin/logs', function () {
             return view('superadmin.SuperAdminLogs');
         })->name('superadmin.logs');
