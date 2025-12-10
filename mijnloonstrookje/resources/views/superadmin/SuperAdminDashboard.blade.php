@@ -7,7 +7,7 @@
     <h1 class="text-2xl mb-4">Super Admin Dashboard</h1>
     <p>Welkom {{ auth()->user()->name }}, je hebt volledige toegang tot het systeem.</p>
 
-    <table>
+    <table id="superadmin-table">
         <thead>
             <tr>
                 <th>Gebruiker</th>
@@ -25,12 +25,12 @@
                     <td>{{ $user->company->name ?? '-' }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role }}</td>
-                    <td>{{ $user->status }}</td>
+                    <td><span class="status-label">Ready</span></td>
                     <td class="icon-cell">
                         <form action="{{ route('superadmin.users.destroy', $user) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" title="Verwijder gebruiker" class="text-red-600">
+                            <button id="delete-table-button" type="submit" title="Verwijder gebruiker" class="text-red-600">
                                 {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
                             </button>
                         </form>

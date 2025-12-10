@@ -12,7 +12,7 @@
         <a href="{{ route('superadmin.subscriptions') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Abonnementen</a>
         <a href="{{ route('superadmin.logs') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logs</a>
     </div>
-    <table>
+    <table id="super-admin-facturation">
         <thead>
             <th>Bedrijf</th>
             <th>Datum</th>

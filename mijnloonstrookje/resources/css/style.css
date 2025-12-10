@@ -4,3 +4,54 @@ h1 {
     font-size: 72px;
     color: white;
 }
+
+.nav-tabs a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+}
+
+.nav-tabs a span {
+    font-family: var(--font-body);
+    font-size: 22px;
+}
+
+.nav-tabs a svg {
+    width: 35px;
+    height: 35px;
+    flex-shrink: 0;
+}
+
+.nav-tabs a span {
+    white-space: nowrap;
+}
+
+table#superadmin-table {
+    margin-top: 10px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: rgba(4, 211, 0, 0.3);
+    color: #00BC0D;
+}
+
+button#delete-table-button:hover {
+    cursor: pointer;
+}
+
+button#primairy {
+    background-color: #3B7DE4;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+table#super-admin-facturation {
+    margin-top: 20px;
+}
