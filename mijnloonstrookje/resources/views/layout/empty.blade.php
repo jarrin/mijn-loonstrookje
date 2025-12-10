@@ -6,7 +6,7 @@
     <title>@yield('title', 'Mijn Loonstrookje')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="loginPage">
+<body>
     <main class="main-content">
         @yield('content')
     </main>
