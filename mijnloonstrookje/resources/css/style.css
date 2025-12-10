@@ -5,9 +5,10 @@ h1 {
     color: white;
 }
 
-.loginPage .main-content {
+.empty-layout .main-content {
     padding: 0;
     margin-left: 0;
+    width: 100%;
 }
 
 
