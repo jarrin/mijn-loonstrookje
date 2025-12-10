@@ -78,16 +78,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 18px;
 }
 
-.main-content {
-    margin-left: 350px;
-    width: calc(100% - 350px);
-    padding: 4rem;
-}
-
-.main-content table {
-    box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.15);
-}
-
 /* User Menu Styles */
 .user-menu-container {
     position: relative;

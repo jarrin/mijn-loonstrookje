@@ -7,6 +7,23 @@
     <h1 class="text-2xl mb-4">Super Admin Dashboard</h1>
     <p>Welkom {{ auth()->user()->name }}, je hebt volledige toegang tot het systeem.</p>
 
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Type gebruiker',
+                'options' => ['Bedrijf', 'Werknemer', 'Administratie bureau']
+            ],
+            [
+                'label' => 'Alle gebruikers',
+                'options' => ['Actief', 'Inactief', 'In afwachting']
+            ],
+            [
+                'label' => 'Alle gebruikers',
+                'options' => ['Alfabetisch', 'Datum', 'Status']
+            ]
+        ]
+    ])
+
     <table id="superadmin-table">
         <thead>
             <tr>

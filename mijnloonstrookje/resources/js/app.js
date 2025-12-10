@@ -1,4 +1,5 @@
 import './bootstrap';
+import './components/table-filter';
 
 function toggleUserMenu() {
     const dropdown = document.getElementById('userMenuDropdown');

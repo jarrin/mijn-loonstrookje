@@ -1,56 +1,13 @@
-/* // site styling // */
-
-h1 {
-    font-size: 72px;
-    color: white;
-}
-
-.main-content {
-    margin-left: 350px;
-    width: calc(100% - 350px);
-    padding: 4rem;
-}
-
-.main-content table {
-    box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.1);
-}
-
-table#superadmin-table {
-    margin-top: 10px;
-}
-
-.status-label {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    background-color: rgba(4, 211, 0, 0.3);
-    color: #00BC0D;
-}
-
-button#delete-table-button:hover {
-    cursor: pointer;
-}
-
-button#primairy {
-    background-color: #3B7DE4;
-    color: white;
-    border-radius: 8px;
-    padding: 10px 20px;
-}
-
-/* Table Filter Bar Styles */
+/* Table Filter Bar Styles
 .table-filter-bar {
     display: flex;
     gap: 16px;
     margin-bottom: 20px;
     padding: 16px;
-    background-color: white;
+    background-color: #f9f9f9;
     border-radius: 8px;
     flex-wrap: wrap;
     align-items: center;
-    box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.1);
 }
 
 .search-container {
@@ -127,7 +84,7 @@ button#primairy {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     min-width: 200px;
-    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     z-index: 10;
 }
 
@@ -154,8 +111,4 @@ button#primairy {
 
 .dropdown-item:last-child {
     border-radius: 0 0 7px 7px;
-}
-
-table#super-admin-facturation {
-    margin-top: 20px;
-}
+} */
