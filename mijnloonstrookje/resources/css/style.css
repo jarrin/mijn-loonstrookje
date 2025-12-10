@@ -4,3 +4,130 @@ h1 {
     font-size: 72px;
     color: white;
 }
+
+.loginPage .main-content {
+    padding: 0;
+    margin-left: 0;
+}
+
+
+/* login */
+
+.loginPage {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.loginContainer {
+    max-width: 420px;
+    width: 100%;
+    background-color: white;
+    padding: 50px 40px;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.loginHeader {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.loginHeader h1 {
+    font-size: 36px;
+    color: #4A90E2;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+}
+
+.loginSubtitle {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loginFormGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.loginFormGroup label {
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.loginFormGroup input[type="email"],
+.loginFormGroup input[type="password"] {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.loginFormGroup input[type="email"]:focus,
+.loginFormGroup input[type="password"]:focus {
+    outline: none;
+    border-color: #4A90E2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.loginFormGroup .error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: -5px;
+}
+
+.loginFormRemember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.loginFormRemember input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #4A90E2;
+}
+
+.loginFormRemember label {
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.loginSubmitButton {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.loginSubmitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+}
+
+.loginSubmitButton:active {
+    transform: translateY(0);
+}
