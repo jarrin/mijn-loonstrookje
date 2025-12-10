@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasMany(AuditLog::class);
     }
 
+    public function sentInvitations()
+    {
+        return $this->hasMany(Invitation::class, 'employer_id');
+    }
+
     // Role checking
     public function hasRole($role)
     {
