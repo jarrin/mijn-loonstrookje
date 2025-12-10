@@ -30,7 +30,7 @@
                 <th>Gebruiker</th>
                 <th>Bedrijf</th>
                 <th>Email</th>
-                <th>Rol</th>
+                <th>Type</th>
                 <th>Status</th>
                 <th class="icon-cell">Acties</th>
             </tr>

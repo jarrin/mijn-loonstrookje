@@ -16,6 +16,7 @@
             </svg>
         </button>
         <div class="dropdown-menu">
+            <a href="#" class="dropdown-item dropdown-item-all">Alles</a>
             @foreach($filter['options'] as $option)
                 <a href="#" class="dropdown-item">{{ $option }}</a>
             @endforeach
