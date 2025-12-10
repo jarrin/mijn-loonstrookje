@@ -16,19 +16,19 @@
                 @auth
                     {{-- SuperAdmin links --}}
                     @if(auth()->user()->hasRole('super_admin'))
-                        <a href="{{ route('superadmin.dashboard') }}">
+                        <a href="{{ route('superadmin.dashboard') }}" class="{{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Home</span>
                         </a>
-                        <a href="{{ route('superadmin.subscriptions') }}">
+                        <a href="{{ route('superadmin.subscriptions') }}" class="{{ request()->routeIs('superadmin.subscriptions') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/credit-card.svg')) !!}
-                            <span>Subscriptions</span>
+                            <span>Abonnementen</span>
                         </a>
-                        <a href="{{ route('superadmin.logs') }}">
+                        <a href="{{ route('superadmin.logs') }}" class="{{ request()->routeIs('superadmin.logs') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/file-text.svg')) !!}
                             <span>Logs</span>
                         </a>
-                        <a href="{{ route('superadmin.facturation') }}">
+                        <a href="{{ route('superadmin.facturation') }}" class="{{ request()->routeIs('superadmin.facturation') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/invoice.svg')) !!}
                             <span>Facturatie</span>
                         </a>
@@ -36,15 +36,15 @@
 
                     {{-- Administratiekantoor links --}}
                     @if(auth()->user()->hasRole('administration_office'))
-                        <a href="{{ route('administration.dashboard') }}">
+                        <a href="{{ route('administration.dashboard') }}" class="{{ request()->routeIs('administration.dashboard') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Home</span>
                         </a>
-                        <a href="{{ route('administration.employees') }}">
+                        <a href="{{ route('administration.employees') }}" class="{{ request()->routeIs('administration.employees') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('administration.documents') }}">
+                        <a href="{{ route('administration.documents') }}" class="{{ request()->routeIs('administration.documents') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>
@@ -52,15 +52,15 @@
 
                     {{-- Werkgever links --}}
                     @if(auth()->user()->hasRole('employer'))
-                        <a href="{{ route('employer.dashboard') }}">
+                        <a href="{{ route('employer.dashboard') }}" class="{{ request()->routeIs('employer.dashboard') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('employer.employees') }}">
+                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('employer.admin-offices') }}">
+                        <a href="{{ route('employer.admin-offices') }}" class="{{ request()->routeIs('employer.admin-offices') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/briefcase.svg')) !!}
                             <span>Administratiebureau's</span>
                         </a>
@@ -68,7 +68,7 @@
                     
                     {{-- Medewerker links --}}
                     @if(auth()->user()->hasRole('employee'))
-                        <a href="{{ route('employee.dashboard') }}">
+                        <a href="{{ route('employee.dashboard') }}" class="{{ request()->routeIs('employee.dashboard') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
