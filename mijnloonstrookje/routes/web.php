@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployerController;
+use App\Http\Controllers\AdministrationController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\InvitationController;
 use App\Models\Subscription;
 
 // Website routes 
@@ -20,68 +24,41 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Employee routes
     Route::middleware('role:employee')->group(function () {
-        Route::get('/employee/dashboard', [DashboardController::class, 'employee'])->name('employee.dashboard');
+        Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
     });
     
     // Employer routes
     Route::middleware('role:employer')->group(function () {
-        Route::get('/employer/dashboard', [DashboardController::class, 'employer'])->name('employer.dashboard');
-        Route::get('/employer/employees', function () {
-            return view('employer.EmployerEmployeeList');
-        })->name('employer.employees');
-        Route::get('/employer/documents', function () {
-            return view('employer.EmployerEmployeeDocuments');
-        })->name('employer.documents');
-        Route::get('/employer/admin-offices', function () {
-            return view('employer.EmployerAdminOfficeList');
-        })->name('employer.admin-offices');
+        Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
+        Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
+        Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
+        Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
+        Route::get('/employer/admin-offices', [EmployerController::class, 'adminOffices'])->name('employer.admin-offices');
+        
+        // Invitation routes
+        Route::get('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'showInviteForm'])->name('employer.invite.employee');
+        Route::post('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'sendInvitation'])->name('employer.send.invitation');
     });
     
     // Administration routes
     Route::middleware('role:administration_office')->group(function () {
-        Route::get('/administration/dashboard', [DashboardController::class, 'administration'])->name('administration.dashboard');
-        Route::get('/administration/employees', function () {
-            return view('admin.AdminOfficeEmployeeList');
-        })->name('administration.employees');
-        Route::get('/administration/documents', function () {
-            return view('admin.AdminOfficeDocuments');
-        })->name('administration.documents');
+        Route::get('/administration/dashboard', [AdministrationController::class, 'dashboard'])->name('administration.dashboard');
+        Route::get('/administration/employees', [AdministrationController::class, 'employees'])->name('administration.employees');
+        Route::get('/administration/documents', [AdministrationController::class, 'documents'])->name('administration.documents');
     });
     
     // Super Admin routes
     Route::middleware('role:super_admin')->group(function () {
-        Route::get('/superadmin/dashboard', [DashboardController::class, 'superAdmin'])->name('superadmin.dashboard');
-        Route::get('/superadmin/users/{user}/edit', [DashboardController::class, 'editUser'])->name('superadmin.users.edit');
-        Route::put('/superadmin/users/{user}', [DashboardController::class, 'updateUser'])->name('superadmin.users.update');
-        Route::get('/superadmin/subscriptions', function () {
-            $subscriptions = Subscription::all();
-            return view('superadmin.SuperAdminSubs', compact('subscriptions'));
-        })->name('superadmin.subscriptions');
+        Route::get('/superadmin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
+        Route::get('/superadmin/users/{user}/edit', [SuperAdminController::class, 'editUser'])->name('superadmin.users.edit');
+        Route::put('/superadmin/users/{user}', [SuperAdminController::class, 'updateUser'])->name('superadmin.users.update');
+        Route::delete('/superadmin/users/{user}', [SuperAdminController::class, 'destroyUser'])->name('superadmin.users.destroy');
         
-        // Edit subscription
-        Route::put('/superadmin/subscriptions/{subscription}', function (\App\Models\Subscription $subscription, \Illuminate\Http\Request $request) {
-            $data = $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'feature_1' => ['nullable', 'string', 'max:255'],
-                'feature_2' => ['nullable', 'string', 'max:255'],
-                'feature_3' => ['nullable', 'string', 'max:255'],
-                'price' => ['required', 'numeric'],
-                'subscription_plan' => ['required', 'string', 'max:255'],
-            ]);
-
-            $subscription->update($data);
-
-            return redirect()->route('superadmin.subscriptions')->with('status', 'Abonnement bijgewerkt.');
-        })->name('superadmin.subscriptions.update');
-
-        Route::get('/superadmin/logs', function () {
-            return view('superadmin.SuperAdminLogs');
-        })->name('superadmin.logs');
-        Route::get('/superadmin/facturation', function () {
-            $invoices = \App\Models\Invoice::with('company')->orderBy('due_date', 'desc')->get();
-            return view('superadmin.SuperAdminFacturation', compact('invoices'));
-        })->name('superadmin.facturation');
-        Route::delete('/superadmin/users/{user}', [DashboardController::class, 'destroyUser'])->name('superadmin.users.destroy');
+        Route::get('/superadmin/subscriptions', [SuperAdminController::class, 'subscriptions'])->name('superadmin.subscriptions');
+        Route::put('/superadmin/subscriptions/{subscription}', [SuperAdminController::class, 'updateSubscription'])->name('superadmin.subscriptions.update');
+        
+        Route::get('/superadmin/logs', [SuperAdminController::class, 'logs'])->name('superadmin.logs');
+        Route::get('/superadmin/facturation', [SuperAdminController::class, 'facturation'])->name('superadmin.facturation');
     });
     
     // Two-factor authentication management (accessible to all authenticated users)
@@ -106,3 +83,7 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->intended();
     });
 });
+
+// Public invitation routes (not requiring authentication)
+Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
+Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');

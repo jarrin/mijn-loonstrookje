@@ -34,12 +34,12 @@
         </div>
 
         <div>
-            <button type="button" id="toggle-recovery" class="border-1 border-gray-500">
+            <button type="button" id="toggle-recovery" class="border border-gray-500">
                 Gebruik een herstelcode
             </button>
         </div>
 
-        <button type="submit" class="border-1 border-gray-500">Verifiëren</button>
+        <button type="submit" class="border border-gray-500">Verifiëren</button>
     </form>
 </div>
 
