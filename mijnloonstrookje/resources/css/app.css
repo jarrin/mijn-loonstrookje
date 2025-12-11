@@ -10,6 +10,7 @@
 @import './component/status.css';
 @import './tabellen/employees.css';
 @import './tabellen/log.css';
+@import './showcase/showcase.css';
 
 
 :root {
