@@ -17,8 +17,8 @@ Route::get('/website', function () {
 
 // Home page route dashboard
 Route::get('/', function () {
-    return view('HomePage');
-})->name('home');
+    return view('auth.Login');
+})->name('auth');
 
 // Protected dashboard routes
 Route::middleware(['auth', 'verified'])->group(function () {
