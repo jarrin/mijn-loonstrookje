@@ -17,6 +17,18 @@ Route::get('/website', function () {
 
 // Home page route dashboard
 Route::get('/', function () {
+    // Redirect authenticated users to their dashboard
+    if (auth()->check()) {
+        $user = auth()->user();
+        return match($user->role) {
+            'employee' => redirect()->route('employee.dashboard'),
+            'employer' => redirect()->route('employer.dashboard'),
+            'administration_office' => redirect()->route('administration.dashboard'),
+            'super_admin' => redirect()->route('superadmin.dashboard'),
+            default => view('auth.Login'),
+        };
+    }
+    
     return view('auth.Login');
 })->name('auth');
 
