@@ -35,8 +35,10 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get all users with role 'employee'
-        $employees = User::where('role', 'employee')->get();
+        // Get only employees from the employer's company
+        $employees = User::where('role', 'employee')
+                        ->where('company_id', auth()->user()->company_id)
+                        ->get();
         
         return view('employer.EmployerEmployeeList', compact('employees'));
     }
@@ -51,12 +53,12 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
+        // Get employee only if they belong to the employer's company
         $employee = User::where('id', $employeeId)
                        ->where('role', 'employee')
+                       ->where('company_id', auth()->user()->company_id)
                        ->firstOrFail();
         
-        // For now, we'll use dummy data for documents
-        // Later this will be replaced with actual document model
         $documents = collect([
             // (object)['name' => 'Loonstrook Januari 2024', 'type' => 'Loonstrook', 'date' => '2024-01-31'],
             // (object)['name' => 'Loonstrook Februari 2024', 'type' => 'Loonstrook', 'date' => '2024-02-29'],
