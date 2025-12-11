@@ -1,7 +1,4 @@
 <nav class="main-side-nav">
-    <div class="logo">
-        <h1>LOGO</h1>
-    </div>
     <div class="buttons">
         <div class="nav-tabs">
             @auth

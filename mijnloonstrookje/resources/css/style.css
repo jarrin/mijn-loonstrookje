@@ -132,3 +132,163 @@ h1 {
 .loginSubmitButton:active {
     transform: translateY(0);
 }
+
+.main-content {
+    margin-left: 350px;
+    width: calc(100% - 350px);
+    padding: 4rem;
+}
+
+.main-content table {
+    box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.1);
+}
+
+table#superadmin-table {
+    margin-top: 10px;
+}
+
+.status-label {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: rgba(4, 211, 0, 0.3);
+    color: #00BC0D;
+}
+
+button#delete-table-button:hover {
+    cursor: pointer;
+}
+
+button#primairy {
+    background-color: #3B7DE4;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+/* Table Filter Bar Styles */
+.table-filter-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background-color: white;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-icon {
+    color: #999;
+    flex-shrink: 0;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: inherit;
+    color: #333;
+    width: 100%;
+    background: transparent;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.dropdown-container {
+    position: relative;
+}
+
+.dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.dropdown-button:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-button svg {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-button.active svg {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    min-width: 200px;
+    z-index: 10;
+}
+
+.dropdown-menu.active {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-item:first-child {
+    border-radius: 7px 7px 0 0;
+}
+
+.dropdown-item:last-child {
+    border-radius: 0 0 7px 7px;
+}
+
+.dropdown-item-all {
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 500;
+    color: #666;
+}
+
+table#super-admin-facturation {
+    margin-top: 20px;
+}
