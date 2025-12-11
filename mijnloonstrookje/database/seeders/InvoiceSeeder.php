@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\Company;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class InvoiceSeeder extends Seeder
 {
@@ -14,12 +16,32 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create some demo companies
-        $companies = [
-            Company::create(['name' => 'Acme BV', 'kvk_number' => '12345678', 'subscription_id' => null]),
-            Company::create(['name' => 'Beta Solutions', 'kvk_number' => '87654321', 'subscription_id' => null]),
-            Company::create(['name' => 'Gamma Industries', 'kvk_number' => '11223344', 'subscription_id' => null]),
+        // Create some demo companies with users
+        $companiesData = [
+            ['name' => 'Acme BV', 'kvk_number' => '12345678', 'email' => 'employer@acme.com'],
+            ['name' => 'Beta Solutions', 'kvk_number' => '87654321', 'email' => 'employer@beta.com'],
+            ['name' => 'Gamma Industries', 'kvk_number' => '11223344', 'email' => 'employer@gamma.com'],
         ];
+
+        $companies = [];
+        foreach ($companiesData as $companyData) {
+            $company = Company::create([
+                'name' => $companyData['name'],
+                'kvk_number' => $companyData['kvk_number'],
+                'subscription_id' => null
+            ]);
+
+            // Create employer user for this company
+            User::create([
+                'name' => $companyData['name'] . ' Werkgever',
+                'email' => $companyData['email'],
+                'password' => Hash::make('password'),
+                'role' => 'employer',
+                'company_id' => $company->id,
+            ]);
+
+            $companies[] = $company;
+        }
 
         // Create demo invoices for each company
         foreach ($companies as $index => $company) {
