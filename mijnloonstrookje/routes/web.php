@@ -32,6 +32,21 @@ Route::get('/', function () {
     return view('auth.Login');
 })->name('auth');
 
+Route::get('/home', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        return match($user->role) {
+            'employee' => redirect()->route('employee.dashboard'),
+            'employer' => redirect()->route('employer.dashboard'),
+            'administration_office' => redirect()->route('administration.dashboard'),
+            'super_admin' => redirect()->route('superadmin.dashboard'),
+            default => redirect('/'),
+        };
+    }
+    
+    return redirect('/');
+})->name('home');
+
 // Protected dashboard routes
 Route::middleware(['auth', 'verified'])->group(function () {
     // Employee routes
