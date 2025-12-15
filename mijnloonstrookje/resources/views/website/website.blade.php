@@ -11,18 +11,14 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="2" y="2" width="28" height="28" rx="6" fill="#0052cc"/>
-                    <path d="M16 8V24M10 16H22" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                <span class="logo-text">Loonstrookje</span>
+                <img src="{{ asset('images/loonstrookje-breed-logo-upscale-transparent.png') }}" alt="Mijn Loonstrookje">
             </div>
             <ul class="nav-menu">
                 <li><a href="#functies">Functionaliteiten</a></li>
                 <li><a href="#veiligheid">Veiligheid</a></li>
                 <li><a href="#abonnement">Abonnementen</a></li>
             </ul>
-            <button class="nav-button">↪️ Inloggen</button>
+            <button class="nav-button">Inloggen</button>
         </div>
     </nav>
 
