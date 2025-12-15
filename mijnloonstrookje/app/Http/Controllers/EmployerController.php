@@ -22,7 +22,36 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        return view('employer.EmployerDashboard');
+        $company = auth()->user()->company;
+        
+        // Count employees for this company
+        $employeeCount = User::where('role', 'employee')
+                            ->where('company_id', auth()->user()->company_id)
+                            ->count();
+        
+        // Get max employees based on subscription plan
+        $maxEmployees = 50; // Default
+        if ($company && $company->subscription) {
+            switch ($company->subscription->subscription_plan) {
+                case 'basic':
+                    $maxEmployees = 5;
+                    break;
+                case 'pro':
+                    $maxEmployees = 25;
+                    break;
+                case 'premium':
+                    $maxEmployees = 999; // "Onbeperkt"
+                    break;
+            }
+        }
+        
+        // Get next unpaid invoice
+        $nextInvoice = \App\Models\Invoice::where('company_id', auth()->user()->company_id)
+                            ->whereIn('status', ['pending', 'overdue'])
+                            ->orderBy('due_date', 'asc')
+                            ->first();
+        
+        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice'));
     }
 
     /**

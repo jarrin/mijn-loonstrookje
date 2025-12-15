@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,6 +17,9 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
+        // Get subscriptions to assign to companies
+        $subscriptions = Subscription::all();
+        
         // Create some demo companies with users
         $companiesData = [
             ['name' => 'Acme BV', 'kvk_number' => '12345678', 'email' => 'employer@acme.com'],
@@ -24,11 +28,14 @@ class InvoiceSeeder extends Seeder
         ];
 
         $companies = [];
-        foreach ($companiesData as $companyData) {
+        foreach ($companiesData as $index => $companyData) {
+            // Assign subscriptions in a round-robin fashion
+            $subscription = $subscriptions[$index % $subscriptions->count()];
+            
             $company = Company::create([
                 'name' => $companyData['name'],
                 'kvk_number' => $companyData['kvk_number'],
-                'subscription_id' => null
+                'subscription_id' => $subscription->id
             ]);
 
             // Create employer user for this company
