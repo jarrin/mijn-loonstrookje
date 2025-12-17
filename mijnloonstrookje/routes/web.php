@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\DocumentController;
 use App\Models\Subscription;
 
 // Website routes 
@@ -72,6 +73,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/administration/dashboard', [AdministrationController::class, 'dashboard'])->name('administration.dashboard');
         Route::get('/administration/employees', [AdministrationController::class, 'employees'])->name('administration.employees');
         Route::get('/administration/documents', [AdministrationController::class, 'documents'])->name('administration.documents');
+    });
+    
+    // Document routes (accessible by employer and administration for upload)
+    Route::middleware('role:employer,administration_office')->group(function () {
+        Route::get('/documents/upload/{employee?}', [DocumentController::class, 'create'])->name('documents.upload');
+        Route::post('/documents/upload', [DocumentController::class, 'store'])->name('documents.store');
+    });
+    
+    // Document routes (accessible by employee, employer, and administration)
+    Route::middleware('role:employee,employer,administration_office,super_admin')->group(function () {
+        Route::get('/documents/{document}/view', [DocumentController::class, 'view'])->name('documents.view');
+        Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
+        Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     });
     
     // Super Admin routes

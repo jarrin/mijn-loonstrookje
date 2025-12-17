@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->hasMany(Document::class, 'uploader_id');
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'employee_id');
+    }
+
     public function employeeDocuments()
     {
         return $this->hasMany(Document::class, 'employee_id');

@@ -59,16 +59,13 @@ class EmployerController extends Controller
                        ->where('company_id', auth()->user()->company_id)
                        ->firstOrFail();
         
-        $documents = collect([
-            // (object)['name' => 'Loonstrook Januari 2024', 'type' => 'Loonstrook', 'date' => '2024-01-31'],
-            // (object)['name' => 'Loonstrook Februari 2024', 'type' => 'Loonstrook', 'date' => '2024-02-29'],
-        ]);
-        
-        // When you want to use real data instead, replace the above with:
-        // $documents = $employee->documents;
-        
-        // To disable dummy data and show empty table, uncomment:
-        // $documents = collect([]);
+        // Get real documents from database
+        $documents = $employee->documents()
+                             ->whereNull('deleted_at')
+                             ->orderBy('year', 'desc')
+                             ->orderBy('month', 'desc')
+                             ->orderBy('week', 'desc')
+                             ->get();
         
         return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents'));
     }
@@ -96,6 +93,17 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        return view('employer.EmployerEmployeeDocuments');
+        // Get all documents for all employees in the company
+        $documents = \App\Models\Document::where('company_id', auth()->user()->company_id)
+                                        ->whereNull('deleted_at')
+                                        ->with(['employee', 'uploader'])
+                                        ->orderBy('year', 'desc')
+                                        ->orderBy('month', 'desc')
+                                        ->orderBy('week', 'desc')
+                                        ->get();
+        
+        $employee = null; // No specific employee selected
+        
+        return view('employer.EmployerEmployeeDocuments', compact('documents', 'employee'));
     }
 }

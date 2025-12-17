@@ -6,27 +6,97 @@
 <section>
     <h1 class="text-2xl mb-4">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
     
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+    
     @if(isset($documents))
     <table>
         <thead>
             <tr>
+                @if(!isset($employee))
+                <th>Medewerker</th>
+                @endif
                 <th>Document Naam</th>
                 <th>Type</th>
-                <th>Datum</th>
+                <th>Periode</th>
+                <th>Grootte</th>
+                <th>Upload Datum</th>
                 <th class="icon-cell">Acties</th>
             </tr>
         </thead>
         <tbody>
             @forelse($documents as $document)
             <tr>
-                <td>{{ $document->name }}</td>
-                <td>{{ $document->type }}</td>
-                <td>{{ $document->date }}</td>
-                <td class="icon-cell">{!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}</td>
+                @if(!isset($employee))
+                <td>{{ $document->employee->name ?? 'N/A' }}</td>
+                @endif
+                <td>{{ $document->display_name }}</td>
+                <td>
+                    @switch($document->type)
+                        @case('payslip')
+                            Loonstrook
+                            @break
+                        @case('annual_statement')
+                            Jaaroverzicht
+                            @break
+                        @case('other')
+                            Overig
+                            @break
+                        @default
+                            {{ ucfirst($document->type) }}
+                    @endswitch
+                </td>
+                <td>
+                    @if($document->month)
+                        {{ ['', 'Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][$document->month] }} {{ $document->year }}
+                    @elseif($document->week)
+                        Week {{ $document->week }}, {{ $document->year }}
+                    @else
+                        {{ $document->year }}
+                    @endif
+                </td>
+                <td>{{ $document->formatted_size }}</td>
+                <td>{{ $document->created_at->format('d-m-Y') }}</td>
+                <td class="icon-cell">
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <a href="{{ route('documents.view', $document->id) }}" 
+                           target="_blank" 
+                           title="Bekijken"
+                           style="cursor: pointer; color: #3B82F6;">
+                            👁️
+                        </a>
+                        <a href="{{ route('documents.download', $document->id) }}" 
+                           title="Downloaden"
+                           style="cursor: pointer; color: #10B981;">
+                            ⬇️
+                        </a>
+                        <form action="{{ route('documents.destroy', $document->id) }}" 
+                              method="POST" 
+                              style="display: inline;"
+                              onsubmit="return confirm('Weet je zeker dat je dit document wilt verwijderen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" 
+                                    title="Verwijderen"
+                                    style="cursor: pointer; background: none; border: none; padding: 0; color: #EF4444;">
+                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                            </button>
+                        </form>
+                    </div>
+                </td>
             </tr>
             @empty
             <tr>
-                <td colspan="4" style="text-align: center;">Geen documenten gevonden</td>
+                <td colspan="{{ isset($employee) ? '6' : '7' }}" style="text-align: center;">Geen documenten gevonden</td>
             </tr>
             @endforelse
         </tbody>
@@ -36,8 +106,11 @@
     @endif
     
     <div class="mt-6 space-x-4">
-        <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('employer.employees') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Medewerkers</a>
+        @if(isset($employee))
+            <a href="{{ route('documents.upload', $employee->id) }}">Document Uploaden</a>
+        @else
+            <a href="{{ route('documents.upload') }}">Document Uploaden</a>
+        @endif
     </div>
 </section>
 @endsection

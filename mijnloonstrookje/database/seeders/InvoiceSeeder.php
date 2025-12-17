@@ -18,27 +18,31 @@ class InvoiceSeeder extends Seeder
     {
         // Create some demo companies with users
         $companiesData = [
-            ['name' => 'Acme BV', 'kvk_number' => '12345678', 'email' => 'employer@acme.com'],
+            ['name' => 'Acme BV', 'kvk_number' => '11111111', 'email' => 'employer@acme.com'],
             ['name' => 'Beta Solutions', 'kvk_number' => '87654321', 'email' => 'employer@beta.com'],
             ['name' => 'Gamma Industries', 'kvk_number' => '11223344', 'email' => 'employer@gamma.com'],
         ];
 
         $companies = [];
         foreach ($companiesData as $companyData) {
-            $company = Company::create([
-                'name' => $companyData['name'],
-                'kvk_number' => $companyData['kvk_number'],
-                'subscription_id' => null
-            ]);
+            $company = Company::firstOrCreate(
+                ['kvk_number' => $companyData['kvk_number']],
+                [
+                    'name' => $companyData['name'],
+                    'subscription_id' => null
+                ]
+            );
 
             // Create employer user for this company
-            User::create([
-                'name' => $companyData['name'] . ' Werkgever',
-                'email' => $companyData['email'],
-                'password' => Hash::make('password'),
-                'role' => 'employer',
-                'company_id' => $company->id,
-            ]);
+            User::updateOrCreate(
+                ['email' => $companyData['email']],
+                [
+                    'name' => $companyData['name'] . ' Werkgever',
+                    'password' => Hash::make('password'),
+                    'role' => 'employer',
+                    'company_id' => $company->id,
+                ]
+            );
 
             $companies[] = $company;
         }
