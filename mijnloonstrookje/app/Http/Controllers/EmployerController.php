@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class EmployerController extends Controller
@@ -112,7 +113,89 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        return view('employer.EmployerAdminOfficeList');
+        // Get all administration offices
+        $adminOffices = User::where('role', 'administration_office')->get();
+        
+        return view('employer.EmployerAdminOfficeList', compact('adminOffices'));
+    }
+
+    /**
+     * Store a new administration office.
+     */
+    public function storeAdminOffice(Request $request)
+    {
+        // Verify user is actually an employer
+        if (auth()->user()->role !== 'employer') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'administration_office',
+            'status' => 'active',
+        ]);
+
+        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor toegevoegd.');
+    }
+
+    /**
+     * Update an administration office.
+     */
+    public function updateAdminOffice(Request $request, User $adminOffice)
+    {
+        // Verify user is actually an employer
+        if (auth()->user()->role !== 'employer') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Verify target is an administration office
+        if ($adminOffice->role !== 'administration_office') {
+            abort(403, 'Invalid user type');
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $adminOffice->id],
+            'status' => ['required', 'string', 'in:active,inactive,pending'],
+        ]);
+
+        $adminOffice->update($validated);
+
+        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor bijgewerkt.');
+    }
+
+    /**
+     * Delete an administration office.
+     */
+    public function destroyAdminOffice(User $adminOffice)
+    {
+        // Verify user is actually an employer
+        if (auth()->user()->role !== 'employer') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Verify target is an administration office
+        if ($adminOffice->role !== 'administration_office') {
+            abort(403, 'Invalid user type');
+        }
+
+        // Mark as inactive and deleted
+        $adminOffice->status = 'inactive';
+        $adminOffice->is_deleted = true;
+        $adminOffice->save();
+        
+        // Soft delete
+        $adminOffice->delete();
+
+        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor verwijderd.');
     }
 
     /**

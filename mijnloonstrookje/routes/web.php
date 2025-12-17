@@ -60,7 +60,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
         Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
+        
+        // Administration office management routes
         Route::get('/employer/admin-offices', [EmployerController::class, 'adminOffices'])->name('employer.admin-offices');
+        Route::post('/employer/admin-offices', [EmployerController::class, 'storeAdminOffice'])->name('employer.admin-offices.store');
+        Route::put('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'updateAdminOffice'])->name('employer.admin-offices.update');
+        Route::delete('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'destroyAdminOffice'])->name('employer.admin-offices.destroy');
         
         // Invitation routes
         Route::get('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'showInviteForm'])->name('employer.invite.employee');
