@@ -7,20 +7,8 @@
     <h1 class="text-2xl mb-4">Administratiekantoren</h1>
     <p>Beheer hier de administratiekantoren die toegang hebben tot jouw bedrijf.</p>
 
-    @if(session('success'))
-        <div style="background:#10b981; color:white; padding:1rem; border-radius:0.5rem; margin-bottom:1rem;">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div style="background:#ef4444; color:white; padding:1rem; border-radius:0.5rem; margin-bottom:1rem;">
-            {{ session('error') }}
-        </div>
-    @endif
-
     <div style="margin-bottom:1rem;">
-        <button type="button" onclick="openAddAdminOfficeModal()" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px; cursor:pointer;">
+        <button type="button" onclick="openAddAdminOfficeModal()">
             + Administratiekantoor toevoegen
         </button>
     </div>
