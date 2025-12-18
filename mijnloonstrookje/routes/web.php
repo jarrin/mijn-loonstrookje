@@ -17,8 +17,35 @@ Route::get('/website', function () {
 
 // Home page route dashboard
 Route::get('/', function () {
+    // Redirect authenticated users to their dashboard
+    if (auth()->check()) {
+        $user = auth()->user();
+        return match($user->role) {
+            'employee' => redirect()->route('employee.dashboard'),
+            'employer' => redirect()->route('employer.dashboard'),
+            'administration_office' => redirect()->route('administration.dashboard'),
+            'super_admin' => redirect()->route('superadmin.dashboard'),
+            default => view('auth.Login'),
+        };
+    }
+    
     return view('auth.Login');
 })->name('auth');
+
+Route::get('/home', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        return match($user->role) {
+            'employee' => redirect()->route('employee.dashboard'),
+            'employer' => redirect()->route('employer.dashboard'),
+            'administration_office' => redirect()->route('administration.dashboard'),
+            'super_admin' => redirect()->route('superadmin.dashboard'),
+            default => redirect('/'),
+        };
+    }
+    
+    return redirect('/');
+})->name('home');
 
 // Protected dashboard routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -33,11 +60,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
         Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
+        
+        // Administration office management routes
         Route::get('/employer/admin-offices', [EmployerController::class, 'adminOffices'])->name('employer.admin-offices');
+        Route::post('/employer/admin-offices/invite', [EmployerController::class, 'inviteAdminOffice'])->name('employer.admin-offices.invite');
+        Route::put('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'updateAdminOffice'])->name('employer.admin-offices.update');
+        Route::delete('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'destroyAdminOffice'])->name('employer.admin-offices.destroy');
         
         // Invitation routes
-        Route::get('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'showInviteForm'])->name('employer.invite.employee');
         Route::post('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'sendInvitation'])->name('employer.send.invitation');
+        Route::delete('/invitations/{id}', [App\Http\Controllers\InvitationController::class, 'deleteInvitation'])->name('invitation.delete');
     });
     
     // Administration routes
@@ -86,4 +118,5 @@ Route::middleware(['auth'])->group(function () {
 
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
+Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
 Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');

@@ -44,9 +44,73 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        <button onclick="window.location='{{ route('employer.invite.employee') }}'" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Medewerker Toevoegen</button>
+        <button type="button" onclick="openInviteEmployeeModal()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Medewerker Toevoegen</button>
         <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
         <a href="{{ route('employer.documents') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Alle Documenten</a>
     </div>
 </section>
+
+<!-- Invite Employee Modal -->
+<section>
+    <div id="inviteEmployeeModal" style="display:none; position:fixed; inset:0; z-index:50; background:rgba(15, 23, 42, 0.4); align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:0.75rem; width:100%; max-width:640px; box-shadow:0 10px 40px rgba(15,23,42,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem 1.75rem; border-bottom:1px solid #e5e7eb;">
+                <h2 style="font-size:1.5rem; font-weight:600; color:#111827; margin:0;">Medewerker Uitnodigen</h2>
+                <button type="button" onclick="closeInviteEmployeeModal()" aria-label="Sluiten" style="background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:#6b7280;">&times;</button>
+            </div>
+
+            <form id="inviteEmployeeForm" action="{{ route('employer.send.invitation') }}" method="POST" style="padding:1.75rem;">
+                @csrf
+
+                <div style="margin-bottom:1rem;">
+                    <p style="color:#6b7280; font-size:0.875rem; line-height:1.5;">
+                        Voer het e-mailadres van de werknemer in. Deze ontvangt een uitnodiging om zijn/haar account aan te maken.
+                    </p>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:1rem;">
+                    <div>
+                        <label for="inviteEmployeeEmail" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">E-mailadres *</label>
+                        <input 
+                            id="inviteEmployeeEmail" 
+                            name="email" 
+                            type="email" 
+                            required 
+                            placeholder="werknemer@example.com"
+                            style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;" 
+                        />
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
+                    <button type="button" onclick="closeInviteEmployeeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px; cursor:pointer;">Annuleren</button>
+                    <button type="submit" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer;">Uitnodiging Versturen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@push('scripts')
+<script>
+    function openInviteEmployeeModal() {
+        const modal = document.getElementById('inviteEmployeeModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeInviteEmployeeModal() {
+        const modal = document.getElementById('inviteEmployeeModal');
+        modal.style.display = 'none';
+        document.getElementById('inviteEmployeeForm').reset();
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('inviteEmployeeModal');
+        if (event.target === modal) {
+            closeInviteEmployeeModal();
+        }
+    }
+</script>
+@endpush
 @endsection

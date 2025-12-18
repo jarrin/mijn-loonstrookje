@@ -14,9 +14,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,
-            SubscriptionSeeder::class,
-            InvoiceSeeder::class,
+            SubscriptionSeeder::class,  // First create subscriptions
+            CompanySeeder::class,       // Then create companies (which need subscriptions)
+            UserSeeder::class,          // Then create users (which need companies)
+            InvoiceSeeder::class,       // Finally create invoices
         ]);
     }
 }

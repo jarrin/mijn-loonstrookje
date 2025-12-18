@@ -22,7 +22,8 @@ class UserSeeder extends Seeder
             'role' => 'super_admin',
         ]);
 
-        User::create([
+        // Create admin office (not linked to any company yet)
+        $adminOffice = User::create([
             'name' => 'Administratiekantoor',
             'email' => 'admin@test.com',
             'password' => Hash::make('password'),
@@ -30,10 +31,27 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
+            'name' => 'Werkgever Acme',
+            'email' => 'employer@acme.com',
+            'password' => Hash::make('password'),
+            'role' => 'employer',
+            'company_id' => 1, // Acme BV
+        ]);
+
+        User::create([
+            'name' => 'Werkgever Beta',
+            'email' => 'employer@beta.com',
+            'password' => Hash::make('password'),
+            'role' => 'employer',
+            'company_id' => 2, // Beta Solutions
+        ]);
+
+        User::create([
             'name' => 'Werkgever Test',
             'email' => 'employer@test.com',
             'password' => Hash::make('password'),
             'role' => 'employer',
+            'company_id' => 1, 
         ]);
 
         User::create([
@@ -41,6 +59,7 @@ class UserSeeder extends Seeder
             'email' => 'employee@test.com',
             'password' => Hash::make('password'),
             'role' => 'employee',
+            'company_id' => 1, 
         ]);
     }
 }

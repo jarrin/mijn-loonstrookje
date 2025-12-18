@@ -5,7 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\Company;
+use App\Models\User;
+use App\Models\Subscription;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class InvoiceSeeder extends Seeder
 {
@@ -14,12 +17,8 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create some demo companies
-        $companies = [
-            Company::create(['name' => 'Acme BV', 'kvk_number' => '12345678', 'subscription_id' => null]),
-            Company::create(['name' => 'Beta Solutions', 'kvk_number' => '87654321', 'subscription_id' => null]),
-            Company::create(['name' => 'Gamma Industries', 'kvk_number' => '11223344', 'subscription_id' => null]),
-        ];
+        // Get existing companies (created by CompanySeeder)
+        $companies = Company::all();
 
         // Create demo invoices for each company
         foreach ($companies as $index => $company) {
