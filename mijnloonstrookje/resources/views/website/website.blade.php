@@ -39,10 +39,7 @@
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 3H7C5.9 3 5 3.9 5 5V19C5 20.1 5.9 21 7 21H17C18.1 21 19 20.1 19 19V7L13 3H7Z" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M13 3V7H17" stroke="#0052cc" stroke-width="2"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text-icon lucide-file-text"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
                     </div>
                     <h3>Digitale Loonstroken</h3>
                     <p>Upload en beheer alle loonstroken op één centrale plek. Medewerkers hebben 24/7 toegang tot hun archief.</p>
@@ -59,12 +56,7 @@
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="8" cy="8" r="4" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M2 20C2 16.7 4.7 14 8 14C11.3 14 14 16.7 14 20" stroke="#0052cc" stroke-width="2"/>
-                            <circle cx="18" cy="13" r="4" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M14 22C14 19.3 15.8 17.1 18 16" stroke="#0052cc" stroke-width="2"/>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-icon lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
                     </div>
                     <h3>Medewerkerportaal</h3>
                     <p>Een persoonlijk portal waar medewerkers hun loonstroken kunnen inkijken en downloaden.</p>
@@ -144,7 +136,7 @@
     <section class="security-section" id="veiligheid">
         <div class="container">
             <div class="security-header">
-                <span class="security-icon-large">🛡️</span>
+                <span class="security-icon-large"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-icon lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
                 <h2 class="section-title">Veiligheid staat voorop</h2>
             </div>
             <p class="section-subtitle">Loongegevens zijn gevoelig. Daarom nemen wij bescherming serieus. Jouw data is bij ons in veilige handen.</p>

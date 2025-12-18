@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1540px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -31,7 +31,7 @@ body {
 }
 
 .nav-container {
-    max-width: 1200px;
+    max-width: 1540px;
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
@@ -166,9 +166,11 @@ body {
     text-align: center;
     padding: 40px 30px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+    background: #ffffff;
     transition: all 0.3s ease;
     border: 2px solid transparent;
+    box-shadow: 0 15px 40px rgba(41, 41, 41, 0.12);
+
 }
 
 .feature-card:hover {
@@ -191,8 +193,8 @@ body {
 }
 
 .feature-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
 }
 
 .feature-card h3 {
@@ -367,8 +369,8 @@ body {
 }
 
 .security-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
 }
 
 .security-card h3 {
@@ -536,7 +538,7 @@ body {
 }
 
 .footer-container {
-    max-width: 1200px;
+    max-width: 1510px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -603,7 +605,7 @@ body {
 }
 
 .footer-bottom {
-    max-width: 1200px;
+    max-width: 1510px;
     margin: 0 auto;
     padding-top: 30px;
     border-top: 1px solid #eee;
