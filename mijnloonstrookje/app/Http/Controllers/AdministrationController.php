@@ -16,7 +16,13 @@ class AdministrationController extends Controller
      */
     public function dashboard()
     {
-        return view('admin.AdminOfficeDashboard');
+        // Get companies where the authenticated admin office user has active access
+        $companies = auth()->user()->companies()
+            ->wherePivot('status', 'active')
+            ->with('subscription')
+            ->get();
+
+        return view('admin.AdminOfficeDashboard', compact('companies'));
     }
 
     /**
