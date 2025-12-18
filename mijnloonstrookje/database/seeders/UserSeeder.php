@@ -22,19 +22,12 @@ class UserSeeder extends Seeder
             'role' => 'super_admin',
         ]);
 
-        // Create admin offices and link them to companies
+        // Create admin office (not linked to any company yet)
         $adminOffice = User::create([
             'name' => 'Administratiekantoor',
             'email' => 'admin@test.com',
             'password' => Hash::make('password'),
             'role' => 'administration_office',
-        ]);
-
-        // Link admin office to company 1 and 2 (Acme BV and Beta Solutions)
-        $adminOffice->companies()->attach([1, 2], [
-            'status' => 'active',
-            'created_at' => now(),
-            'updated_at' => now(),
         ]);
 
         User::create([

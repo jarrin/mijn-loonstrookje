@@ -69,6 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Invitation routes
         Route::post('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'sendInvitation'])->name('employer.send.invitation');
+        Route::delete('/invitations/{id}', [App\Http\Controllers\InvitationController::class, 'deleteInvitation'])->name('invitation.delete');
     });
     
     // Administration routes

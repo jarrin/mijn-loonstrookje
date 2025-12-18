@@ -52,7 +52,14 @@
                     <td>{{ $invitation->email }}</td>
                     <td><span class="status-label" style="background-color: #FFA500;">Uitnodiging verstuurd</span></td>
                     <td class="icon-cell">
-                        <span style="font-size: 0.75rem; color: #6b7280;">Wacht op acceptatie</span>
+                        <form action="{{ route('invitation.delete', $invitation->id) }}" method="POST" style="display: inline;" 
+                              onsubmit="return confirm('Weet je zeker dat je de uitnodiging voor {{ $invitation->email }} wilt verwijderen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="icon-btn icon-btn-destructive" title="Uitnodiging verwijderen">
+                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endforeach

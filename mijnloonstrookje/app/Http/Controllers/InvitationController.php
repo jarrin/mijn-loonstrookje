@@ -240,4 +240,27 @@ class InvitationController extends Controller
         return redirect()->route('profile.two-factor-authentication')
             ->with('success', 'Account succesvol aangemaakt! Stel nu je twee-factor authenticatie in.');
     }
+
+    /**
+     * Delete an invitation
+     * Only the user who sent the invitation can delete it
+     */
+    public function deleteInvitation($id)
+    {
+        $invitation = Invitation::findOrFail($id);
+
+        // Check if the current user is the one who sent the invitation
+        if ($invitation->invited_by !== auth()->id()) {
+            abort(403, 'Je hebt geen toestemming om deze uitnodiging te verwijderen.');
+        }
+
+        // Only allow deleting pending invitations
+        if ($invitation->status !== 'pending') {
+            return back();
+        }
+
+        $invitation->delete();
+
+        return back();
+    }
 }
