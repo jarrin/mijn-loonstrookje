@@ -63,12 +63,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Administration office management routes
         Route::get('/employer/admin-offices', [EmployerController::class, 'adminOffices'])->name('employer.admin-offices');
-        Route::post('/employer/admin-offices', [EmployerController::class, 'storeAdminOffice'])->name('employer.admin-offices.store');
+        Route::post('/employer/admin-offices/invite', [EmployerController::class, 'inviteAdminOffice'])->name('employer.admin-offices.invite');
         Route::put('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'updateAdminOffice'])->name('employer.admin-offices.update');
         Route::delete('/employer/admin-offices/{adminOffice}', [EmployerController::class, 'destroyAdminOffice'])->name('employer.admin-offices.destroy');
         
         // Invitation routes
-        Route::get('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'showInviteForm'])->name('employer.invite.employee');
         Route::post('/employer/invite-employee', [App\Http\Controllers\InvitationController::class, 'sendInvitation'])->name('employer.send.invitation');
     });
     
@@ -118,4 +117,5 @@ Route::middleware(['auth'])->group(function () {
 
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
+Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
 Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');

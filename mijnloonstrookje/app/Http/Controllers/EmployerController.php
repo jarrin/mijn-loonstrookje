@@ -104,7 +104,7 @@ class EmployerController extends Controller
     }
 
     /**
-     * Display list of administration offices.
+     * Display list of administration offices linked to this company.
      */
     public function adminOffices()
     {
@@ -113,41 +113,113 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get all administration offices
-        $adminOffices = User::where('role', 'administration_office')->get();
+        // Get only administration offices linked to this company
+        $company = auth()->user()->company;
         
-        return view('employer.EmployerAdminOfficeList', compact('adminOffices'));
+        if (!$company) {
+            return view('employer.EmployerAdminOfficeList', ['adminOffices' => collect(), 'pendingInvitations' => collect()]);
+        }
+        
+        $adminOffices = $company->adminOffices()->get();
+        
+        // Get pending invitations for admin offices
+        $pendingInvitations = \App\Models\Invitation::where('company_id', $company->id)
+            ->where('role', 'administration_office')
+            ->where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->get();
+        
+        return view('employer.EmployerAdminOfficeList', compact('adminOffices', 'pendingInvitations'));
     }
 
     /**
-     * Store a new administration office.
+     * Send invitation to administration office.
      */
-    public function storeAdminOffice(Request $request)
+    public function inviteAdminOffice(Request $request)
     {
         // Verify user is actually an employer
         if (auth()->user()->role !== 'employer') {
             abort(403, 'Unauthorized access');
         }
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8'],
+        $request->validate([
+            'email' => ['required', 'email', 'max:255'],
+        ], [
+            'email.required' => 'E-mailadres is verplicht.',
+            'email.email' => 'Voer een geldig e-mailadres in.',
         ]);
 
-        User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+        // Check if user already exists as admin office
+        $existingUser = User::where('email', $request->email)
+            ->where('role', 'administration_office')
+            ->first();
+        
+        // If user exists, check if already linked to this company
+        if ($existingUser) {
+            $alreadyLinked = $existingUser->companies()
+                ->where('company_id', auth()->user()->company_id)
+                ->exists();
+            
+            if ($alreadyLinked) {
+                return back()->with('error', 'Dit administratiekantoor heeft al toegang tot jouw bedrijf.');
+            }
+        }
+        
+        $invitationType = $existingUser ? 'company_access' : 'new_account';
+        $isNewAccount = !$existingUser;
+
+        // Check if there's already a pending invitation for this company
+        $existingInvitation = \App\Models\Invitation::where('email', $request->email)
+            ->where('company_id', auth()->user()->company_id)
+            ->where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if ($existingInvitation) {
+            return back()->with('error', 'Er is al een actieve uitnodiging voor dit e-mailadres voor jouw bedrijf.');
+        }
+
+        // Create invitation
+        $invitation = \App\Models\Invitation::create([
+            'email' => $request->email,
+            'token' => \App\Models\Invitation::generateToken(),
+            'employer_id' => auth()->id(),
+            'invited_by' => auth()->id(),
+            'company_id' => auth()->user()->company_id,
             'role' => 'administration_office',
-            'status' => 'active',
+            'invitation_type' => $invitationType,
+            'status' => 'pending',
+            'expires_at' => \Carbon\Carbon::now()->addDays(7),
         ]);
 
-        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor toegevoegd.');
+        // Get employer and company details
+        $employer = auth()->user();
+        $companyName = $employer->company ? $employer->company->name : 'Uw Bedrijf';
+
+        // Send appropriate email based on whether user exists
+        try {
+            \Illuminate\Support\Facades\Mail::to($request->email)
+                ->send(new \App\Mail\AdminOfficeInvitation($invitation, $employer->name, $companyName, $isNewAccount));
+            
+            $message = $isNewAccount 
+                ? 'Uitnodiging succesvol verzonden. Het administratiekantoor ontvangt een e-mail om een account aan te maken.'
+                : 'Uitnodiging succesvol verzonden. Het administratiekantoor ontvangt een e-mail om toegang te accepteren.';
+            
+            return back()->with('success', $message);
+        } catch (\Exception $e) {
+            // Delete invitation if email fails
+            $invitation->delete();
+            
+            return back()
+                ->withInput()
+                ->with('error', 'Er is een fout opgetreden bij het verzenden van de uitnodiging: ' . $e->getMessage());
+        }
     }
 
+
+
     /**
-     * Update an administration office.
+     * Update administration office access status for this company.
      */
     public function updateAdminOffice(Request $request, User $adminOffice)
     {
@@ -162,18 +234,21 @@ class EmployerController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $adminOffice->id],
             'status' => ['required', 'string', 'in:active,inactive,pending'],
         ]);
 
-        $adminOffice->update($validated);
+        // Update the pivot table status
+        $company = auth()->user()->company;
+        $company->adminOffices()->updateExistingPivot($adminOffice->id, [
+            'status' => $validated['status'],
+            'updated_at' => now(),
+        ]);
 
-        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor bijgewerkt.');
+        return redirect()->route('employer.admin-offices')->with('success', 'Toegangsstatus bijgewerkt.');
     }
 
     /**
-     * Delete an administration office.
+     * Remove administration office access from this company.
      */
     public function destroyAdminOffice(User $adminOffice)
     {
@@ -187,15 +262,17 @@ class EmployerController extends Controller
             abort(403, 'Invalid user type');
         }
 
-        // Mark as inactive and deleted
-        $adminOffice->status = 'inactive';
-        $adminOffice->is_deleted = true;
-        $adminOffice->save();
+        // Remove the relationship between company and admin office
+        $company = auth()->user()->company;
+        $company->adminOffices()->detach($adminOffice->id);
         
-        // Soft delete
-        $adminOffice->delete();
+        // Also delete any pending invitations for this admin office from this company
+        Invitation::where('email', $adminOffice->email)
+            ->where('company_id', $company->id)
+            ->where('status', 'pending')
+            ->delete();
 
-        return redirect()->route('employer.admin-offices')->with('success', 'Administratiekantoor verwijderd.');
+        return redirect()->route('employer.admin-offices')->with('success', 'Toegang van administratiekantoor is ingetrokken.');
     }
 
     /**

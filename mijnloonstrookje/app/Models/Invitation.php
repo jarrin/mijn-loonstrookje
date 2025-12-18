@@ -15,6 +15,9 @@ class Invitation extends Model
         'token',
         'employer_id',
         'company_id',
+        'invited_by',
+        'role',
+        'invitation_type',
         'status',
         'expires_at',
     ];

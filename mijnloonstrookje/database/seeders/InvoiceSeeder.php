@@ -17,38 +17,8 @@ class InvoiceSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get subscriptions to assign to companies
-        $subscriptions = Subscription::all();
-        
-        // Create some demo companies with users
-        $companiesData = [
-            ['name' => 'Acme BV', 'kvk_number' => '12345678', 'email' => 'employer@acme.com'],
-            ['name' => 'Beta Solutions', 'kvk_number' => '87654321', 'email' => 'employer@beta.com'],
-            ['name' => 'Gamma Industries', 'kvk_number' => '11223344', 'email' => 'employer@gamma.com'],
-        ];
-
-        $companies = [];
-        foreach ($companiesData as $index => $companyData) {
-            // Assign subscriptions in a round-robin fashion
-            $subscription = $subscriptions[$index % $subscriptions->count()];
-            
-            $company = Company::create([
-                'name' => $companyData['name'],
-                'kvk_number' => $companyData['kvk_number'],
-                'subscription_id' => $subscription->id
-            ]);
-
-            // Create employer user for this company
-            User::create([
-                'name' => $companyData['name'] . ' Werkgever',
-                'email' => $companyData['email'],
-                'password' => Hash::make('password'),
-                'role' => 'employer',
-                'company_id' => $company->id,
-            ]);
-
-            $companies[] = $company;
-        }
+        // Get existing companies (created by CompanySeeder)
+        $companies = Company::all();
 
         // Create demo invoices for each company
         foreach ($companies as $index => $company) {
