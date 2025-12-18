@@ -8,7 +8,6 @@
 @import './style.css';
 @import './component/nav.css';
 @import './component/status.css';
-@import './component/toast.css';
 @import './tabellen/employees.css';
 @import './tabellen/log.css';
 @import './showcase/showcase.css';
