@@ -107,6 +107,53 @@
     <main class="main-content">
         @yield('content')
     </main>
+
+    <!-- Toast Notification -->
+    @if(session('success') || session('error') || session('info'))
+        <div id="toast" class="toast toast-{{ session('success') ? 'success' : (session('error') ? 'error' : 'info') }}">
+            <div class="toast-content">
+                <span class="toast-icon">
+                    @if(session('success'))
+                        ✓
+                    @elseif(session('error'))
+                        ✕
+                    @else
+                        ℹ
+                    @endif
+                </span>
+                <span class="toast-message">
+                    {{ session('success') ?? session('error') ?? session('info') }}
+                </span>
+            </div>
+            <button onclick="closeToast()" class="toast-close">×</button>
+        </div>
+        <script>
+            // Show toast and auto-hide after 5 seconds
+            document.addEventListener('DOMContentLoaded', function() {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    setTimeout(() => {
+                        toast.classList.add('show');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        closeToast();
+                    }, 5000);
+                }
+            });
+            
+            function closeToast() {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }
+            }
+        </script>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

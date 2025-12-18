@@ -67,6 +67,13 @@ class User extends Authenticatable
         return $this->hasMany(Invitation::class, 'employer_id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'company_admin_office', 'admin_office_id', 'company_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+
     // Role checking
     public function hasRole($role)
     {
