@@ -79,6 +79,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:employer,administration_office')->group(function () {
         Route::get('/documents/upload/{employee?}', [DocumentController::class, 'create'])->name('documents.upload');
         Route::post('/documents/upload', [DocumentController::class, 'store'])->name('documents.store');
+        Route::get('/documents/deleted', [DocumentController::class, 'deleted'])->name('documents.deleted');
+        Route::post('/documents/{document}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
     });
     
     // Document routes (accessible by employee, employer, and administration)

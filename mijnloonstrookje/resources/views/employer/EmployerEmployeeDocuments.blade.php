@@ -111,6 +111,7 @@
         @else
             <a href="{{ route('documents.upload') }}">Document Uploaden</a>
         @endif
+        <a href="{{ route('documents.deleted') }}">Verwijderde Documenten</a>
     </div>
 </section>
 @endsection

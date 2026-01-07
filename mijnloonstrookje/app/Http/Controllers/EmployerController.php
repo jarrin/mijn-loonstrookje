@@ -61,7 +61,7 @@ class EmployerController extends Controller
         
         // Get real documents from database
         $documents = $employee->documents()
-                             ->whereNull('deleted_at')
+                             ->where('is_deleted', false)
                              ->orderBy('year', 'desc')
                              ->orderBy('month', 'desc')
                              ->orderBy('week', 'desc')
@@ -95,7 +95,7 @@ class EmployerController extends Controller
         
         // Get all documents for all employees in the company
         $documents = \App\Models\Document::where('company_id', auth()->user()->company_id)
-                                        ->whereNull('deleted_at')
+                                        ->where('is_deleted', false)
                                         ->with(['employee', 'uploader'])
                                         ->orderBy('year', 'desc')
                                         ->orderBy('month', 'desc')

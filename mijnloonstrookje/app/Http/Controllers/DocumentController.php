@@ -16,15 +16,10 @@ class DocumentController extends Controller
      */
     public function create($employeeId = null)
     {
-        \Log::info('DocumentController@create called with employeeId: ' . $employeeId);
-        
         $user = Auth::user();
-        
-        \Log::info('User role: ' . $user->role);
         
         // Check authorization
         if (!in_array($user->role, ['employer', 'administration_office'])) {
-            \Log::warning('Unauthorized access attempt by user role: ' . $user->role);
             abort(403, 'Unauthorized access');
         }
         
@@ -34,8 +29,6 @@ class DocumentController extends Controller
             ->orderBy('name')
             ->get();
         
-        \Log::info('Found ' . $employees->count() . ' employees');
-        
         $selectedEmployee = null;
         if ($employeeId) {
             $selectedEmployee = User::where('id', $employeeId)
@@ -43,8 +36,6 @@ class DocumentController extends Controller
                 ->where('company_id', $user->company_id)
                 ->first();
         }
-        
-        \Log::info('Rendering documents.upload view');
         
         return view('documents.upload', compact('employees', 'selectedEmployee'));
     }
@@ -184,13 +175,66 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Soft delete
-        $document->delete();
-        
-        // Optionally also delete the physical file
-        // Storage::disk('local')->delete($document->file_path);
+        // Soft delete - set is_deleted to true and deleted_at timestamp
+        $document->is_deleted = true;
+        $document->deleted_at = now();
+        $document->save();
         
         return back()->with('success', 'Document succesvol verwijderd');
+    }
+    
+    /**
+     * Show deleted documents
+     */
+    public function deleted()
+    {
+        $user = Auth::user();
+        
+        // Check authorization
+        if (!in_array($user->role, ['employer', 'administration_office', 'super_admin'])) {
+            abort(403, 'Unauthorized access');
+        }
+        
+        // Get deleted documents
+        $query = Document::where('is_deleted', true);
+        
+        if ($user->role !== 'super_admin') {
+            $query->where('company_id', $user->company_id);
+        }
+        
+        $documents = $query->with(['employee', 'uploader'])
+                          ->orderBy('deleted_at', 'desc')
+                          ->get();
+        
+        return view('documents.deleted', compact('documents'));
+    }
+    
+    /**
+     * Restore deleted document
+     */
+    public function restore($id)
+    {
+        $user = Auth::user();
+        $document = Document::where('id', $id)
+                           ->where('is_deleted', true)
+                           ->firstOrFail();
+        
+        // Only uploader or super admin can restore
+        if ($user->role !== 'super_admin' && $document->uploader_id !== $user->id) {
+            abort(403, 'Je hebt geen toestemming om dit document te herstellen');
+        }
+        
+        // Verify user has access to this company
+        if ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
+            abort(403, 'Unauthorized access');
+        }
+        
+        // Restore document
+        $document->is_deleted = false;
+        $document->deleted_at = null;
+        $document->save();
+        
+        return back()->with('success', 'Document succesvol hersteld');
     }
     
     /**
