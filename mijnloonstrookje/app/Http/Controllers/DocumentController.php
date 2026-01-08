@@ -195,8 +195,8 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get deleted documents
-        $query = Document::where('is_deleted', true);
+        // Get deleted documents (using withTrashed to include soft-deleted records)
+        $query = Document::withTrashed()->where('is_deleted', true);
         
         if ($user->role !== 'super_admin') {
             $query->where('company_id', $user->company_id);
@@ -215,7 +215,8 @@ class DocumentController extends Controller
     public function restore($id)
     {
         $user = Auth::user();
-        $document = Document::where('id', $id)
+        $document = Document::withTrashed()
+                           ->where('id', $id)
                            ->where('is_deleted', true)
                            ->firstOrFail();
         
