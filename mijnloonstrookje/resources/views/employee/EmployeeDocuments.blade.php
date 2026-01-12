@@ -1,10 +1,10 @@
 @extends('layout.Layout')
 
-@section('title', 'Documenten - Mijn Loonstrookje')
+@section('title', 'Mijn Documenten - Mijn Loonstrookje')
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
+    <h1 class="text-2xl mb-4">Mijn Documenten</h1>
     
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -18,27 +18,21 @@
         </div>
     @endif
     
-    @if(isset($documents))
     <table>
         <thead>
             <tr>
-                @if(!isset($employee))
-                <th>Medewerker</th>
-                @endif
                 <th>Document Naam</th>
                 <th>Type</th>
                 <th>Periode</th>
                 <th>Grootte</th>
                 <th>Upload Datum</th>
+                <th>Geüpload door</th>
                 <th class="icon-cell">Acties</th>
             </tr>
         </thead>
         <tbody>
             @forelse($documents as $document)
             <tr>
-                @if(!isset($employee))
-                <td>{{ $document->employee->name ?? 'N/A' }}</td>
-                @endif
                 <td>{{ $document->display_name }}</td>
                 <td>
                     @switch($document->type)
@@ -66,6 +60,7 @@
                 </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
+                <td>{{ $document->uploader->name ?? 'N/A' }}</td>
                 <td class="icon-cell">
                     <div style="display: flex; gap: 8px; justify-content: center;">
                         <a href="{{ route('documents.view', $document->id) }}" 
@@ -79,42 +74,19 @@
                            style="cursor: pointer; color: #10B981;">
                             ⬇️
                         </a>
-                        <form action="{{ route('documents.destroy', $document->id) }}" 
-                              method="POST" 
-                              style="display: inline;"
-                              onsubmit="return confirm('Weet je zeker dat je dit document wilt verwijderen?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" 
-                                    title="Verwijderen"
-                                    style="cursor: pointer; background: none; border: none; padding: 0; color: #EF4444;">
-                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
-                            </button>
-                        </form>
                     </div>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="{{ isset($employee) ? '6' : '7' }}" style="text-align: center;">Geen documenten gevonden</td>
+                <td colspan="7" style="text-align: center;">Geen documenten gevonden</td>
             </tr>
             @endforelse
         </tbody>
     </table>
-    @else
-    <p>Hier komen alle documenten te staan.</p>
-    @endif
     
     <div class="mt-6 space-x-4">
-        @if(isset($employee))
-            <a href="{{ route('documents.upload', $employee->id) }}">Document Uploaden</a>
-            <a href="{{ route('employer.employees') }}">Terug naar Medewerkers</a>
-        @else
-            <a href="{{ route('documents.upload') }}">Document Uploaden</a>
-            <a href="{{ route('employer.employees') }}">Medewerkers</a>
-        @endif
-        <a href="{{ route('documents.deleted') }}">Verwijderde Documenten</a>
-        <a href="{{ route('employer.dashboard') }}">Dashboard</a>
+        <a href="{{ route('employee.dashboard') }}">Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

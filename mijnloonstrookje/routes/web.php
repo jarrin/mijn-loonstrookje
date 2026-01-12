@@ -53,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Employee routes
     Route::middleware('role:employee')->group(function () {
         Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
+        Route::get('/employee/documents', [EmployeeController::class, 'documents'])->name('employee.documents');
     });
     
     // Employer routes
