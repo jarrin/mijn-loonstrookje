@@ -21,6 +21,7 @@ class Document extends Model
         'original_filename',
         'file_size',
         'version',
+        'parent_document_id',
         'year',
         'month',
         'week',
@@ -36,7 +37,7 @@ class Document extends Model
             'year' => 'integer',
             'month' => 'integer',
             'week' => 'integer',
-            'version' => 'integer',
+            'version' => 'decimal:1',
             'file_size' => 'integer',
         ];
     }
@@ -57,6 +58,26 @@ class Document extends Model
     public function uploader()
     {
         return $this->belongsTo(User::class, 'uploader_id');
+    }
+
+    public function parentDocument()
+    {
+        return $this->belongsTo(Document::class, 'parent_document_id');
+    }
+
+    public function revisions()
+    {
+        return $this->hasMany(Document::class, 'parent_document_id')->orderBy('version', 'desc');
+    }
+
+    public function allRevisions()
+    {
+        // Get all documents in the revision chain
+        $parent = $this->parent_document_id ? $this->parentDocument : $this;
+        return Document::where('parent_document_id', $parent->id)
+                      ->orWhere('id', $parent->id)
+                      ->orderBy('version', 'desc')
+                      ->get();
     }
 
     /**

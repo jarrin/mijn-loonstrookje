@@ -24,6 +24,7 @@
                 <th>Document Naam</th>
                 <th>Type</th>
                 <th>Periode</th>
+                <th>Versie</th>
                 <th>Grootte</th>
                 <th>Upload Datum</th>
                 <th>Geüpload door</th>
@@ -58,6 +59,22 @@
                         {{ $document->year }}
                     @endif
                 </td>
+                <td>
+                    v{{ number_format($document->version, 1) }}
+                    @if($document->version == 1.0 && !$document->parent_document_id)
+                        <span style="background: #3B82F6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-left: 4px;">ORIGINEEL</span>
+                    @endif
+                    @php
+                        $parentId = $document->parent_document_id ?? $document->id;
+                        $maxVersion = \App\Models\Document::where('parent_document_id', $parentId)
+                                     ->orWhere('id', $parentId)
+                                     ->max('version');
+                        $isLatest = $document->version == $maxVersion;
+                    @endphp
+                    @if($isLatest && $document->version > 1.0)
+                        <span style="background: #10B981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-left: 4px;">NIEUWSTE</span>
+                    @endif
+                </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
                 <td>{{ $document->uploader->name ?? 'N/A' }}</td>
@@ -79,7 +96,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="7" style="text-align: center;">Geen documenten gevonden</td>
+                <td colspan="8" style="text-align: center;">Geen documenten gevonden</td>
             </tr>
             @endforelse
         </tbody>

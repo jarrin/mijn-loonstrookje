@@ -239,6 +239,122 @@ class DocumentController extends Controller
     }
     
     /**
+     * Show edit form for document revision
+     */
+    public function edit($id)
+    {
+        $user = Auth::user();
+        
+        // Check authorization
+        if (!in_array($user->role, ['employer', 'administration_office'])) {
+            abort(403, 'Unauthorized access');
+        }
+        
+        $document = Document::findOrFail($id);
+        
+        // Verify user has access to this company
+        if ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
+            abort(403, 'Unauthorized access');
+        }
+        
+        return view('documents.edit', compact('document'));
+    }
+    
+    /**
+     * Store new revision of document
+     */
+    public function update(Request $request, $id)
+    {
+        $user = Auth::user();
+        
+        // Check authorization
+        if (!in_array($user->role, ['employer', 'administration_office'])) {
+            abort(403, 'Unauthorized access');
+        }
+        
+        $originalDocument = Document::findOrFail($id);
+        
+        // Verify user has access to this company
+        if ($originalDocument->company_id !== $user->company_id && $user->role !== 'super_admin') {
+            abort(403, 'Unauthorized access');
+        }
+        
+        // Validation
+        $validated = $request->validate([
+            'document' => 'required|file|mimes:pdf|max:10240', // Max 10MB
+            'document_type' => 'required|in:payslip,annual_statement,other',
+            'period_type' => 'required|in:Maandelijks,Weekelijks,2-wekelijks,Jaarlijks',
+            'year' => 'required|integer|min:2000|max:2100',
+            'month' => 'nullable|integer|min:1|max:12',
+            'week' => 'nullable|integer|min:1|max:53',
+            'note' => 'nullable|string|max:500',
+        ]);
+        
+        // Validate period fields based on period_type
+        if ($validated['period_type'] === 'Maandelijks' && !$request->filled('month')) {
+            return back()->withErrors(['month' => 'Maand is verplicht voor maandelijkse periode'])->withInput();
+        }
+        
+        if (in_array($validated['period_type'], ['Weekelijks', '2-wekelijks']) && !$request->filled('week')) {
+            return back()->withErrors(['week' => 'Week is verplicht voor wekelijkse periode'])->withInput();
+        }
+        
+        $file = $request->file('document');
+        $originalFilename = $file->getClientOriginalName();
+        $fileSize = $file->getSize();
+        
+        // Determine parent and new version
+        $parentId = $originalDocument->parent_document_id ?? $originalDocument->id;
+        $parent = $originalDocument->parent_document_id ? $originalDocument->parentDocument : $originalDocument;
+        
+        // Get highest version number in this revision chain
+        $maxVersion = Document::where('parent_document_id', $parentId)
+                             ->orWhere('id', $parentId)
+                             ->max('version');
+        
+        // Calculate new version: 1.0 -> 1.1 -> 1.2 ... -> 1.9 -> 2.0
+        $majorVersion = floor($maxVersion);
+        $minorVersion = ($maxVersion - $majorVersion) * 10;
+        
+        if ($minorVersion >= 9) {
+            // Go to next major version
+            $newVersion = $majorVersion + 1.0;
+        } else {
+            // Increment minor version
+            $newVersion = $majorVersion + (($minorVersion + 1) / 10);
+        }
+        
+        // Generate unique file path
+        $filename = time() . '_' . uniqid() . '.pdf';
+        $filePath = 'documents/' . $user->company_id . '/' . $originalDocument->employee_id . '/' . $filename;
+        
+        // Store encrypted file
+        Document::storeEncrypted($file, $filePath);
+        
+        // Create new document revision
+        $newDocument = Document::create([
+            'employee_id' => $originalDocument->employee_id,
+            'company_id' => $originalDocument->company_id,
+            'uploader_id' => $user->id,
+            'type' => $validated['document_type'],
+            'file_path' => $filePath,
+            'original_filename' => $originalFilename,
+            'file_size' => $fileSize,
+            'year' => $validated['year'],
+            'month' => $validated['month'],
+            'week' => $validated['week'],
+            'period_type' => $validated['period_type'],
+            'version' => $newVersion,
+            'parent_document_id' => $parentId,
+            'note' => $validated['note'],
+        ]);
+        
+        return redirect()
+            ->route('employer.employee.documents', $originalDocument->employee_id)
+            ->with('success', "Document succesvol bijgewerkt naar versie " . number_format($newVersion, 1));
+    }
+    
+    /**
      * Check if user is authorized to access document
      */
     private function authorizeDocument($user, $document)

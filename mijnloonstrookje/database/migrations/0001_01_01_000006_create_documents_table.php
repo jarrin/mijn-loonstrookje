@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('file_path'); // Encrypted file path
             $table->string('original_filename'); // Original file name
             $table->integer('file_size')->nullable(); // File size in bytes
-            $table->integer('version')->default(1);
+            $table->decimal('version', 3, 1)->default(1.0);
             $table->integer('year');
             $table->integer('month')->nullable();
             $table->integer('week')->nullable();
