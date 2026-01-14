@@ -60,7 +60,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:employer')->group(function () {
         Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
-        Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
         
         // Administration office management routes
@@ -74,9 +73,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/invitations/{id}', [App\Http\Controllers\InvitationController::class, 'deleteInvitation'])->name('invitation.delete');
     });
     
+    // Shared routes for employer and administration office
+    Route::middleware('role:employer,administration_office')->group(function () {
+        Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
+    });
+    
     // Administration routes
     Route::middleware('role:administration_office')->group(function () {
         Route::get('/administration/dashboard', [AdministrationController::class, 'dashboard'])->name('administration.dashboard');
+        Route::get('/administration/company/{company}', [AdministrationController::class, 'showCompany'])->name('administration.company.show');
+        Route::get('/administration/company/{company}/employees', [AdministrationController::class, 'companyEmployees'])->name('administration.company.employees');
         Route::get('/administration/employees', [AdministrationController::class, 'employees'])->name('administration.employees');
         Route::get('/administration/documents', [AdministrationController::class, 'documents'])->name('administration.documents');
     });

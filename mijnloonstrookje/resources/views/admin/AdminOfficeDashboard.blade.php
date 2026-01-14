@@ -46,7 +46,7 @@
                             @endif
                             
                             <div class="mt-auto w-full space-y-2">
-                                <a href="#" class="block w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors text-sm font-medium">
+                                <a href="{{ route('administration.company.show', $company->id) }}" class="block w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors text-sm font-medium">
                                     Bekijk Details
                                 </a>
                             </div>

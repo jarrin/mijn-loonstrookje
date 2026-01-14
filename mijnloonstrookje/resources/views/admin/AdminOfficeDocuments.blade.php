@@ -4,12 +4,128 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Documenten</h1>
-    <p>Hier komen alle documenten te staan.</p>
+    <h1 class="text-2xl mb-4">Alle Documenten</h1>
     
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('administration.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('administration.employees') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Medewerkers</a>
+    @if(session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
+    
+    @if($documents->isEmpty())
+        <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-center mb-4">
+            <p>Er zijn nog geen documenten beschikbaar.</p>
+        </div>
+    @else
+        <div class="bg-white shadow overflow-x-auto mb-4">
+            <table class="min-w-full">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Bedrijf</th>
+                        <th class="px-4 py-2 text-left">Medewerker</th>
+                        <th class="px-4 py-2 text-left">Document Naam</th>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Periode</th>
+                        <th class="px-4 py-2 text-left">Versie</th>
+                        <th class="px-4 py-2 text-left">Upload Datum</th>
+                        <th class="px-4 py-2 text-left">Acties</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($documents as $document)
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ $document->company->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ $document->employee->name ?? 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ $document->display_name }}</td>
+                        <td class="px-4 py-2">
+                            @switch($document->type)
+                                @case('payslip')
+                                    Loonstrook
+                                    @break
+                                @case('annual_statement')
+                                    Jaaroverzicht
+                                    @break
+                                @case('other')
+                                    Overig
+                                    @break
+                                @default
+                                    {{ ucfirst($document->type) }}
+                            @endswitch
+                        </td>
+                        <td class="px-4 py-2">
+                            @if($document->month)
+                                {{ ['', 'Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][$document->month] }} {{ $document->year }}
+                            @elseif($document->week)
+                                Week {{ $document->week }}, {{ $document->year }}
+                            @else
+                                {{ $document->year }}
+                            @endif
+                        </td>
+                        <td class="px-4 py-2">
+                            v{{ number_format($document->version, 1) }}
+                            @if($document->version == 1.0 && !$document->parent_document_id)
+                                <span class="text-xs px-2 py-1 rounded bg-blue-500 text-white ml-1">ORIGINEEL</span>
+                            @endif
+                            @php
+                                $parentId = $document->parent_document_id ?? $document->id;
+                                $maxVersion = \App\Models\Document::where('parent_document_id', $parentId)
+                                             ->orWhere('id', $parentId)
+                                             ->max('version');
+                                $isLatest = $document->version == $maxVersion;
+                            @endphp
+                            @if($isLatest && $document->version > 1.0)
+                                <span class="text-xs px-2 py-1 rounded bg-green-500 text-white ml-1">NIEUWSTE</span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-2">{{ $document->created_at->format('d-m-Y') }}</td>
+                        <td class="px-4 py-2">
+                            <div class="flex gap-2">
+                                <a href="{{ route('documents.view', $document->id) }}" 
+                                   target="_blank" 
+                                   title="Bekijken"
+                                   class="text-blue-500 hover:underline">
+                                    👁️
+                                </a>
+                                <a href="{{ route('documents.download', $document->id) }}" 
+                                   title="Downloaden"
+                                   class="text-green-500 hover:underline">
+                                    ⬇️
+                                </a>
+                                <a href="{{ route('documents.edit', $document->id) }}" 
+                                   title="Bijwerken"
+                                   class="text-yellow-500 hover:underline">
+                                    ✏️
+                                </a>
+                                <form action="{{ route('documents.destroy', $document->id) }}" 
+                                      method="POST" 
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Weet je zeker dat je dit document wilt verwijderen?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            title="Verwijderen"
+                                            class="text-red-500 hover:underline"
+                                            style="background: none; border: none; cursor: pointer; padding: 0;">
+                                        🗑️
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
+    
+    <div class="mt-6">
+        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

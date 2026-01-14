@@ -78,16 +78,31 @@ class EmployerController extends Controller
      */
     public function employeeDocuments($employeeId)
     {
-        // Verify user is actually an employer
-        if (auth()->user()->role !== 'employer') {
+        $user = auth()->user();
+        
+        // Verify user is employer or administration office
+        if (!in_array($user->role, ['employer', 'administration_office'])) {
             abort(403, 'Unauthorized access');
         }
         
-        // Get employee only if they belong to the employer's company
-        $employee = User::where('id', $employeeId)
-                       ->where('role', 'employee')
-                       ->where('company_id', auth()->user()->company_id)
-                       ->firstOrFail();
+        // Get employee based on user role
+        if ($user->role === 'administration_office') {
+            // Admin office: check if employee belongs to accessible company
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            
+            $employee = User::where('id', $employeeId)
+                ->where('role', 'employee')
+                ->whereIn('company_id', $companyIds)
+                ->firstOrFail();
+        } else {
+            // Employer: check if employee belongs to their company
+            $employee = User::where('id', $employeeId)
+                ->where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->firstOrFail();
+        }
         
         // Get real documents from database
         $documents = $employee->documents()

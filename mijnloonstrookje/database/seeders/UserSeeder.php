@@ -37,9 +37,19 @@ class UserSeeder extends Seeder
                 'name' => 'Administratiekantoor',
                 'password' => Hash::make('password'),
                 'role' => 'administration_office',
-                'company_id' => $company->id,
+                'company_id' => null, // Admin offices don't have a direct company_id
             ]
         );
+        
+        // Link admin office to test company
+        $adminOffice = User::where('email', 'admin@test.com')->first();
+        if ($adminOffice && !$company->adminOffices()->where('admin_office_id', $adminOffice->id)->exists()) {
+            $company->adminOffices()->attach($adminOffice->id, [
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         User::updateOrCreate(
             ['email' => 'employer@test.com'],

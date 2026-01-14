@@ -23,18 +23,42 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get employees from the same company
-        $employees = User::where('role', 'employee')
-            ->where('company_id', $user->company_id)
-            ->orderBy('name')
-            ->get();
+        // Get employees based on user role
+        if ($user->role === 'administration_office') {
+            // Get company IDs that admin office has access to
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            
+            $employees = User::where('role', 'employee')
+                ->whereIn('company_id', $companyIds)
+                ->orderBy('name')
+                ->get();
+        } else {
+            // Employer: get employees from their company
+            $employees = User::where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->orderBy('name')
+                ->get();
+        }
         
         $selectedEmployee = null;
         if ($employeeId) {
-            $selectedEmployee = User::where('id', $employeeId)
-                ->where('role', 'employee')
-                ->where('company_id', $user->company_id)
-                ->first();
+            if ($user->role === 'administration_office') {
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                
+                $selectedEmployee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->first();
+            } else {
+                $selectedEmployee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->where('company_id', $user->company_id)
+                    ->first();
+            }
         }
         
         return view('documents.upload', compact('employees', 'selectedEmployee'));
@@ -64,11 +88,22 @@ class DocumentController extends Controller
             'document' => 'required|file|mimes:pdf|max:10240', // Max 10MB
         ]);
         
-        // Verify employee belongs to the same company
-        $employee = User::where('id', $validated['employee_id'])
-            ->where('role', 'employee')
-            ->where('company_id', $user->company_id)
-            ->firstOrFail();
+        // Verify employee belongs to accessible company
+        if ($user->role === 'administration_office') {
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            
+            $employee = User::where('id', $validated['employee_id'])
+                ->where('role', 'employee')
+                ->whereIn('company_id', $companyIds)
+                ->firstOrFail();
+        } else {
+            $employee = User::where('id', $validated['employee_id'])
+                ->where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->firstOrFail();
+        }
         
         // Validate period fields based on period_type
         if ($validated['period_type'] === 'Maandelijks' && !$request->filled('month')) {
@@ -171,7 +206,16 @@ class DocumentController extends Controller
         }
         
         // Verify user has access to this company
-        if ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
+        if ($user->role === 'administration_office') {
+            $hasAccess = $user->companies()
+                ->where('companies.id', $document->company_id)
+                ->wherePivot('status', 'active')
+                ->exists();
+            
+            if (!$hasAccess) {
+                abort(403, 'Je hebt geen toegang tot dit bedrijf');
+            }
+        } elseif ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
             abort(403, 'Unauthorized access');
         }
         
@@ -226,7 +270,16 @@ class DocumentController extends Controller
         }
         
         // Verify user has access to this company
-        if ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
+        if ($user->role === 'administration_office') {
+            $hasAccess = $user->companies()
+                ->where('companies.id', $document->company_id)
+                ->wherePivot('status', 'active')
+                ->exists();
+            
+            if (!$hasAccess) {
+                abort(403, 'Je hebt geen toegang tot dit bedrijf');
+            }
+        } elseif ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
             abort(403, 'Unauthorized access');
         }
         
@@ -253,7 +306,16 @@ class DocumentController extends Controller
         $document = Document::findOrFail($id);
         
         // Verify user has access to this company
-        if ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
+        if ($user->role === 'administration_office') {
+            $hasAccess = $user->companies()
+                ->where('companies.id', $document->company_id)
+                ->wherePivot('status', 'active')
+                ->exists();
+            
+            if (!$hasAccess) {
+                abort(403, 'Je hebt geen toegang tot dit bedrijf');
+            }
+        } elseif ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
             abort(403, 'Unauthorized access');
         }
         
@@ -275,7 +337,16 @@ class DocumentController extends Controller
         $originalDocument = Document::findOrFail($id);
         
         // Verify user has access to this company
-        if ($originalDocument->company_id !== $user->company_id && $user->role !== 'super_admin') {
+        if ($user->role === 'administration_office') {
+            $hasAccess = $user->companies()
+                ->where('companies.id', $originalDocument->company_id)
+                ->wherePivot('status', 'active')
+                ->exists();
+            
+            if (!$hasAccess) {
+                abort(403, 'Je hebt geen toegang tot dit bedrijf');
+            }
+        } elseif ($originalDocument->company_id !== $user->company_id && $user->role !== 'super_admin') {
             abort(403, 'Unauthorized access');
         }
         
@@ -364,7 +435,20 @@ class DocumentController extends Controller
             return;
         }
         
-        // Document must belong to user's company
+        // Administration office: check if they have access to the company via pivot table
+        if ($user->role === 'administration_office') {
+            $hasAccess = $user->companies()
+                ->where('companies.id', $document->company_id)
+                ->wherePivot('status', 'active')
+                ->exists();
+            
+            if (!$hasAccess) {
+                abort(403, 'Je hebt geen toegang tot documenten van dit bedrijf');
+            }
+            return;
+        }
+        
+        // For other roles: Document must belong to user's company
         if ($document->company_id !== $user->company_id) {
             abort(403, 'Unauthorized access');
         }
@@ -374,8 +458,8 @@ class DocumentController extends Controller
             abort(403, 'Je hebt geen toestemming om dit document te bekijken');
         }
         
-        // Employer and administration office can access all documents in their company
-        if (!in_array($user->role, ['employer', 'administration_office', 'employee'])) {
+        // Employer can access all documents in their company
+        if (!in_array($user->role, ['employer', 'employee'])) {
             abort(403, 'Unauthorized access');
         }
     }
