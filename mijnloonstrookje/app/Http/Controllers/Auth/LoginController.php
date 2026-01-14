@@ -49,6 +49,12 @@ class LoginController extends Controller
 
     private function redirectBasedOnRole($user)
     {
+        // Check of er een intended subscription in de sessie staat
+        if (session()->has('intended_subscription')) {
+            $subscriptionId = session()->pull('intended_subscription');
+            return redirect()->route('payment.start', ['subscription' => $subscriptionId]);
+        }
+
         if (isset($user->role)) {
             switch ($user->role) {
                 case 'super_admin':

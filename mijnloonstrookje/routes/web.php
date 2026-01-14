@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Subscription;
 
 // Website routes 
@@ -118,5 +119,10 @@ Route::middleware(['auth'])->group(function () {
 
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
+
+// Payment routes
+Route::post('/payment/start/{subscription}', [PaymentController::class, 'startPayment'])->name('payment.start');
+Route::get('/payment/return/{subscription}', [PaymentController::class, 'returnFromPayment'])->name('payment.return');
+Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
 Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
 Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');
