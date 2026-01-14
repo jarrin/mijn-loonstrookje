@@ -101,7 +101,7 @@ body {
 
 /* Header Section */
 .header-section {
-    background: linear-gradient(to bottom right, #eff6ff, #ffffff);
+    /* background: linear-gradient(to bottom right, #eff6ff, #ffffff); */
     padding: 100px 20px 80px;
     height: 550px;
     text-align: center;
@@ -152,7 +152,7 @@ body {
 /* Features Section */
 .features-section {
     padding: 100px 20px;
-    background-color: #F8FAFC;
+    /* background-color: #F8FAFC; */
 }
 
 .features-grid {
@@ -213,7 +213,7 @@ body {
 /* Admin Section */
 .admin-section {
     padding: 100px 20px;
-    background: #ffffff;
+    /* background: #ffffff; */
 }
 
 .admin-content {
@@ -317,7 +317,7 @@ body {
 /* Security Section */
 .security-section {
     padding: 100px 20px;
-    background-color: #F8FAFC;
+    /* background-color: #F8FAFC; */
 }
 
 .security-header {
@@ -389,7 +389,7 @@ body {
 /* Subscriptions Section */
 .subscriptions-section {
     padding: 100px 20px;
-    background: #ffffff;
+    /* background: #ffffff; */
 }
 
 .subscriptions-container {
