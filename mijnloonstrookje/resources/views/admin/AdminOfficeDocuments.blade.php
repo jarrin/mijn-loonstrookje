@@ -68,20 +68,37 @@
                             @endif
                         </td>
                         <td class="px-4 py-2">
-                            v{{ number_format($document->version, 1) }}
-                            @if($document->version == 1.0 && !$document->parent_document_id)
-                                <span class="text-xs px-2 py-1 rounded bg-blue-500 text-white ml-1">ORIGINEEL</span>
-                            @endif
                             @php
                                 $parentId = $document->parent_document_id ?? $document->id;
-                                $maxVersion = \App\Models\Document::where('parent_document_id', $parentId)
-                                             ->orWhere('id', $parentId)
-                                             ->max('version');
+                                $allVersions = \App\Models\Document::where(function($q) use ($parentId) {
+                                    $q->where('parent_document_id', $parentId)
+                                      ->orWhere('id', $parentId);
+                                })->orderBy('version')->get();
+                                $maxVersion = $allVersions->max('version');
                                 $isLatest = $document->version == $maxVersion;
+                                $isOriginal = $document->version == 1.0 && !$document->parent_document_id;
+                                $versionCount = $allVersions->count();
                             @endphp
-                            @if($isLatest && $document->version > 1.0)
-                                <span class="text-xs px-2 py-1 rounded bg-green-500 text-white ml-1">NIEUWSTE</span>
-                            @endif
+                            
+                            <div class="flex items-center gap-1">
+                                <span class="font-medium">v{{ number_format($document->version, 1) }}</span>
+                                
+                                @if($isOriginal)
+                                    <span class="text-xs px-2 py-1 rounded bg-blue-500 text-white">
+                                        #{{ $document->id }}
+                                    </span>
+                                @else
+                                    <span class="text-xs px-2 py-1 rounded bg-gray-400 text-white">
+                                        van #{{ $parentId }}
+                                    </span>
+                                @endif
+                                
+                                @if($isLatest && $document->version > 1.0)
+                                    <span class="text-xs px-2 py-1 rounded bg-green-500 text-white">
+                                        NIEUWSTE
+                                    </span>
+                                @endif
+                            </div>
                         </td>
                         <td class="px-4 py-2">{{ $document->created_at->format('d-m-Y') }}</td>
                         <td class="px-4 py-2">
