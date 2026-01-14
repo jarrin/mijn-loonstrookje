@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentConfirmation;
 use App\Models\Company;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Mollie\Api\MollieApiClient;
 
 class PaymentController extends Controller
@@ -42,6 +44,15 @@ class PaymentController extends Controller
                     ->with('info', 'Maak eerst een account aan om dit abonnement te kunnen aanschaffen: ' . $subscription->name);
             }
 
+            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
+            $user = Auth::user();
+            $company = $user->company;
+            
+            if ($company && $company->subscription_id) {
+                return redirect()->route('employer.dashboard')
+                    ->with('info', 'Je hebt al een actief abonnement.');
+            }
+
             // Betaling kan zonder inloggen - metadata bevat alleen subscription info
             $metadata = [
                 'subscription_id' => $subscription->id,
@@ -49,8 +60,6 @@ class PaymentController extends Controller
             ];
 
             // Als gebruiker WEL is ingelogd, voeg user/company info toe
-            $user = Auth::user();
-            $company = $user->company;
             
             if (!$company) {
                 // Maak automatisch een company aan

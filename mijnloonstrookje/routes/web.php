@@ -105,6 +105,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('onboarding.setup-2fa');
     
     Route::get('/onboarding/checkout/{subscription}', function (\App\Models\Subscription $subscription) {
+        // If user already has an active subscription, redirect to dashboard
+        if (auth()->user()->company && auth()->user()->company->subscription_id) {
+            return redirect()->route('employer.dashboard');
+        }
+        
         return view('onboarding.checkout', compact('subscription'));
     })->name('payment.checkout');
 });
