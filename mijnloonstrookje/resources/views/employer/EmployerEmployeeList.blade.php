@@ -44,7 +44,7 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        <button onclick="window.location='{{ route('employer.invite.employee') }}}'" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Medewerker Toevoegen</button>
+        <button onclick="openInviteEmployeeModal()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Medewerker Toevoegen</button>
         <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
         <a href="{{ route('employer.documents') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Alle Documenten</a>
         <a href="{{ route('documents.deleted') }}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Verwijderde Documenten</a>
