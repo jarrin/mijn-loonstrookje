@@ -118,9 +118,9 @@ class DocumentController extends Controller
         $originalFilename = $file->getClientOriginalName();
         $fileSize = $file->getSize();
         
-        // Generate unique file path
+        // Generate unique file path using employee's company_id
         $filename = time() . '_' . uniqid() . '.pdf';
-        $filePath = 'documents/' . $user->company_id . '/' . $employee->id . '/' . $filename;
+        $filePath = 'documents/' . $employee->company_id . '/' . $employee->id . '/' . $filename;
         
         // Store encrypted file
         Document::storeEncrypted($file, $filePath);
@@ -128,7 +128,7 @@ class DocumentController extends Controller
         // Create document record
         $document = Document::create([
             'employee_id' => $employee->id,
-            'company_id' => $user->company_id,
+            'company_id' => $employee->company_id,
             'uploader_id' => $user->id,
             'type' => $validated['document_type'],
             'file_path' => $filePath,
