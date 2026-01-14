@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 

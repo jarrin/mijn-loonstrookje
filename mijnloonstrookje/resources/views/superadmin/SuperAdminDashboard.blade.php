@@ -1,11 +1,11 @@
 @extends('layout.Layout')
 
-@section('title', 'Super Admin Dashboard - Mijn Loonstrookje')
+@section('title', 'Gebruikers - Mijn Loonstrookje')
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Super Admin Dashboard</h1>
-    <p>Welkom {{ auth()->user()->name }}, je hebt volledige toegang tot het systeem.</p>
+    <h1 class="text-2xl mb-4">Gebruikers</h1>
+    <p>Welkom {{ auth()->user()->name }}, Beheer hier alle gebruikers</p>
 
     @include('components.TableFilterBar', [
         'filters' => [
@@ -44,6 +44,9 @@
                     <td>{{ $user->role }}</td>
                     <td><span class="status-label">Ready</span></td>
                     <td class="icon-cell">
+                        <button type="button" onclick='openEditUserModal(@json($user))' title="Bewerk gebruiker" style="background:transparent; border:none; cursor:pointer; margin-right:0.5rem;">
+                            {!! file_get_contents(resource_path('assets/icons/Edit.svg')) !!}
+                        </button>
                         <form action="{{ route('superadmin.users.destroy', $user) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');">
                             @csrf
                             @method('DELETE')

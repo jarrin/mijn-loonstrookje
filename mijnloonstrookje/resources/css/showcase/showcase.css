@@ -1,0 +1,787 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+.navbar {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+.nav-brand img{
+    height: 4rem;
+}
+
+.logo {
+    font-size: 1.8rem;
+}
+
+.logo-text {
+    color: #1a1a1a;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-menu a {
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: #0052cc;
+}
+
+.nav-button {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-button:hover {
+    transform: scale(1.01);
+}
+
+.nav-button:active {
+    transform: scale(0.98);
+}
+
+/* Header Section */
+.header-section {
+    background: linear-gradient(to bottom right, #eff6ff, #ffffff);
+    padding: 100px 20px 80px;
+    height: 550px;
+    text-align: center;
+}
+
+.header-container {
+    max-width: 900px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.header-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+    line-height: 1.2;
+}
+
+.header-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 0;
+    line-height: 1.7;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #666;
+    margin-bottom: 50px;
+    line-height: 1.6;
+}
+
+/* Features Section */
+.features-section {
+    padding: 100px 20px;
+    background-color: #F8FAFC;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 40px 30px;
+    border-radius: 16px;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    box-shadow: 0 15px 40px rgba(41, 41, 41, 0.12);
+
+}
+
+.feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 82, 204, 0.12);
+    border-color: #0052cc;
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
+    border-radius: 12px;
+}
+
+.feature-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.feature-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Admin Section */
+.admin-section {
+    padding: 100px 20px;
+    background: #ffffff;
+}
+
+.admin-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.admin-features {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.admin-feature {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.admin-icon {
+    font-size: 2.5rem;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-feature h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.admin-feature p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.admin-subscription-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.subscription-badge {
+    padding: 20px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.subscription-badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.badge-color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.badge-content {
+    text-align: left;
+}
+
+.subscription-badge h4 {
+    margin-bottom: 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.subscription-badge p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.subscription-badge-a {
+    background: linear-gradient(135deg, #4a7c9e 0%, #2d5a7b 100%);
+}
+
+.subscription-badge-b {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.subscription-badge-c {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+/* Security Section */
+.security-section {
+    padding: 100px 20px;
+    background-color: #F8FAFC;
+}
+
+.security-header {
+    text-align: center;
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+}
+
+.security-icon-large {
+    font-size: 4rem;
+}
+
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.security-card {
+    padding: 40px 30px;
+    text-align: center;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.security-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 82, 204, 0.12);
+    border-color: #0052cc;
+}
+
+.security-icon {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
+    border-radius: 12px;
+}
+
+.security-icon svg {
+    width: 30px;
+    height: 30px;
+}
+
+.security-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.security-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Subscriptions Section */
+.subscriptions-section {
+    padding: 100px 20px;
+    background: #ffffff;
+}
+
+.subscriptions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.subscription-card {
+    background: white;
+    border-radius: 16px;
+    padding: 45px 35px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 3px solid transparent;
+}
+
+.subscription-card.featured {
+    transform: scale(1.06);
+    box-shadow: 0 20px 50px rgba(0, 82, 204, 0.2);
+    border: 3px solid #0052cc;
+}
+
+.subscription-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.subscription-card.featured:hover {
+    transform: scale(1.06) translateY(-8px);
+}
+
+.featured-badge {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.3);
+}
+
+.subscription-name {
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+    color: #1a1a1a;
+    margin-top: 15px;
+    font-weight: 700;
+}
+
+.subscription-price {
+    margin-bottom: 35px;
+}
+
+.price-amount {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.price-period {
+    color: #999;
+    font-size: 1rem;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.subscription-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 35px;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.feature-item {
+    padding: 14px 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+.feature-item::before {
+    content: '✓';
+    color: #2ecc71;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 1.3rem;
+}
+
+.subscription-button {
+    width: 100%;
+    padding: 16px 25px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.2);
+}
+
+.subscription-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 82, 204, 0.3);
+}
+
+.subscription-button:active {
+    transform: translateY(-1px);
+}
+
+.subscriptions-footer {
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 40px;
+}
+
+/* Footer */
+.footer {
+    background-color: #F8FAFC;
+    color: #666;
+    padding: 60px 20px 30px;
+    border-top: 1px solid #eee;
+}
+
+.footer-container {
+    max-width: 1510px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.footer-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.footer-brand svg {
+    width: 40px;
+    height: 40px;
+}
+
+.footer-brand span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.footer-column h5 {
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-column p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: #0052cc;
+}
+
+.footer-bottom {
+    max-width: 1510px;
+    margin: 0 auto;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-bottom p {
+    color: #999;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.footer-payments {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.payment-label {
+    color: #999;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.payment-item {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.payment-paypal {
+    background: #0052cc;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .header-title {
+        font-size: 2.2rem;
+    }
+
+    .header-subtitle {
+        font-size: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .admin-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .subscriptions-container {
+        grid-template-columns: 1fr;
+    }
+
+    .subscription-card.featured {
+        transform: scale(1);
+    }
+
+    .subscription-card.featured:hover {
+        transform: translateY(-8px);
+    }
+
+    .price-amount {
+        font-size: 2.5rem;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        height: auto;
+        padding: 15px 20px;
+    }
+
+    .nav-brand {
+        font-size: 1.1rem;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .header-title {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+
+    .header-section {
+        padding: 60px 20px 40px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+    }
+
+    .features-grid,
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .feature-card,
+    .security-card {
+        padding: 25px 20px;
+    }
+
+    .feature-icon,
+    .security-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+
+    .subscription-card {
+        padding: 30px 20px;
+    }
+
+    .subscription-name {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    .price-amount {
+        font-size: 2rem;
+    }
+
+    .admin-features {
+        gap: 25px;
+    }
+
+    .admin-feature {
+        gap: 15px;
+    }
+
+    .admin-icon {
+        font-size: 2rem;
+        min-width: 50px;
+    }
+}
