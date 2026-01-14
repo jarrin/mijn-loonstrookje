@@ -32,6 +32,16 @@ class PaymentController extends Controller
                 'session_id' => session()->getId(),
             ]);
 
+            // Check of gebruiker is ingelogd
+            if (!Auth::check()) {
+                // Sla subscription ID op in sessie
+                session(['subscription_id' => $subscription->id]);
+                
+                // Redirect naar registratie met bericht
+                return redirect()->route('register')
+                    ->with('info', 'Maak eerst een account aan om dit abonnement te kunnen aanschaffen: ' . $subscription->name);
+            }
+
             // Betaling kan zonder inloggen - metadata bevat alleen subscription info
             $metadata = [
                 'subscription_id' => $subscription->id,
@@ -39,25 +49,23 @@ class PaymentController extends Controller
             ];
 
             // Als gebruiker WEL is ingelogd, voeg user/company info toe
-            if (Auth::check()) {
-                $user = Auth::user();
-                $company = $user->company;
+            $user = Auth::user();
+            $company = $user->company;
+            
+            if (!$company) {
+                // Maak automatisch een company aan
+                $company = Company::create([
+                    'name' => $user->name . "'s Bedrijf",
+                    'email' => $user->email,
+                    'subscription_id' => null,
+                ]);
                 
-                if (!$company) {
-                    // Maak automatisch een company aan
-                    $company = Company::create([
-                        'name' => $user->name . "'s Bedrijf",
-                        'email' => $user->email,
-                        'subscription_id' => null,
-                    ]);
-                    
-                    $user->company_id = $company->id;
-                    $user->save();
-                }
-                
-                $metadata['user_id'] = $user->id;
-                $metadata['company_id'] = $company->id;
+                $user->company_id = $company->id;
+                $user->save();
             }
+            
+            $metadata['user_id'] = $user->id;
+            $metadata['company_id'] = $company->id;
 
             // Maak een Mollie betaling aan
             $paymentData = [
@@ -67,13 +75,12 @@ class PaymentController extends Controller
                 ],
                 'description' => 'Abonnement: ' . $subscription->name,
                 'redirectUrl' => route('payment.return', ['subscription' => $subscription->id]),
-                'metadata' => [
-                    'subscription_id' => $subscription->id,
-                    'company_id' => $company->id,
-                    'user_id' => $user->id,
-                ],
+                'metadata' => $metadata,
             ];
-$metadatastr_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1')) {
+
+            // Voeg alleen webhook toe als de app URL publiek toegankelijk is
+            $appUrl = config('app.url');
+            if (!str_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1')) {
                 $paymentData['webhookUrl'] = route('payment.webhook');
             }
 
@@ -82,11 +89,11 @@ $metadatastr_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1
             Log::info('Mollie payment created', [
                 'payment_id' => $payment->id,
                 'subscription_id' => $subscription->id,
-                'company_id' => $company->id,
+                'metadata' => $metadata,
                 'amount' => $subscription->price,
             ]);
 
-            // Remetadata' => $metadatae checkout pagina
+            // Redirect gebruiker naar Mollie checkout pagina
             return redirect($payment->getCheckoutUrl());
 
         } catch (\Exception $e) {
@@ -104,11 +111,7 @@ $metadatastr_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1
      */
     public function returnFromPayment(Request $request, Subscription $subscription)
     {
-        // Check of gebruiker is ingelogd
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-betaling status (zonder company_id filter want misschien niet ingelogd)
+        // Check betaling status (zonder company_id filter want misschien niet ingelogd)
         if (str_contains(config('app.url'), 'localhost') || str_contains(config('app.url'), '127.0.0.1')) {
             try {
                 $sessionId = session()->getId();
@@ -133,9 +136,36 @@ betaling status (zonder company_id filter want misschien niet ingelogd)
                         if ($payment->isPaid()) {
                             // Betaling geslaagd!
                             if (Auth::check()) {
-                                // Al ingelogd - redirect naar dashboard
-                                return redirect()->route('employer.dashboard')
-                                    ->with('success', 'Betaling succesvol! (test mode - abonnement niet geactiveerd)');
+                                $user = Auth::user();
+                                
+                                // Sla subscription_id op in company
+                                if ($user->company) {
+                                    $user->company->update([
+                                        'subscription_id' => $subscription->id
+                                    ]);
+                                    
+                                    Log::info('Subscription activated for company', [
+                                        'company_id' => $user->company->id,
+                                        'subscription_id' => $subscription->id,
+                                        'payment_id' => $payment->id,
+                                    ]);
+                                }
+                                
+                                // Verwijder pending_subscription_id uit sessie
+                                session()->forget('pending_subscription_id');
+                                
+                                // Verstuur bevestigingsmail
+                                Mail::to($user->email)->send(new PaymentConfirmation($user, $subscription));
+                                
+                                Log::info('Payment confirmation email sent', [
+                                    'user_email' => $user->email,
+                                    'subscription_id' => $subscription->id,
+                                ]);
+                                
+                                // Redirect naar success pagina
+                                return view('onboarding.payment-success', [
+                                    'subscription' => $subscription
+                                ]);
                             } else {
                                 // Niet ingelogd - vraag om te registreren/inloggen
                                 session(['completed_payment' => [
@@ -163,7 +193,11 @@ betaling status (zonder company_id filter want misschien niet ingelogd)
 
         // Default redirect
         $redirectRoute = Auth::check() ? 'employer.dashboard' : 'website';
-        return redirect()->route($redirectRoute
+        return redirect()->route($redirectRoute)
+            ->with('info', 'Terug van Mollie. Check de logs voor betaling status.');
+    }
+
+    /**
      * Mollie webhook - wordt aangeroepen wanneer betaling status verandert
      */
     public function webhook(Request $request)

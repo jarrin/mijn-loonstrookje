@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     
     // Employer routes
-    Route::middleware('role:employer')->group(function () {
+    Route::middleware(['role:employer', 'paid.subscription'])->group(function () {
         Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
         Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
@@ -98,6 +98,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/two-factor-authentication', function () {
         return view('profile.two-factor-authentication');
     })->name('profile.two-factor-authentication');
+    
+    // Onboarding routes
+    Route::get('/onboarding/setup-2fa', function () {
+        return view('onboarding.setup-2fa');
+    })->name('onboarding.setup-2fa');
+    
+    Route::get('/onboarding/checkout/{subscription}', function (\App\Models\Subscription $subscription) {
+        return view('onboarding.checkout', compact('subscription'));
+    })->name('payment.checkout');
 });
 
 // Password confirmation routes
