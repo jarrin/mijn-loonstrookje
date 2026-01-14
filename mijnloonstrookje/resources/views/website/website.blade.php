@@ -47,8 +47,8 @@
                 <div class="feature-card">
                     <div class="feature-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="9" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M12 6V12L16 14" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="12" cy="12" r="9" stroke-width="2" fill="none"/>
+                            <path d="M12 6V12L16 14" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <h3>Automatische Verwerking</h3>
@@ -139,7 +139,6 @@
     <section class="security-section" id="veiligheid">
         <div class="container">
             <div class="security-header">
-                <span class="security-icon-large"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-icon lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
                 <h2 class="section-title">Veiligheid staat voorop</h2>
             </div>
             <p class="section-subtitle">Loongegevens zijn gevoelig. Daarom nemen wij bescherming serieus. Jouw data is bij ons in veilige handen.</p>
@@ -148,8 +147,8 @@
                 <div class="security-card">
                     <div class="security-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L3 6V12C3 18.6 12 22 12 22C12 22 21 18.6 21 12V6L12 2Z" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M8 12L11 15L16 9" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 2L3 6V12C3 18.6 12 22 12 22C12 22 21 18.6 21 12V6L12 2Z" stroke-width="2" fill="none"/>
+                            <path d="M8 12L11 15L16 9" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <h3>SSL Encryptie</h3>
@@ -158,8 +157,8 @@
                 <div class="security-card">
                     <div class="security-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2Z" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M8 12L11 15L16 8" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2Z" stroke-width="2" fill="none"/>
+                            <path d="M8 12L11 15L16 8" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <h3>AVG Compliant</h3>
@@ -168,8 +167,8 @@
                 <div class="security-card">
                     <div class="security-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="12" cy="12" r="10" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M12 7V12L15.5 14.5" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="12" cy="12" r="10" stroke-width="2" fill="none"/>
+                            <path d="M12 7V12L15.5 14.5" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <h3>Toegangscontrole</h3>
@@ -178,8 +177,8 @@
                 <div class="security-card">
                     <div class="security-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C6.5 2 2 6.5 2 12V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V12C22 6.5 17.5 2 12 2Z" stroke="#0052cc" stroke-width="2" fill="none"/>
-                            <path d="M12 13V18M9 15H15" stroke="#0052cc" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M12 2C6.5 2 2 6.5 2 12V20C2 21.1 2.9 22 4 22H20C21.1 22 22 21.1 22 20V12C22 6.5 17.5 2 12 2Z" stroke-width="2" fill="none"/>
+                            <path d="M12 13V18M9 15H15" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </div>
                     <h3>Dagelijks Backup</h3>
@@ -219,8 +218,6 @@
                     </div>
                 @endforeach
             </div>
-            
-            <p class="subscriptions-footer">Alle abonnementen inclusief 30 dagen gratis proefperiode</p>
         </div>
     </section>
 

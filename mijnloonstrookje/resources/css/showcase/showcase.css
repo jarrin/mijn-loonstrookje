@@ -11,8 +11,9 @@ html {
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #fff;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+    min-height: 100vh;
 }
 
 .container {
@@ -23,11 +24,13 @@ body {
 
 /* Navigation */
 .navbar {
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .nav-container {
@@ -50,7 +53,7 @@ body {
     text-decoration: none;
 }
 
-.nav-brand img{
+.nav-brand img {
     height: 4rem;
 }
 
@@ -72,39 +75,99 @@ body {
     color: #666;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-bottom: 4px;
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transition: width 0.3s ease;
 }
 
 .nav-menu a:hover {
     color: #0052cc;
 }
 
+.nav-menu a:hover::after {
+    width: 100%;
+}
+
 .nav-button {
     background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
+    padding: 12px 28px;
+    border-radius: 8px;
     font-size: 17px;
     font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 82, 204, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
 }
 
 .nav-button:hover {
-    transform: scale(1.01);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 82, 204, 0.4);
+}
+
+.nav-button:hover::before {
+    left: 100%;
 }
 
 .nav-button:active {
-    transform: scale(0.98);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 82, 204, 0.3);
 }
 
 /* Header Section */
 .header-section {
-    /* background: linear-gradient(to bottom right, #eff6ff, #ffffff); */
-    padding: 100px 20px 80px;
-    height: 550px;
-    text-align: center;
+    padding: 120px 20px 100px;
+    min-height: 600px;
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(0, 102, 255, 0.05) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.header-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(0, 82, 204, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.header-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
 }
 
 .header-container {
@@ -115,14 +178,20 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
+    z-index: 1;
 }
 
 .header-title {
     font-size: 3.5rem;
     font-weight: 800;
     margin-bottom: 20px;
-    color: #1a1a1a;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     line-height: 1.2;
+    animation: slideInDown 0.8s ease-out;
 }
 
 .header-subtitle {
@@ -130,6 +199,7 @@ body {
     color: #666;
     margin-bottom: 0;
     line-height: 1.7;
+    animation: slideInUp 0.8s ease-out 0.1s both;
 }
 
 /* Section Titles */
@@ -145,14 +215,14 @@ body {
     font-size: 1.1rem;
     text-align: center;
     color: #666;
-    margin-bottom: 50px;
+    margin-bottom: 60px;
     line-height: 1.6;
 }
 
 /* Features Section */
 .features-section {
     padding: 100px 20px;
-    /* background-color: #F8FAFC; */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 82, 204, 0.02) 100%);
 }
 
 .features-grid {
@@ -166,16 +236,17 @@ body {
     text-align: center;
     padding: 40px 30px;
     border-radius: 16px;
-    background: #ffffff;
-    transition: all 0.3s ease;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
     border: 2px solid transparent;
-    box-shadow: 0 15px 40px rgba(41, 41, 41, 0.12);
-
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
 }
 
 .feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 82, 204, 0.12);
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     border-color: #0052cc;
 }
 
@@ -190,11 +261,24 @@ body {
     margin: 0 auto 25px;
     background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
     border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-icon {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transform: scale(1.1) rotate(5deg);
 }
 
 .feature-icon svg {
     width: 30px;
     height: 30px;
+    color: #0052cc;
+    stroke: #0052cc;
+}
+
+.feature-card:hover .feature-icon svg {
+    stroke: white;
+    color: white;
 }
 
 .feature-card h3 {
@@ -213,7 +297,6 @@ body {
 /* Admin Section */
 .admin-section {
     padding: 100px 20px;
-    /* background: #ffffff; */
 }
 
 .admin-content {
@@ -232,7 +315,7 @@ body {
 .admin-feature {
     display: flex;
     gap: 25px;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .admin-icon {
@@ -317,12 +400,11 @@ body {
 /* Security Section */
 .security-section {
     padding: 100px 20px;
-    /* background-color: #F8FAFC; */
+    background: linear-gradient(180deg, rgba(0, 82, 204, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .security-header {
     text-align: center;
-    margin-bottom: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -344,15 +426,22 @@ body {
     padding: 40px 30px;
     text-align: center;
     border-radius: 16px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
-    transition: all 0.3s ease;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
     border: 2px solid transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
 }
 
 .security-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 82, 204, 0.12);
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
     border-color: #0052cc;
+}
+
+.security-card:hover::before {
+    transform: scaleX(1);
 }
 
 .security-icon {
@@ -366,11 +455,24 @@ body {
     margin: 0 auto 25px;
     background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
     border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+.security-card:hover .security-icon {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transform: scale(1.1) rotate(5deg);
 }
 
 .security-icon svg {
     width: 30px;
     height: 30px;
+    color: #0052cc;
+    stroke: #0052cc;
+}
+
+.security-card:hover .security-icon svg {
+    stroke: white;
+    color: white;
 }
 
 .security-card h3 {
@@ -389,7 +491,6 @@ body {
 /* Subscriptions Section */
 .subscriptions-section {
     padding: 100px 20px;
-    /* background: #ffffff; */
 }
 
 .subscriptions-container {
@@ -531,10 +632,11 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #F8FAFC;
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%);
     color: #666;
     padding: 60px 20px 30px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 100px;
 }
 
 .footer-container {
@@ -783,5 +885,28 @@ body {
     .admin-icon {
         font-size: 2rem;
         min-width: 50px;
+    }
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
