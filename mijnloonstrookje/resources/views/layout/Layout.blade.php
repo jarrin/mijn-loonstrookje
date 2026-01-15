@@ -84,7 +84,9 @@
                 @auth
                     <div class="user-menu-container">
                         <ul class="user-menu-dropdown" id="userMenuDropdown">
-                            <li><a href="{{ route('profile.two-factor-authentication') }}">2FA Instellingen</a></li>
+                            <li>
+                                <a href="{{ route('profile.two-factor-authentication') }}" class="dropdown-link">2FA Instellingen</a>
+                            </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="inline">
                                     @csrf
