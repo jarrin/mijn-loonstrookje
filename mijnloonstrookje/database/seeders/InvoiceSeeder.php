@@ -30,9 +30,15 @@ class InvoiceSeeder extends Seeder
                 ['kvk_number' => $companyData['kvk_number']],
                 [
                     'name' => $companyData['name'],
-                    'subscription_id' => null
+                    'subscription_id' => 1, // Assign subscription
                 ]
             );
+            
+            // Ensure company has subscription
+            if (!$company->subscription_id) {
+                $company->subscription_id = 1;
+                $company->save();
+            }
 
             // Create employer user for this company
             User::updateOrCreate(
@@ -42,6 +48,8 @@ class InvoiceSeeder extends Seeder
                     'password' => Hash::make('password'),
                     'role' => 'employer',
                     'company_id' => $company->id,
+                    'email_verified_at' => now(),
+                    'two_factor_confirmed_at' => now(),
                 ]
             );
 
