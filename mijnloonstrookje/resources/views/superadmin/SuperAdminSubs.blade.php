@@ -17,12 +17,12 @@
 
     <h2>Alle abonnementen</h2>
 
-    <div style="display: flex; gap: 20px;">
+    <div class="subscription-tiles-container">
     @foreach ($subscriptions as $subscription)
         @php
             $isEditing = request('edit') == $subscription->id;
         @endphp
-        <div class="subscription-tile" style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; width: 250px;">
+        <div class="subscription-tile">
             @if(! $isEditing)
                 {{-- Alleen lezen modus --}}
                 <p><strong>Naam:</strong></p>
