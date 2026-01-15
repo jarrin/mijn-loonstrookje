@@ -18,8 +18,17 @@ class UserSeeder extends Seeder
         // Create or find test company
         $company = Company::firstOrCreate(
             ['kvk_number' => '12345678'],
-            ['name' => 'Test Bedrijf BV']
+            [
+                'name' => 'Test Bedrijf BV',
+                'subscription_id' => 1, // Assign basic plan
+            ]
         );
+        
+        // Ensure company has subscription
+        if (!$company->subscription_id) {
+            $company->subscription_id = 1;
+            $company->save();
+        }
 
         // Create test users for each role
         User::updateOrCreate(
@@ -28,6 +37,7 @@ class UserSeeder extends Seeder
                 'name' => 'Super Admin',
                 'password' => Hash::make('password'),
                 'role' => 'super_admin',
+                'email_verified_at' => now(),
             ]
         );
 
@@ -37,11 +47,11 @@ class UserSeeder extends Seeder
                 'name' => 'Administratiekantoor',
                 'password' => Hash::make('password'),
                 'role' => 'administration_office',
-                'company_id' => null, // Admin offices don't have a direct company_id
+                'company_id' => null,
+                'email_verified_at' => now(),
             ]
         );
         
-        // Link admin office to test company
         $adminOffice = User::where('email', 'admin@test.com')->first();
         if ($adminOffice && !$company->adminOffices()->where('admin_office_id', $adminOffice->id)->exists()) {
             $company->adminOffices()->attach($adminOffice->id, [
@@ -58,6 +68,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'employer',
                 'company_id' => $company->id,
+                'email_verified_at' => now(),
+                'two_factor_confirmed_at' => now(),
             ]
         );
 
@@ -68,6 +80,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'employee',
                 'company_id' => $company->id,
+                'email_verified_at' => now(),
             ]
         );
     }

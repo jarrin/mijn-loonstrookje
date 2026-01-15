@@ -65,27 +65,18 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::redirects('login', function () {
             $user = auth()->user();
             
-            // Check of er een subscription in sessie staat (na registratie)
-            if (session()->has('pending_subscription_id')) {
-                $subscriptionId = session()->pull('pending_subscription_id');
-                return route('payment.start', ['subscription' => $subscriptionId]);
+            if (!$user) {
+                return route('employee.dashboard');
             }
             
-            if ($user) {
-                switch ($user->role) {
-                    case 'super_admin':
-                        return route('superadmin.dashboard');
-                    case 'administration_office':
-                        return route('administration.dashboard');
-                    case 'employer':
-                        return route('employer.dashboard');
-                    case 'employee':
-                    default:
-                        return route('employee.dashboard');
-                }
-            }
-            
-            return route('employee.dashboard');
+            // Route based on user role
+            return match($user->role) {
+                'super_admin' => route('superadmin.dashboard'),
+                'administration_office' => route('administration.dashboard'),
+                'employer' => route('employer.dashboard'),
+                'employee' => route('employee.dashboard'),
+                default => route('employee.dashboard'),
+            };
         });
 
         // Custom redirect after registration
