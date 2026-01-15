@@ -3,6 +3,18 @@
 @section('title', 'Inloggen - Mijn Loonstrookje')
 
 @section('content')
+@if(auth()->check())
+    <script>
+        window.location.href = "{{ match(auth()->user()->role) {
+            'super_admin' => route('superadmin.dashboard'),
+            'administration_office' => route('administration.dashboard'),
+            'employer' => route('employer.dashboard'),
+            'employee' => route('employee.dashboard'),
+            default => route('employee.dashboard'),
+        } }}";
+    </script>
+@endif
+
 <section class="loginPage">
     <div class="loginContainer">
         <div class="loginHeader">
