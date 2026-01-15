@@ -211,7 +211,7 @@ class InvitationController extends Controller
         // Determine the role from invitation
         $role = $invitation->role ?? 'employee';
         
-        // Create the user
+        // Create the user (without email_verified_at so verification is required)
         $user = User::create([
             'name' => $request->name,
             'email' => $invitation->email,
@@ -233,12 +233,15 @@ class InvitationController extends Controller
         // Mark invitation as accepted
         $invitation->update(['status' => 'accepted']);
 
-        // Log the user in
+        // Log the user in (this triggers automatic email verification sending)
         auth()->login($user);
+        
+        // Send email verification notification automatically
+        $user->sendEmailVerificationNotification();
 
-        // Redirect to 2FA setup
-        return redirect()->route('profile.two-factor-authentication')
-            ->with('success', 'Account succesvol aangemaakt! Stel nu je twee-factor authenticatie in.');
+        // Redirect to verification notice page
+        return redirect()->route('verification.notice')
+            ->with('success', 'Account succesvol aangemaakt! Check je inbox voor de verificatie email.');
     }
 
     /**

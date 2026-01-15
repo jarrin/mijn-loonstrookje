@@ -7,7 +7,6 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\InvitationController;
-use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\PaymentController;
 use App\Models\Subscription;
 
@@ -50,17 +49,17 @@ Route::get('/home', function () {
 })->name('home');
 
 // Protected dashboard routes
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () {
     // Employee routes
     Route::middleware('role:employee')->group(function () {
         Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
-        Route::get('/employee/documents', [EmployeeController::class, 'documents'])->name('employee.documents');
     });
     
     // Employer routes
-    Route::middleware(['role:employer', 'paid.subscription'])->group(function () {
+    Route::middleware('role:employer')->group(function () {
         Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
+        Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
         
         // Administration office management routes
@@ -74,35 +73,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/invitations/{id}', [App\Http\Controllers\InvitationController::class, 'deleteInvitation'])->name('invitation.delete');
     });
     
-    // Shared routes for employer and administration office
-    Route::middleware('role:employer,administration_office')->group(function () {
-        Route::get('/employer/employees/{employee}/documents', [EmployerController::class, 'employeeDocuments'])->name('employer.employee.documents');
-    });
-    
     // Administration routes
     Route::middleware('role:administration_office')->group(function () {
         Route::get('/administration/dashboard', [AdministrationController::class, 'dashboard'])->name('administration.dashboard');
-        Route::get('/administration/company/{company}', [AdministrationController::class, 'showCompany'])->name('administration.company.show');
-        Route::get('/administration/company/{company}/employees', [AdministrationController::class, 'companyEmployees'])->name('administration.company.employees');
         Route::get('/administration/employees', [AdministrationController::class, 'employees'])->name('administration.employees');
         Route::get('/administration/documents', [AdministrationController::class, 'documents'])->name('administration.documents');
-    });
-    
-    // Document routes (accessible by employer and administration for upload)
-    Route::middleware('role:employer,administration_office')->group(function () {
-        Route::get('/documents/upload/{employee?}', [DocumentController::class, 'create'])->name('documents.upload');
-        Route::post('/documents/upload', [DocumentController::class, 'store'])->name('documents.store');
-        Route::get('/documents/{document}/edit', [DocumentController::class, 'edit'])->name('documents.edit');
-        Route::post('/documents/{document}/update', [DocumentController::class, 'update'])->name('documents.update');
-        Route::get('/documents/deleted', [DocumentController::class, 'deleted'])->name('documents.deleted');
-        Route::post('/documents/{document}/restore', [DocumentController::class, 'restore'])->name('documents.restore');
-    });
-    
-    // Document routes (accessible by employee, employer, and administration)
-    Route::middleware('role:employee,employer,administration_office,super_admin')->group(function () {
-        Route::get('/documents/{document}/view', [DocumentController::class, 'view'])->name('documents.view');
-        Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
-        Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
     });
     
     // Super Admin routes
@@ -118,16 +93,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/superadmin/logs', [SuperAdminController::class, 'logs'])->name('superadmin.logs');
         Route::get('/superadmin/facturation', [SuperAdminController::class, 'facturation'])->name('superadmin.facturation');
     });
-    
-    // Two-factor authentication management (accessible to all authenticated users)
-    Route::get('/profile/two-factor-authentication', function () {
-        return view('profile.two-factor-authentication');
-    })->name('profile.two-factor-authentication');
-    
-    // Onboarding routes
+});
+
+// Onboarding routes (auth + verified but WITHOUT paid.subscription middleware to avoid redirect loop)
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/onboarding/setup-2fa', function () {
         return view('onboarding.setup-2fa');
     })->name('onboarding.setup-2fa');
+    
+    // 2FA settings page for all authenticated users
+    Route::get('/profile/two-factor-authentication', function () {
+        return view('profile.two-factor-authentication');
+    })->name('profile.two-factor-authentication');
     
     Route::get('/onboarding/checkout/{subscription}', function (\App\Models\Subscription $subscription) {
         // If user already has an active subscription, redirect to dashboard

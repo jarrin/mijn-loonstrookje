@@ -41,13 +41,22 @@
                             <h3 class="mt-4 text-lg font-medium text-gray-900">Account beveiligd!</h3>
                             <p class="mt-2 text-sm text-gray-500">Twee-factor authenticatie is succesvol ingeschakeld.</p>
                             
-                            @if (session('pending_subscription_id'))
+                            @if (session('pending_subscription_id') && auth()->user()->role === 'employer')
                                 <a href="{{ route('payment.checkout', ['subscription' => session('pending_subscription_id')]) }}" 
                                    class="mt-6 w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                     Verder naar betaling →
                                 </a>
                             @else
-                                <a href="{{ route('home') }}" 
+                                @php
+                                    $dashboardRoute = match(auth()->user()->role) {
+                                        'super_admin' => 'superadmin.dashboard',
+                                        'administration_office' => 'administration.dashboard',
+                                        'employer' => 'employer.dashboard',
+                                        'employee' => 'employee.dashboard',
+                                        default => 'employee.dashboard',
+                                    };
+                                @endphp
+                                <a href="{{ route($dashboardRoute) }}" 
                                    class="mt-6 w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                                     Ga naar dashboard →
                                 </a>

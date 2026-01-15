@@ -26,7 +26,7 @@ return [
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false, // Geen wachtwoord bevestiging vereist tijdens onboarding
         ]),
     ],
 ];
