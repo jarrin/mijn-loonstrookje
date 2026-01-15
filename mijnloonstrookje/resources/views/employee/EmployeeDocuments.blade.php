@@ -60,20 +60,37 @@
                     @endif
                 </td>
                 <td>
-                    v{{ number_format($document->version, 1) }}
-                    @if($document->version == 1.0 && !$document->parent_document_id)
-                        <span style="background: #3B82F6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-left: 4px;">ORIGINEEL</span>
-                    @endif
                     @php
                         $parentId = $document->parent_document_id ?? $document->id;
-                        $maxVersion = \App\Models\Document::where('parent_document_id', $parentId)
-                                     ->orWhere('id', $parentId)
-                                     ->max('version');
+                        $allVersions = \App\Models\Document::where(function($q) use ($parentId) {
+                            $q->where('parent_document_id', $parentId)
+                              ->orWhere('id', $parentId);
+                        })->orderBy('version')->get();
+                        $maxVersion = $allVersions->max('version');
                         $isLatest = $document->version == $maxVersion;
+                        $isOriginal = $document->version == 1.0 && !$document->parent_document_id;
+                        $versionCount = $allVersions->count();
                     @endphp
-                    @if($isLatest && $document->version > 1.0)
-                        <span style="background: #10B981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; margin-left: 4px;">NIEUWSTE</span>
-                    @endif
+                    
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <span style="font-weight: 500;">v{{ number_format($document->version, 1) }}</span>
+                        
+                        @if($isOriginal)
+                            <span style="background: #3B82F6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                                #{{ $document->id }}
+                            </span>
+                        @else
+                            <span style="background: #9CA3AF; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                                van #{{ $parentId }}
+                            </span>
+                        @endif
+                        
+                        @if($isLatest && $document->version > 1.0)
+                            <span style="background: #10B981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                                NIEUWSTE
+                            </span>
+                        @endif
+                    </div>
                 </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
