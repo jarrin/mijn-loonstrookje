@@ -56,14 +56,5 @@
             </div>
         @endif
     </div>
-    
-    <div class="mt-8 flex gap-4">
-        <a href="{{ route('administration.employees') }}" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors">
-            Alle Medewerkers
-        </a>
-        <a href="{{ route('administration.documents') }}" class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition-colors">
-            Alle Documenten
-        </a>
-    </div>
 </section>
 @endsection
