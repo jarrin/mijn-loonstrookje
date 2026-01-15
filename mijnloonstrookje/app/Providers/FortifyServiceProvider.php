@@ -3,18 +3,21 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        //
+        $this->app->singleton(CreatesNewUsers::class, CreateNewUser::class);
     }
 
     public function boot(): void
@@ -31,6 +34,14 @@ class FortifyServiceProvider extends ServiceProvider
         // Views
         Fortify::loginView(function () {
             return view('auth.Login');
+        });
+
+        Fortify::registerView(function () {
+            return view('auth.register');
+        });
+
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
         });
 
         Fortify::confirmPasswordView(function () {
@@ -54,6 +65,12 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::redirects('login', function () {
             $user = auth()->user();
             
+            // Check of er een subscription in sessie staat (na registratie)
+            if (session()->has('pending_subscription_id')) {
+                $subscriptionId = session()->pull('pending_subscription_id');
+                return route('payment.start', ['subscription' => $subscriptionId]);
+            }
+            
             if ($user) {
                 switch ($user->role) {
                     case 'super_admin':
@@ -69,6 +86,33 @@ class FortifyServiceProvider extends ServiceProvider
             }
             
             return route('employee.dashboard');
+        });
+
+        // Custom redirect after registration
+        Fortify::redirects('register', function () {
+            $user = auth()->user();
+            
+            Log::info('User registered', [
+                'user_id' => $user->id,
+                'email_verified' => $user->hasVerifiedEmail(),
+                'has_pending_subscription' => session()->has('pending_subscription_id'),
+            ]);
+            
+            // Na registratie moet gebruiker eerst email verifiëren
+            // Verificatie email wordt automatisch verstuurd door Laravel
+            return route('verification.notice');
+        });
+
+        // Custom redirect after email verification
+        Fortify::redirects('email-verification', function () {
+            $user = auth()->user();
+            
+            Log::info('Email verified - redirect to 2FA setup', [
+                'user_id' => $user->id,
+            ]);
+            
+            // Na email verificatie → 2FA setup onboarding pagina
+            return route('onboarding.setup-2fa');
         });
     }
 }

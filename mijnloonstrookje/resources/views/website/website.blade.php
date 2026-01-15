@@ -212,7 +212,10 @@
                             <li class="feature-item">{{ $subscription->feature_3 ?? 'N/A' }}</li>
                         </ul>
                         
-                        <button class="subscription-button">Start {{ $subscription->name ?? 'plan' }}</button>
+                        <form action="{{ route('payment.start', $subscription) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="subscription-button">Start {{ $subscription->name ?? 'plan' }}</button>
+                        </form>
                     </div>
                 @endforeach
             </div>

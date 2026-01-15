@@ -8,6 +8,7 @@ use App\Http\Controllers\AdministrationController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\PaymentController;
 use App\Models\Subscription;
 
 // Website routes 
@@ -57,7 +58,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     
     // Employer routes
-    Route::middleware('role:employer')->group(function () {
+    Route::middleware(['role:employer', 'paid.subscription'])->group(function () {
         Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
@@ -122,6 +123,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile/two-factor-authentication', function () {
         return view('profile.two-factor-authentication');
     })->name('profile.two-factor-authentication');
+    
+    // Onboarding routes
+    Route::get('/onboarding/setup-2fa', function () {
+        return view('onboarding.setup-2fa');
+    })->name('onboarding.setup-2fa');
+    
+    Route::get('/onboarding/checkout/{subscription}', function (\App\Models\Subscription $subscription) {
+        // If user already has an active subscription, redirect to dashboard
+        if (auth()->user()->company && auth()->user()->company->subscription_id) {
+            return redirect()->route('employer.dashboard');
+        }
+        
+        return view('onboarding.checkout', compact('subscription'));
+    })->name('payment.checkout');
 });
 
 // Password confirmation routes
@@ -143,5 +158,10 @@ Route::middleware(['auth'])->group(function () {
 
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
+
+// Payment routes
+Route::post('/payment/start/{subscription}', [PaymentController::class, 'startPayment'])->name('payment.start');
+Route::get('/payment/return/{subscription}', [PaymentController::class, 'returnFromPayment'])->name('payment.return');
+Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
 Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
 Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');
