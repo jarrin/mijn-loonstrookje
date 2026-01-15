@@ -57,6 +57,14 @@ class Company extends Model
     public function adminOffices()
     {
         return $this->belongsToMany(User::class, 'company_admin_office', 'company_id', 'admin_office_id')
+                    ->where('role', 'administration_office')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
+    
+    public function activeAdminOffices()
+    {
+        return $this->belongsToMany(User::class, 'company_admin_office', 'company_id', 'admin_office_id')
                     ->wherePivot('status', 'active')
                     ->where('role', 'administration_office')
                     ->withPivot('status')

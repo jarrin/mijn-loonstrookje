@@ -28,7 +28,24 @@
                 <tr>
                     <td>{{ $office->name }}</td>
                     <td>{{ $office->email }}</td>
-                    <td><span class="status-label">{{ ucfirst($office->pivot->status ?? 'pending') }}</span></td>
+                    <td>
+                        @php
+                            $status = $office->pivot->status ?? 'pending';
+                            $statusColors = [
+                                'active' => 'bg-green-100 text-green-800',
+                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                'inactive' => 'bg-gray-100 text-gray-800'
+                            ];
+                            $statusLabels = [
+                                'active' => 'Actief',
+                                'pending' => 'In behandeling',
+                                'inactive' => 'Inactief'
+                            ];
+                        @endphp
+                        <span class="text-xs px-2 py-1 rounded {{ $statusColors[$status] ?? 'bg-gray-100 text-gray-800' }}">
+                            {{ $statusLabels[$status] ?? ucfirst($status) }}
+                        </span>
+                    </td>
                     <td class="icon-cell">
                         <button type="button" onclick='openEditAdminOfficeModal(@json($office))' title="Bewerk administratiekantoor" style="background:transparent; border:none; cursor:pointer; margin-right:0.5rem;">
                             {!! file_get_contents(resource_path('assets/icons/Edit.svg')) !!}
