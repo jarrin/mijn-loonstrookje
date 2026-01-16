@@ -242,7 +242,14 @@ class DocumentController extends Controller
         // Get deleted documents (using withTrashed to include soft-deleted records)
         $query = Document::withTrashed()->where('is_deleted', true);
         
-        if ($user->role !== 'super_admin') {
+        if ($user->role === 'administration_office') {
+            // Admin office: get documents from accessible companies
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            $query->whereIn('company_id', $companyIds);
+        } elseif ($user->role !== 'super_admin') {
+            // Employer: only their company
             $query->where('company_id', $user->company_id);
         }
         

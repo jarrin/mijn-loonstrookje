@@ -106,4 +106,24 @@ class AdministrationController extends Controller
         
         return view('admin.AdminOfficeCompanyEmployees', compact('company', 'employees'));
     }
+
+    /**
+     * Display documents for specific company.
+     */
+    public function companyDocuments($companyId)
+    {
+        // Verify admin office has access to this company
+        $company = auth()->user()->companies()
+            ->wherePivot('status', 'active')
+            ->where('companies.id', $companyId)
+            ->firstOrFail();
+        
+        $documents = \App\Models\Document::where('company_id', $companyId)
+            ->where('is_deleted', false)
+            ->with(['employee', 'company', 'uploader'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('admin.AdminOfficeDocuments', compact('documents', 'company'));
+    }
 }

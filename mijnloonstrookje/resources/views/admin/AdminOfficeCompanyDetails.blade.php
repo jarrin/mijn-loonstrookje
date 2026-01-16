@@ -27,7 +27,7 @@
         <div class="bg-white border rounded p-4">
             <h3 class="font-semibold mb-2">Documenten</h3>
             <p class="text-2xl font-bold mb-2">{{ $documentsCount }}</p>
-            <a href="{{ route('administration.documents') }}" class="text-blue-500 hover:underline text-sm">
+            <a href="{{ route('administration.company.documents', $company->id) }}" class="text-blue-500 hover:underline text-sm">
                 Bekijk documenten
             </a>
         </div>

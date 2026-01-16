@@ -38,7 +38,8 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'role' => 'super_admin',
                 'email_verified_at' => now(),
-                'two_factor_confirmed_at' => now(),
+                'two_factor_secret' => null,
+                'two_factor_confirmed_at' => null,
             ]
         );
 
@@ -50,7 +51,8 @@ class UserSeeder extends Seeder
                 'role' => 'administration_office',
                 'company_id' => null,
                 'email_verified_at' => now(),
-                'two_factor_confirmed_at' => now(),
+                'two_factor_secret' => null,
+                'two_factor_confirmed_at' => null,
             ]
         );
         
@@ -71,7 +73,8 @@ class UserSeeder extends Seeder
                 'role' => 'employer',
                 'company_id' => $company->id,
                 'email_verified_at' => now(),
-                'two_factor_confirmed_at' => now(),
+                'two_factor_secret' => null,
+                'two_factor_confirmed_at' => null,
             ]
         );
 
@@ -83,7 +86,8 @@ class UserSeeder extends Seeder
                 'role' => 'employee',
                 'company_id' => $company->id,
                 'email_verified_at' => now(),
-                'two_factor_confirmed_at' => now(),
+                'two_factor_secret' => null,
+                'two_factor_confirmed_at' => null,
             ]
         );
     }

@@ -13,8 +13,12 @@ class EnsureEmployerHasPaidSubscription
         $user = $request->user();
 
         if ($user) {
-            // Check of 2FA is ingesteld (VOOR IEDEREEN)
-            if (!$user->two_factor_confirmed_at) {
+            // Skip 2FA check for test accounts
+            $testEmails = ['superadmin@test.com', 'admin@test.com', 'employer@test.com', 'employee@test.com'];
+            $isTestAccount = in_array($user->email, $testEmails);
+            
+            // Check of 2FA is ingesteld (VOOR IEDEREEN behalve test accounts)
+            if (!$isTestAccount && !$user->two_factor_confirmed_at) {
                 return redirect()->route('onboarding.setup-2fa')
                     ->with('error', 'Je moet eerst twee-factor authenticatie inschakelen.');
             }

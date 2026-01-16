@@ -4,7 +4,16 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Alle Documenten</h1>
+    @if(isset($company))
+        <div class="mb-4">
+            <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline">
+                ← Terug naar {{ $company->name }}
+            </a>
+        </div>
+        <h1 class="text-2xl mb-4">Documenten - {{ $company->name }}</h1>
+    @else
+        <h1 class="text-2xl mb-4">Alle Documenten</h1>
+    @endif
     
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -141,8 +150,21 @@
         </div>
     @endif
     
+    <div class="mt-6 flex gap-4">
+        <a href="{{ route('documents.upload') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+            Document Uploaden
+        </a>
+        <a href="{{ route('documents.deleted') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+            Verwijderde Documenten
+        </a>
+    </div>
+    
     <div class="mt-6">
-        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+        @if(isset($company))
+            <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline">← Terug naar {{ $company->name }}</a>
+        @else
+            <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+        @endif
     </div>
 </section>
 @endsection

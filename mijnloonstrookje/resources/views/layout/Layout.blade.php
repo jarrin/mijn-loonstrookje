@@ -85,7 +85,7 @@
                     <div class="user-menu-container">
                         <ul class="user-menu-dropdown" id="userMenuDropdown">
                             <li>
-                                <a href="{{ route('profile.two-factor-authentication') }}" class="dropdown-link">2FA Instellingen</a>
+                                <a href="{{ route('profile.settings') }}" class="dropdown-link">Profiel Instellingen</a>
                             </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="inline">

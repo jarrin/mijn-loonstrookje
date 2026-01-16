@@ -82,8 +82,13 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        <a href="{{ route('employer.documents') }}">Terug naar Documenten</a>
-        <a href="{{ route('employer.dashboard') }}">Dashboard</a>
+        @if(auth()->user()->role === 'administration_office')
+            <a href="{{ route('administration.documents') }}" class="text-blue-500 hover:underline">Terug naar Documenten</a>
+            <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">Dashboard</a>
+        @else
+            <a href="{{ route('employer.documents') }}" class="text-blue-500 hover:underline">Terug naar Documenten</a>
+            <a href="{{ route('employer.dashboard') }}" class="text-blue-500 hover:underline">Dashboard</a>
+        @endif
     </div>
 </section>
 @endsection
