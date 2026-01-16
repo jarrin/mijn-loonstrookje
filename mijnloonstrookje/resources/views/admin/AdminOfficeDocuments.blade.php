@@ -6,7 +6,7 @@
 <section>
     @if(isset($company))
         <div class="mb-4">
-            <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline">
+            <a href="{{ route('administration.company.show', $company->id) }}" class="hover:underline" style="color: var(--primary-color);">
                 ← Terug naar {{ $company->name }}
             </a>
         </div>
@@ -115,7 +115,7 @@
                                 <a href="{{ route('documents.view', $document->id) }}" 
                                    target="_blank" 
                                    title="Bekijken"
-                                   class="text-blue-500 hover:underline">
+                                   class="hover:underline" style="color: var(--primary-color);">
                                     👁️
                                 </a>
                                 <a href="{{ route('documents.download', $document->id) }}" 
@@ -151,7 +151,7 @@
     @endif
     
     <div class="mt-6 flex gap-4">
-        <a href="{{ route('documents.upload') }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ route('documents.upload') }}" class="text-white font-bold py-2 px-4 rounded hover:opacity-90" style="background-color: var(--primary-color);">
             Document Uploaden
         </a>
         <a href="{{ route('documents.deleted') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
@@ -161,9 +161,9 @@
     
     <div class="mt-6">
         @if(isset($company))
-            <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline">← Terug naar {{ $company->name }}</a>
+            <a href="{{ route('administration.company.show', $company->id) }}" class="hover:underline" style="color: var(--primary-color);">← Terug naar {{ $company->name }}</a>
         @else
-            <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+            <a href="{{ route('administration.dashboard') }}" class="hover:underline" style="color: var(--primary-color);">← Terug naar Dashboard</a>
         @endif
     </div>
 </section>

@@ -5,7 +5,7 @@
 @section('content')
 <section>
     <div class="mb-6">
-        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline mb-4 inline-block">
+        <a href="{{ route('administration.dashboard') }}" class="hover:underline mb-4 inline-block" style="color: var(--primary-color);">
             ← Terug naar Dashboard
         </a>
         
@@ -19,7 +19,7 @@
         <div class="bg-white border rounded p-4">
             <h3 class="font-semibold mb-2">Medewerkers</h3>
             <p class="text-2xl font-bold mb-2">{{ $employeesCount }}</p>
-            <a href="{{ route('administration.company.employees', $company->id) }}" class="text-blue-500 hover:underline text-sm">
+            <a href="{{ route('administration.company.employees', $company->id) }}" class="hover:underline text-sm" style="color: var(--primary-color);">
                 Bekijk medewerkers
             </a>
         </div>
@@ -27,7 +27,7 @@
         <div class="bg-white border rounded p-4">
             <h3 class="font-semibold mb-2">Documenten</h3>
             <p class="text-2xl font-bold mb-2">{{ $documentsCount }}</p>
-            <a href="{{ route('administration.company.documents', $company->id) }}" class="text-blue-500 hover:underline text-sm">
+            <a href="{{ route('administration.company.documents', $company->id) }}" class="hover:underline text-sm" style="color: var(--primary-color);">
                 Bekijk documenten
             </a>
         </div>

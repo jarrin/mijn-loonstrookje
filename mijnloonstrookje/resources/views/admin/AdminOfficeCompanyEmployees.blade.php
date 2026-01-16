@@ -5,7 +5,7 @@
 @section('content')
 <section>
     <div class="mb-6">
-        <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline mb-4 inline-block">
+        <a href="{{ route('administration.company.show', $company->id) }}" class="hover:underline mb-4 inline-block" style="color: var(--primary-color);">
             ← Terug naar {{ $company->name }}
         </a>
         
@@ -39,8 +39,8 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2">
-                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="text-blue-500 hover:underline">
-                                    Documenten
+                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="hover:underline" style="color: var(--primary-color);">
+                                    Bekijk Documenten
                                 </a>
                             </td>
                         </tr>
