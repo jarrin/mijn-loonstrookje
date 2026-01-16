@@ -113,7 +113,7 @@ h1 {
 
 .loginSubmitButton {
     padding: 12px 20px;
-    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 8px;
@@ -126,7 +126,7 @@ h1 {
 
 .loginSubmitButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+    box-shadow: 0 10px 20px var(--secondary-color);
 }
 
 .loginSubmitButton:active {
@@ -162,7 +162,7 @@ button#delete-table-button:hover {
 }
 
 button#primairy {
-    background-color: #3B7DE4;
+    background-color: var(--primary-color);
     color: white;
     border-radius: 8px;
     padding: 10px 20px;

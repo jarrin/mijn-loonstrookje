@@ -129,6 +129,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Profile settings page for all authenticated users
     Route::get('/profile/settings', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.settings');
     Route::post('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('/profile/branding', [\App\Http\Controllers\ProfileController::class, 'updateBranding'])->name('profile.branding.update');
     
     Route::get('/onboarding/checkout/{subscription}', function (\App\Models\Subscription $subscription) {
         // If user already has an active subscription, redirect to dashboard

@@ -5,11 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mijn Loonstrookje')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @php
+        // Get company branding based on user role and context
+        $brandingCompany = null;
+        if (auth()->check()) {
+            $user = auth()->user();
+            
+            // For employer and employee: use their company
+            if ($user->role === 'employer' || $user->role === 'employee') {
+                $brandingCompany = $user->company;
+            }
+            // For admin office: only apply branding when viewing specific company pages
+            elseif ($user->role === 'administration_office') {
+                // Only apply branding on specific company routes, not on dashboard
+                $companyRoutes = [
+                    'administration.company.show',
+                    'administration.company.employees',
+                    'administration.company.documents',
+                    'employer.employee.documents' // When admin views employee documents
+                ];
+                
+                if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
+                    $brandingCompany = $company;
+                }
+            }
+        }
+        
+        $primaryColor = $brandingCompany && $brandingCompany->primary_color ? $brandingCompany->primary_color : '#3B82F6';
+        $secondaryColor = $brandingCompany ? $brandingCompany->secondary_color : 'rgba(59, 130, 246, 0.6)';
+        
+        // Calculate a lighter background color (15% opacity) for hover/active states
+        if ($brandingCompany && $brandingCompany->primary_color) {
+            $hex = str_replace('#', '', $brandingCompany->primary_color);
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+            $lightBgColor = "rgba($r, $g, $b, 0.15)";
+        } else {
+            $lightBgColor = 'rgba(59, 130, 246, 0.15)';
+        }
+        
+        $logoPath = $brandingCompany && $brandingCompany->logo_path 
+            ? asset('storage/' . $brandingCompany->logo_path) 
+            : asset('images/loonstrookje-breed-logo-upscale-transparent.png');
+    @endphp
+    
+    <style>
+        :root {
+            --primary-color: {{ $primaryColor }};
+            --secondary-color: {{ $secondaryColor }};
+            --light-bg-color: {{ $lightBgColor }};
+        }
+    </style>
 </head>
 <body>
     <nav class="main-side-nav">
         <div class="logo"> 
-            <img src="{{ asset('images/loonstrookje-breed-logo-upscale-transparent.png') }}" alt="Mijn Loonstrookje">
+            <img src="{{ $logoPath }}" alt="Logo">
         </div>
         <div class="buttons">
             <div class="nav-tabs">

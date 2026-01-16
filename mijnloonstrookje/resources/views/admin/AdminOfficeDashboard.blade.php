@@ -18,15 +18,17 @@
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($companies as $company)
-                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div class="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-200" 
+                         style="border: 3px solid {{ $company->primary_color ?? '#3B82F6' }};">
                         <div class="flex flex-col items-center text-center">
                             @if($company->logo_path)
                                 <img src="{{ asset('storage/' . $company->logo_path) }}" 
                                      alt="{{ $company->name }} logo" 
                                      class="w-20 h-20 object-contain mb-4">
                             @else
-                                <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-                                    <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="w-20 h-20 rounded-full flex items-center justify-center mb-4" 
+                                     style="background-color: {{ $company->secondary_color ?? 'rgba(59, 130, 246, 0.6)' }};">
+                                    <svg class="w-10 h-10" style="color: {{ $company->primary_color ?? '#3B82F6' }};" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                     </svg>
                                 </div>
@@ -46,7 +48,9 @@
                             @endif
                             
                             <div class="mt-auto w-full space-y-2">
-                                <a href="{{ route('administration.company.show', $company->id) }}" class="block w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors text-sm font-medium">
+                                <a href="{{ route('administration.company.show', $company->id) }}" 
+                                   class="block w-full text-white px-4 py-2 rounded hover:opacity-90 transition-colors text-sm font-medium"
+                                   style="background-color: {{ $company->primary_color ?? '#3B82F6' }};">
                                     Bekijk Details
                                 </a>
                             </div>

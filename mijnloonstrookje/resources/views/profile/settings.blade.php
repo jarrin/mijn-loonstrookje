@@ -184,13 +184,77 @@
         </div>
 
         <!-- Role-Specific Settings Section -->
-        @if (auth()->user()->role === 'employer')
+        @if (auth()->user()->role === 'employer' && $company)
         <div class="bg-white shadow-md rounded-lg p-6">
             <h2 class="text-xl font-semibold mb-4">Bedrijfsinstellingen</h2>
-            <p class="text-gray-600">Hier komen je bedrijfsspecifieke instellingen.</p>
-            <!-- Placeholder for future employer-specific settings -->
+            <p class="text-gray-600 mb-6">Pas de huisstijl van je bedrijf aan. Deze instellingen bepalen hoe je bedrijf eruitziet in het systeem.</p>
+            
+            <form method="POST" action="{{ route('profile.branding.update') }}" enctype="multipart/form-data">
+                @csrf
+                
+                <div class="mb-6">
+                    <label for="primary_color" class="block text-gray-700 font-semibold mb-2">Primaire Kleur</label>
+                    <p class="text-sm text-gray-600 mb-3">Deze kleur wordt gebruikt voor knoppen, links en andere accentelementen.</p>
+                    <div class="flex items-center gap-4">
+                        <input type="color" 
+                               id="primary_color" 
+                               name="primary_color" 
+                               value="{{ $company->primary_color ?? '#3B82F6' }}"
+                               class="h-12 w-24 rounded border border-gray-300 cursor-pointer"
+                               required>
+                        <input type="text" 
+                               id="primary_color_text" 
+                               value="{{ $company->primary_color ?? '#3B82F6' }}"
+                               class="border border-gray-300 rounded px-4 py-2 w-32 font-mono text-sm"
+                               readonly>
+                        <span class="text-sm text-gray-500">Secundaire kleur wordt automatisch berekend (60% opacity)</span>
+                    </div>
+                    @error('primary_color')
+                        <div class="text-red-500 mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label for="logo" class="block text-gray-700 font-semibold mb-2">Bedrijfslogo</label>
+                    <p class="text-sm text-gray-600 mb-3">Upload een logo voor je bedrijf (max 2MB). Ondersteunde formaten: PNG, JPG, SVG</p>
+                    
+                    @if($company->logo_path)
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Huidige logo:</p>
+                            <img src="{{ asset('storage/' . $company->logo_path) }}" 
+                                 alt="Company Logo" 
+                                 class="h-16 object-contain border border-gray-200 rounded p-2 bg-white">
+                        </div>
+                    @endif
+                    
+                    <input type="file" 
+                           id="logo" 
+                           name="logo" 
+                           accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+                           class="border border-gray-300 rounded px-4 py-2 w-full">
+                    @error('logo')
+                        <div class="text-red-500 mt-2">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                    Bedrijfsinstellingen Opslaan
+                </button>
+            </form>
         </div>
         @endif
     </div>
 </div>
+
+<script>
+    // Sync color picker with text input
+    const colorPicker = document.getElementById('primary_color');
+    const colorText = document.getElementById('primary_color_text');
+    
+    if (colorPicker && colorText) {
+        colorPicker.addEventListener('input', function() {
+            colorText.value = this.value.toUpperCase();
+        });
+    }
+</script>
 @endsection

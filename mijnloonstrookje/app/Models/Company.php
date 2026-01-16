@@ -70,4 +70,22 @@ class Company extends Model
                     ->withPivot('status')
                     ->withTimestamps();
     }
+    
+    /**
+     * Get secondary color (60% opacity of primary color)
+     */
+    public function getSecondaryColorAttribute()
+    {
+        if (!$this->primary_color) {
+            return 'rgba(59, 130, 246, 0.6)'; // Default blue with 60% opacity
+        }
+        
+        // Convert hex to RGB
+        $hex = str_replace('#', '', $this->primary_color);
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+        
+        return "rgba($r, $g, $b, 0.6)";
+    }
 }
