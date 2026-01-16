@@ -67,7 +67,9 @@
                           style="display: inline;"
                           onsubmit="return confirm('Weet je zeker dat je dit document wilt herstellen?');">
                         @csrf
-                        <button type="submit" title="Herstellen">
+                        <button type="submit" 
+                                title="Herstellen"
+                                style="background: none; border: none; color: #10B981; cursor: pointer; padding: 0; font-size: inherit;">
                             ↩️
                         </button>
                     </form>
@@ -83,11 +85,13 @@
     
     <div class="mt-6 space-x-4">
         @if(auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.documents') }}" class="text-blue-500 hover:underline">Terug naar Documenten</a>
-            <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">Dashboard</a>
+            <a href="{{ route('administration.documents') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Documenten</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ route('administration.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
         @else
-            <a href="{{ route('employer.documents') }}" class="text-blue-500 hover:underline">Terug naar Documenten</a>
-            <a href="{{ route('employer.dashboard') }}" class="text-blue-500 hover:underline">Dashboard</a>
+            <a href="{{ route('employer.documents') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Documenten</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
         @endif
     </div>
 </section>

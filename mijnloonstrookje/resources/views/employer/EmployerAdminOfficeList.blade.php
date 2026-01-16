@@ -118,7 +118,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
                     <button type="button" onclick="closeAddAdminOfficeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px; cursor:pointer;">Annuleren</button>
-                    <button type="submit" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer;">Uitnodiging Versturen</button>
+                    <button type="submit" style="background-color: var(--primary-color); color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Uitnodiging Versturen</button>
                 </div>
             </form>
         </div>
@@ -158,7 +158,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
                     <button type="button" onclick="closeEditAdminOfficeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px;">Annuleren</button>
-                    <button type="submit" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer;">Opslaan</button>
+                    <button type="submit" style="background-color: var(--primary-color); color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Opslaan</button>
                 </div>
             </form>
         </div>

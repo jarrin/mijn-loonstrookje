@@ -34,9 +34,10 @@
                                     Actief
                                 </span>
                             </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="text-blue-500 hover:underline">
-                                    Documenten
+                            <td class="icon-cell">
+                                <a href="{{ route('employer.employee.documents', $employee->id) }}" 
+                                   style="color: var(--primary-color); cursor: pointer;">
+                                    📄 Documenten
                                 </a>
                             </td>
                         </tr>
@@ -47,7 +48,8 @@
     @endif
     
     <div class="mt-6">
-        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+        <a href="{{ route('administration.dashboard') }}" 
+           style="color: var(--primary-color); cursor: pointer;">← Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

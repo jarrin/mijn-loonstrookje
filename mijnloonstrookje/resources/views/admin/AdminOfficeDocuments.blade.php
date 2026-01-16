@@ -93,7 +93,7 @@
                                 <span class="font-medium">v{{ number_format($document->version, 1) }}</span>
                                 
                                 @if($isOriginal)
-                                    <span class="text-xs px-2 py-1 rounded bg-blue-500 text-white">
+                                    <span class="text-xs px-2 py-1 rounded" style="background-color: var(--primary-color); color: white;">
                                         #{{ $document->id }}
                                     </span>
                                 @else
@@ -103,29 +103,29 @@
                                 @endif
                                 
                                 @if($isLatest && $document->version > 1.0)
-                                    <span class="text-xs px-2 py-1 rounded bg-green-500 text-white">
+                                    <span class="text-xs px-2 py-1 rounded" style="background-color: #10B981; color: white;">
                                         NIEUWSTE
                                     </span>
                                 @endif
                             </div>
                         </td>
                         <td class="px-4 py-2">{{ $document->created_at->format('d-m-Y') }}</td>
-                        <td class="px-4 py-2">
-                            <div class="flex gap-2">
+                        <td class="icon-cell">
+                            <div style="display: flex; gap: 8px; justify-content: center;">
                                 <a href="{{ route('documents.view', $document->id) }}" 
                                    target="_blank" 
                                    title="Bekijken"
-                                   class="hover:underline" style="color: var(--primary-color);">
+                                   style="color: var(--primary-color); cursor: pointer;">
                                     👁️
                                 </a>
                                 <a href="{{ route('documents.download', $document->id) }}" 
                                    title="Downloaden"
-                                   class="text-green-500 hover:underline">
+                                   style="color: #10B981; cursor: pointer;">
                                     ⬇️
                                 </a>
                                 <a href="{{ route('documents.edit', $document->id) }}" 
                                    title="Bijwerken"
-                                   class="text-yellow-500 hover:underline">
+                                   style="color: #F59E0B; cursor: pointer;">
                                     ✏️
                                 </a>
                                 <form action="{{ route('documents.destroy', $document->id) }}" 
@@ -136,8 +136,7 @@
                                     @method('DELETE')
                                     <button type="submit" 
                                             title="Verwijderen"
-                                            class="text-red-500 hover:underline"
-                                            style="background: none; border: none; cursor: pointer; padding: 0;">
+                                            style="background: none; border: none; color: #EF4444; cursor: pointer; padding: 0; font-size: inherit;">
                                         🗑️
                                     </button>
                                 </form>

@@ -38,9 +38,10 @@
                                     Actief
                                 </span>
                             </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="hover:underline" style="color: var(--primary-color);">
-                                    Bekijk Documenten
+                            <td class="icon-cell">
+                                <a href="{{ route('employer.employee.documents', $employee->id) }}" 
+                                   style="color: var(--primary-color); cursor: pointer;">
+                                    📄 Bekijk Documenten
                                 </a>
                             </td>
                         </tr>

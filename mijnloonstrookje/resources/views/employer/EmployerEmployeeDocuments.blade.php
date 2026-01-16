@@ -82,7 +82,7 @@
                         <span style="font-weight: 500;">v{{ number_format($document->version, 1) }}</span>
                         
                         @if($isOriginal)
-                            <span style="background: #3B82F6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span style="background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
                                 #{{ $document->id }}
                             </span>
                         @else

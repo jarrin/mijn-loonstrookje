@@ -76,7 +76,7 @@
                         <span style="font-weight: 500;">v{{ number_format($document->version, 1) }}</span>
                         
                         @if($isOriginal)
-                            <span style="background: #3B82F6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span style="background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
                                 #{{ $document->id }}
                             </span>
                         @else
@@ -100,7 +100,7 @@
                         <a href="{{ route('documents.view', $document->id) }}" 
                            target="_blank" 
                            title="Bekijken"
-                           style="cursor: pointer; color: #3B82F6;">
+                           style="cursor: pointer; color: var(--primary-color);">
                             👁️
                         </a>
                         <a href="{{ route('documents.download', $document->id) }}" 
@@ -120,7 +120,7 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        <a href="{{ route('employee.dashboard') }}">Terug naar Dashboard</a>
+        <a href="{{ route('employee.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

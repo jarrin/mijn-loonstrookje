@@ -103,10 +103,10 @@
         </div>
         
         <div class="mt-6 space-x-4">
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            <button type="submit" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">
                 Document Uploaden
             </button>
-            <a href="{{ route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <a href="{{ route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
                 Annuleren
             </a>
         </div>

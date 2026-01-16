@@ -44,9 +44,9 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        <button onclick="openInviteEmployeeModal()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Medewerker Toevoegen</button>
-        <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('employer.documents') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Alle Documenten</a>
+        <button onclick="openInviteEmployeeModal()" class="text-white px-4 py-2 rounded hover:opacity-90" style="background-color: var(--primary-color);">Medewerker Toevoegen</button>
+        <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">Terug naar Dashboard</a>
+        <a href="{{ route('employer.documents') }}" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">Alle Documenten</a>
     </div>
 </section>
 
@@ -84,7 +84,7 @@
 
                 <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
                     <button type="button" onclick="closeInviteEmployeeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px; cursor:pointer;">Annuleren</button>
-                    <button type="submit" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer;">Uitnodiging Versturen</button>
+                    <button type="submit" style="background-color: var(--primary-color); color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Uitnodiging Versturen</button>
                 </div>
             </form>
         </div>

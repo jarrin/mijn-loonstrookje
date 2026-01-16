@@ -101,10 +101,10 @@
         </div>
         
         <div class="flex gap-4">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <button type="submit" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">
                 Nieuwe Versie Opslaan
             </button>
-            <a href="{{ route('employer.employee.documents', $document->employee_id) }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+            <a href="{{ route('employer.employee.documents', $document->employee_id) }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
                 Annuleren
             </a>
         </div>
