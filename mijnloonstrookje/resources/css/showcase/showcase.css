@@ -148,26 +148,48 @@ body {
     overflow: hidden;
 }
 
+.header-illustration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.9;
+    overflow: hidden;
+}
+
+.header-illustration svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
 .header-section::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 82, 204, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+    z-index: 1;
+    pointer-events: none;
 }
 
 .header-section::after {
     content: '';
     position: absolute;
-    bottom: -30%;
-    left: -5%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(0, 102, 255, 0.08) 0%, transparent 70%);
-    border-radius: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+    z-index: 2;
+    pointer-events: none;
 }
 
 .header-container {
@@ -179,7 +201,7 @@ body {
     align-items: center;
     flex-direction: column;
     position: relative;
-    z-index: 1;
+    z-index: 3;
 }
 
 .header-title {
@@ -660,6 +682,10 @@ body {
     margin-bottom: 20px;
 }
 
+.footer-brand img {
+    height: 3.2rem;
+}
+
 .footer-brand svg {
     width: 40px;
     height: 40px;
@@ -735,20 +761,14 @@ body {
 }
 
 .payment-item {
-    color: #666;
-    font-size: 0.9rem;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
 }
 
-.payment-paypal {
-    background: #0052cc;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
+.payment-item img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* Responsive Design */

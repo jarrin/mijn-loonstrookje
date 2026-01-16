@@ -24,6 +24,9 @@
 
     <!-- Header Section -->
     <header class="header-section">
+        <div class="header-illustration">
+            @include('website.payroll-header-illustration')
+        </div>
         <div class="header-container">
             <h1 class="header-title">Loonstrookjes beheren, simpel en veilig</h1>
             <p class="header-subtitle">De complete oplossing voor het digitaal beheren van loonstroken. Voor bedrijven van elke omvang en administratiekantoren.</p>
@@ -226,11 +229,7 @@
         <div class="footer-container">
             <div class="footer-column footer-main">
                 <div class="footer-brand">
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="2" y="2" width="36" height="36" rx="8" fill="#0052cc"/>
-                        <path d="M20 10V30M12 20H28" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                    </svg>
-                    <span>MijnLoonstrookje</span>
+                    <img src="{{ asset('images/loonstrookje-breed-no-margin-logo-upscale-transparent.png') }}" alt="Mijn Loonstrookje">
                 </div>
                 <p>De complete oplossing voor digitaal loonstrookbeheer.</p>
             </div>
@@ -266,10 +265,10 @@
             <p>&copy; 2025 MijnLoonstrookje. Alle rechten voorbehouden.</p>
             <div class="footer-payments">
                 <span class="payment-label">Betaalmethoden:</span>
-                <span class="payment-item">iDEAL</span>
-                <span class="payment-item">🇳🇱 VISA</span>
-                <span class="payment-item">🇳🇱 MC</span>
-                <button class="payment-paypal">PayPal</button>
+                <span class="payment-item"><img src="{{ Vite::asset('resources/assets/icons/ideal.svg') }}" alt="iDEAL"></span>
+                <span class="payment-item"><img src="{{ Vite::asset('resources/assets/icons/Visa.svg') }}" alt="VISA"></span>
+                <span class="payment-item"><img src="{{ Vite::asset('resources/assets/icons/Mastercard.svg') }}" alt="MasterCard"></span>
+                <span class="payment-item"><img src="{{ Vite::asset('resources/assets/icons/Paypal.svg') }}" alt="PayPal"></span>
             </div>
         </div>
     </footer>
