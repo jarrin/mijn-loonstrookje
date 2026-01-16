@@ -16,6 +16,7 @@ class Company extends Model
         'logo_path',
         'primary_color',
         'subscription_id',
+        'custom_subscription_id',
     ];
 
     protected function casts(): array
@@ -32,6 +33,11 @@ class Company extends Model
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public function customSubscription()
+    {
+        return $this->belongsTo(CustomSubscription::class);
     }
 
     public function users()

@@ -90,6 +90,14 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         Route::get('/superadmin/subscriptions', [SuperAdminController::class, 'subscriptions'])->name('superadmin.subscriptions');
         Route::put('/superadmin/subscriptions/{subscription}', [SuperAdminController::class, 'updateSubscription'])->name('superadmin.subscriptions.update');
         
+        // Custom subscriptions routes
+        Route::post('/superadmin/custom-subscriptions', [SuperAdminController::class, 'storeCustomSubscription'])->name('superadmin.custom-subscriptions.store');
+        Route::put('/superadmin/custom-subscriptions/{customSubscription}', [SuperAdminController::class, 'updateCustomSubscription'])->name('superadmin.custom-subscriptions.update');
+        Route::delete('/superadmin/custom-subscriptions/{customSubscription}', [SuperAdminController::class, 'destroyCustomSubscription'])->name('superadmin.custom-subscriptions.destroy');
+        Route::post('/superadmin/custom-subscriptions/{customSubscription}/invite', [SuperAdminController::class, 'inviteCustomSubscription'])->name('superadmin.custom-subscriptions.invite');
+        Route::delete('/superadmin/custom-subscriptions/{customSubscription}/company/{company}', [SuperAdminController::class, 'removeCompanyFromCustomSubscription'])->name('superadmin.custom-subscriptions.remove-company');
+        Route::delete('/superadmin/invitations/{invitation}/cancel', [SuperAdminController::class, 'cancelInvitation'])->name('superadmin.invitations.cancel');
+        
         Route::get('/superadmin/logs', [SuperAdminController::class, 'logs'])->name('superadmin.logs');
         Route::get('/superadmin/facturation', [SuperAdminController::class, 'facturation'])->name('superadmin.facturation');
     });
@@ -114,6 +122,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         return view('onboarding.checkout', compact('subscription'));
     })->name('payment.checkout');
+    
+    Route::get('/onboarding/custom-checkout/{customSubscription}', function (\App\Models\CustomSubscription $customSubscription) {
+        // Check if this custom subscription is the one pending for this user
+        if (session('pending_custom_subscription_id') != $customSubscription->id) {
+            return redirect()->route('employer.dashboard')
+                ->with('error', 'Je hebt geen toegang tot dit custom abonnement.');
+        }
+        
+        return view('onboarding.custom-checkout', compact('customSubscription'));
+    })->name('payment.custom-checkout');
 });
 
 // Password confirmation routes
@@ -133,12 +151,23 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Payment routes - MUST be outside paid.subscription middleware
+Route::middleware(['web', 'auth', 'verified'])->group(function () {
+    Route::post('/payment/start/{subscription}', [PaymentController::class, 'startPayment'])->name('payment.start');
+    Route::get('/payment/return/{subscription}', [PaymentController::class, 'returnFromPayment'])->name('payment.return');
+    
+    Route::post('/payment/start-custom/{customSubscription}', [PaymentController::class, 'startCustomPayment'])->name('payment.start.custom');
+    Route::get('/payment/return-custom/{customSubscription}', [PaymentController::class, 'returnFromCustomPayment'])->name('payment.return.custom');
+});
+
+// Moet buiten middleware group want anders kun je niet onboarden
+Route::middleware(['web', 'auth', 'verified'])->group(function () {
+    Route::get('/onboarding/checkout/{subscription}', [PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::get('/onboarding/custom-checkout/{customSubscription}', [PaymentController::class, 'customCheckout'])->name('payment.custom-checkout');
+});
+
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
-
-// Payment routes
-Route::post('/payment/start/{subscription}', [PaymentController::class, 'startPayment'])->name('payment.start');
-Route::get('/payment/return/{subscription}', [PaymentController::class, 'returnFromPayment'])->name('payment.return');
 Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
 Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
 Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');

@@ -51,9 +51,26 @@
                         Bedankt voor je registratie! We hebben zojuist een verificatielink naar je e-mailadres gestuurd.
                     </p>
                     
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-gray-600 mb-6">
                         Klik op de link in de e-mail om je account te verifiëren en door te gaan naar de volgende stap.
                     </p>
+
+                    @if(session('pending_custom_subscription_id'))
+                        <a href="{{ route('payment.custom-checkout', ['customSubscription' => session('pending_custom_subscription_id')]) }}" 
+                           class="block w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded font-medium text-center mb-4">
+                            Ga naar betaling
+                        </a>
+                    @elseif(session('pending_subscription_id'))
+                        <a href="{{ route('payment.checkout', ['subscription' => session('pending_subscription_id')]) }}" 
+                           class="block w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium text-center mb-4">
+                            Ga naar betaling
+                        </a>
+                    @else
+                        <a href="{{ route('employer.dashboard') }}" 
+                           class="block w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium text-center mb-4">
+                            Ga naar dashboard
+                        </a>
+                    @endif
                 </div>
 
                 <div class="border-t border-gray-200 pt-6">

@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Subscription;
+use App\Models\CustomSubscription;
 use App\Models\Invoice;
+use App\Models\Log;
+use App\Models\Company;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CustomSubscriptionInvitation;
 
 class SuperAdminController extends Controller
 {
@@ -49,7 +54,7 @@ class SuperAdminController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker bijgewerkt.');
+        return redirect()->route('superadmin.dashboard');
     }
 
     /**
@@ -59,7 +64,7 @@ class SuperAdminController extends Controller
     public function destroyUser(User $user)
     {
         if (auth()->id() === $user->id) {
-            return redirect()->route('superadmin.dashboard')->with('error', 'Je kunt jezelf niet verwijderen.');
+            return redirect()->route('superadmin.dashboard');
         }
         
         // Ontkoppel gebruiker van bedrijf, markeer als inactief en als verwijderd
@@ -71,7 +76,7 @@ class SuperAdminController extends Controller
         // Soft delete gebruiker (vult deleted_at)
         $user->delete();
 
-        return redirect()->route('superadmin.dashboard')->with('success', 'Gebruiker verwijderd, ontkoppeld van bedrijf en gemarkeerd als inactief.');
+        return redirect()->route('superadmin.dashboard');
     }
 
     /**
@@ -80,7 +85,17 @@ class SuperAdminController extends Controller
     public function subscriptions()
     {
         $subscriptions = Subscription::all();
-        return view('superadmin.SuperAdminSubs', compact('subscriptions'));
+
+        // Eager load companies with users, and pending invitations for custom subscriptions
+        $customSubscriptions = CustomSubscription::withCount('companies')
+            ->with(['companies.users', 'invitations' => function($query) {
+                $query->where('status', 'pending')
+                      ->where('invitation_type', 'custom_subscription_invite')
+                      ->where('expires_at', '>', now());
+            }])
+            ->get();
+
+        return view('superadmin.SuperAdminSubs', compact('subscriptions', 'customSubscriptions'));
     }
 
     /**
@@ -99,8 +114,132 @@ class SuperAdminController extends Controller
 
         $subscription->update($data);
 
-        return redirect()->route('superadmin.subscriptions')->with('status', 'Abonnement bijgewerkt.');
+        return redirect()->route('superadmin.subscriptions');
     }
+
+    /**
+     * Store a new custom subscription.
+     */
+    public function storeCustomSubscription(Request $request)
+    {
+        $data = $request->validate([
+            'price' => ['required', 'numeric', 'min:0'],
+            'billing_period' => ['required', 'string', 'in:maandelijks,jaarlijks'],
+            'max_users' => ['required', 'integer', 'min:1'],
+        ]);
+
+        CustomSubscription::create($data);
+
+        return redirect()->route('superadmin.subscriptions');
+    }
+
+    /**
+     * Update the specified custom subscription.
+     */
+    public function updateCustomSubscription(Request $request, CustomSubscription $customSubscription)
+    {
+        $data = $request->validate([
+            'price' => ['required', 'numeric', 'min:0'],
+            'billing_period' => ['required', 'string', 'in:maandelijks,jaarlijks'],
+            'max_users' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $customSubscription->update($data);
+
+        return redirect()->route('superadmin.subscriptions');
+    }
+
+    /**
+     * Delete a custom subscription.
+     */
+    public function destroyCustomSubscription(CustomSubscription $customSubscription)
+    {
+        $customSubscription->delete();
+
+        return redirect()->route('superadmin.subscriptions');
+    }
+
+    /**
+     * Cancel a pending custom subscription invitation.
+     */
+    public function cancelInvitation(Request $request, $invitationId)
+    {
+        $invitation = \App\Models\Invitation::findOrFail($invitationId);
+        
+        // Store custom subscription ID for redirect
+        $customSubscriptionId = $invitation->custom_subscription_id;
+        
+        // Delete the invitation
+        $invitation->delete();
+        
+        return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscriptionId]);
+    }
+
+    /**
+     * Remove a company from a custom subscription.
+     */
+    public function removeCompanyFromCustomSubscription(CustomSubscription $customSubscription, Company $company)
+    {
+        // Check if company actually has this custom subscription
+        if ($company->custom_subscription_id !== $customSubscription->id) {
+            return back();
+        }
+        
+        // Remove custom subscription from company
+        $company->custom_subscription_id = null;
+        $company->save();
+        
+        return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscription->id]);
+    }
+
+    /**
+     * Invite an employer with a custom subscription.
+     */
+    public function inviteCustomSubscription(Request $request, CustomSubscription $customSubscription)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ], [
+            'email.required' => 'E-mailadres is verplicht.',
+            'email.email' => 'Voer een geldig e-mailadres in.',
+        ]);
+
+        // Check if there's already a pending invitation for this email and custom subscription
+        $existingInvitation = \App\Models\Invitation::where('email', $request->email)
+            ->where('custom_subscription_id', $customSubscription->id)
+            ->where('status', 'pending')
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if ($existingInvitation) {
+            return back();
+        }
+
+        // Create invitation
+        $invitation = \App\Models\Invitation::create([
+            'email' => $request->email,
+            'token' => \App\Models\Invitation::generateToken(),
+            'invited_by' => auth()->id(),
+            'custom_subscription_id' => $customSubscription->id,
+            'role' => 'employer',
+            'invitation_type' => 'custom_subscription_invite',
+            'status' => 'pending',
+            'expires_at' => \Carbon\Carbon::now()->addDays(7),
+        ]);
+
+        // Send email
+        try {
+            Mail::to($request->email)->send(new CustomSubscriptionInvitation($invitation, $customSubscription));
+            
+            return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscription->id]);
+        } catch (\Exception $e) {
+            // Delete invitation if email fails
+            $invitation->delete();
+            
+            return back()->withInput();
+        }
+    }
+
 
     /**
      * Display audit logs.

@@ -41,6 +41,14 @@
                                 <p><strong>Medewerkers:</strong> Tot {{ $subscription->max_employees }} medewerkers</p>
                             </div>
                         </div>
+                    @elseif(isset($customSubscription))
+                        <div class="bg-purple-50 border border-purple-200 rounded p-4 mb-6 text-left">
+                            <h4 class="font-medium text-purple-900 mb-2">Jouw custom abonnement</h4>
+                            <div class="space-y-1 text-sm text-purple-800">
+                                <p><strong>Prijs:</strong> €{{ number_format($customSubscription->price, 2, ',', '.') }} per {{ $customSubscription->billing_period }}</p>
+                                <p><strong>Max gebruikers:</strong> {{ $customSubscription->max_users }} gebruikers</p>
+                            </div>
+                        </div>
                     @endif
 
                     <div class="space-y-3">

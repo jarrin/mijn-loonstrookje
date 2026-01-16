@@ -20,6 +20,7 @@ class Invitation extends Model
         'invitation_type',
         'status',
         'expires_at',
+        'custom_subscription_id',
     ];
 
     protected $casts = [
@@ -35,6 +36,11 @@ class Invitation extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function customSubscription()
+    {
+        return $this->belongsTo(CustomSubscription::class);
     }
 
     // Generate a secure token

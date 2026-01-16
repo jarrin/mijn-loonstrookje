@@ -103,4 +103,190 @@
     </div>
 
 </section>
+
+<section style="margin-top: 2rem;">
+    <h2>Custom abonnementen</h2>
+    <p style="color: #6b7280; margin-bottom: 1rem;">Beheer hier alle custom abonnementen.</p>
+
+    <!-- Add new custom subscription form -->
+    <div style="margin-bottom: 1.5rem; padding: 16px 24px; background: white; border-radius: 10px; box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);">
+        <form method="POST" action="{{ route('superadmin.custom-subscriptions.store') }}" style="display: flex; gap: 1rem; align-items: center;">
+            @csrf
+            <div style="width: 160px;">
+                <input type="number" step="0.01" name="price" placeholder="Prijs" required style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="width: 200px;">
+                <select name="billing_period" required style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px; color: #6b7280;">
+                    <option value="">Betalings termijn</option>
+                    <option value="maandelijks">Maandelijks</option>
+                    <option value="jaarlijks">Jaarlijks</option>
+                </select>
+            </div>
+            <div style="width: 200px;">
+                <input type="number" name="max_users" placeholder="Aantal bedrijven" required min="1" style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px;">
+            </div>
+            <div style="margin-left: auto;">
+                <button type="submit" style="padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+                    Toevoegen
+                    <span style="font-size: 18px;">+</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- Custom subscriptions table -->
+    <table id="custom-subscriptions-table">
+        <thead>
+            <tr>
+                <th style="width: 30px;"></th>
+                <th>Abonnements prijs</th>
+                <th>Betalings termijn</th>
+                <th>Max aantal gebruikers</th>
+                <th>Bedrijven</th>
+                <th style="text-align: right;">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($customSubscriptions as $customSub)
+                @php
+                    $isExpanded = request('expand_custom') == $customSub->id;
+                    $showingInvite = request('invite_custom') == $customSub->id;
+                @endphp
+                
+                <!-- Main subscription row -->
+                <tr>
+                    <!-- Expand/Collapse Arrow - ALWAYS SHOW -->
+                    <td>
+                        <form method="GET" action="{{ route('superadmin.subscriptions') }}" style="margin: 0;">
+                            @if(!$isExpanded)
+                                <input type="hidden" name="expand_custom" value="{{ $customSub->id }}">
+                                <button type="submit" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                    {!! file_get_contents(resource_path('assets/icons/chevron-up.svg')) !!}
+                                </button>
+                            @else
+                                <button type="submit" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                    {!! file_get_contents(resource_path('assets/icons/chevron-down.svg')) !!}
+                                </button>
+                            @endif
+                        </form>
+                    </td>
+                    
+                    <td>€ {{ number_format($customSub->price, 2, ',', '.') }}</td>
+                    <td>{{ ucfirst($customSub->billing_period) }}</td>
+                    <td>{{ $customSub->max_users }}</td>
+                    <td>{{ $customSub->companies_count }}</td>
+                    
+                    <!-- Actions column - right aligned with plus and delete buttons -->
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; align-items: center;">
+                            <!-- Invite button - triggers expand with invite form -->
+                            <form method="GET" action="{{ route('superadmin.subscriptions') }}" style="margin: 0; display: inline;">
+                                <input type="hidden" name="expand_custom" value="{{ $customSub->id }}">
+                                <input type="hidden" name="invite_custom" value="{{ $customSub->id }}">
+                                <button type="submit" title="Uitnodigen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                    {!! file_get_contents(resource_path('assets/icons/plus.svg')) !!}
+                                </button>
+                            </form>
+                            
+                            <!-- Delete button -->
+                            <form method="POST" action="{{ route('superadmin.custom-subscriptions.destroy', $customSub) }}" style="margin: 0; display: inline;" onsubmit="return confirm('Weet je zeker dat je dit custom abonnement wilt verwijderen?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" title="Verwijderen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                    {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Expanded section -->
+                @if($isExpanded)
+                    <!-- Show companies if they exist -->
+                    @if($customSub->companies->count() > 0)
+                        @foreach($customSub->companies as $company)
+                            @php
+                                $employer = $company->users->where('role', 'employer')->first();
+                                $employeeCount = $company->users->where('role', 'employee')->count();
+                            @endphp
+                            <tr style="background-color: #f9fafb;">
+                                <td></td>
+                                <td style="padding-left: 2rem; font-size: 14px;">
+                                    {{ $company->name }}
+                                </td>
+                                <td style="font-size: 14px; color: #6b7280;">
+                                    {{ $employer ? $employer->email : '-' }}
+                                </td>
+                                <td style="font-size: 14px;">
+                                    {{ $employeeCount }}/{{ $customSub->max_users }}
+                                </td>
+                                <td></td>
+                                <td style="text-align: right;">
+                                    <form method="POST" action="{{ route('superadmin.custom-subscriptions.remove-company', ['customSubscription' => $customSub->id, 'company' => $company->id]) }}" style="margin: 0; display: inline;" onsubmit="return confirm('Weet je zeker dat je {{ $company->name }} wilt verwijderen van dit custom abonnement?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" title="Bedrijf verwijderen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                            {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    
+                    <!-- Show pending invitations -->
+                    @if($customSub->invitations->count() > 0)
+                        @foreach($customSub->invitations as $invitation)
+                            <tr style="background-color: #fffbeb;">
+                                <td></td>
+                                <td style="padding-left: 2rem; font-size: 14px; color: #92400e;">
+                                    {{ $invitation->email }}
+                                </td>
+                                <td style="font-size: 14px; color: #92400e; font-style: italic;" colspan="2">
+                                    Uitnodiging pending
+                                </td>
+                                <td style="font-size: 14px; color: #6b7280;">
+                                    Verloopt: {{ $invitation->expires_at->format('d-m-Y') }}
+                                </td>
+                                <td style="text-align: right;">
+                                    <form method="POST" action="{{ route('superadmin.invitations.cancel', $invitation) }}" style="margin: 0; display: inline;" onsubmit="return confirm('Weet je zeker dat je deze uitnodiging wilt verwijderen?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" title="Verwijderen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                            {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    
+                    <!-- Invitation form row - always show when expanded and invite_custom is set -->
+                    @if($showingInvite)
+                        <tr style="background-color: #eff6ff;">
+                            <td></td>
+                            <td colspan="5" style="padding: 1rem 0.75rem 1rem 2rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <span style="font-size: 14px; color: #374151; font-weight: 500;">Uitnodigen:</span>
+                                    <form method="POST" action="{{ route('superadmin.custom-subscriptions.invite', $customSub) }}" style="display: flex; gap: 0.5rem; align-items: center; margin: 0; flex: 1;">
+                                        @csrf
+                                        <input type="email" name="email" placeholder="email@voorbeeld.nl" required autofocus style="padding: 8px 14px; border: 1px solid #D4D4D4; border-radius: 6px; font-size: 14px; flex: 1; max-width: 400px;">
+                                        <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; white-space: nowrap;">Uitnodigen</button>
+                                        <a href="{{ route('superadmin.subscriptions', ['expand_custom' => $customSub->id]) }}" style="color: #6b7280; font-size: 1.25rem; text-decoration: none; line-height: 1; cursor: pointer; padding: 0 0.5rem;">×</a>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
+                @endif
+            @empty
+                <tr>
+                    <td colspan="6" style="padding: 2rem; text-align: center; color: #9ca3af; font-size: 0.875rem;">Geen custom abonnementen gevonden.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</section>
 @endsection

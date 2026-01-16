@@ -22,8 +22,15 @@ class EnsureEmployerHasPaidSubscription
             // Alleen voor employer accounts: check abonnement
             // Employees, admin_offices en super_admins hoeven niet te betalen
             if ($user->role === 'employer') {
-                // Check of bedrijf een actief abonnement heeft
-                if ($user->company && !$user->company->subscription_id) {
+                // Check of bedrijf een actief abonnement heeft (standard OF custom)
+                if ($user->company && !$user->company->subscription_id && !$user->company->custom_subscription_id) {
+                    // Check of er een pending custom subscription is
+                    if (session()->has('pending_custom_subscription_id')) {
+                        return redirect()->route('payment.custom-checkout', [
+                            'customSubscription' => session('pending_custom_subscription_id')
+                        ])->with('info', 'Je moet eerst je custom abonnement betalen.');
+                    }
+                    
                     // Check of er een pending subscription is
                     if (session()->has('pending_subscription_id')) {
                         return redirect()->route('payment.checkout', [
