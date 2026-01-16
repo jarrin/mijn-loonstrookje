@@ -89,15 +89,45 @@
 
                     {{-- Administratiekantoor links --}}
                     @if(auth()->user()->hasRole('administration_office'))
-                        <a href="{{ route('administration.dashboard') }}" class="{{ request()->routeIs('administration.dashboard') ? 'active' : '' }}">
+                        @php
+                            // Check if viewing a specific company
+                            $viewingCompany = isset($company) && in_array(request()->route()->getName(), [
+                                'administration.company.show',
+                                'administration.company.employees',
+                                'administration.company.documents',
+                                'employer.employee.documents'
+                            ]);
+                            
+                            // Determine routes based on context
+                            if ($viewingCompany) {
+                                $homeRoute = route('administration.company.show', $company->id);
+                                $employeesRoute = route('administration.company.employees', $company->id);
+                                $documentsRoute = route('administration.company.documents', $company->id);
+                                
+                                // Determine active state
+                                $homeActive = request()->routeIs('administration.company.show');
+                                $employeesActive = request()->routeIs('administration.company.employees');
+                                $documentsActive = request()->routeIs('administration.company.documents', 'employer.employee.documents');
+                            } else {
+                                $homeRoute = route('administration.dashboard');
+                                $employeesRoute = route('administration.employees');
+                                $documentsRoute = route('administration.documents');
+                                
+                                $homeActive = request()->routeIs('administration.dashboard');
+                                $employeesActive = request()->routeIs('administration.employees');
+                                $documentsActive = request()->routeIs('administration.documents');
+                            }
+                        @endphp
+                        
+                        <a href="{{ $homeRoute }}" class="{{ $homeActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Home</span>
                         </a>
-                        <a href="{{ route('administration.employees') }}" class="{{ request()->routeIs('administration.employees') ? 'active' : '' }}">
+                        <a href="{{ $employeesRoute }}" class="{{ $employeesActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('administration.documents') }}" class="{{ request()->routeIs('administration.documents') ? 'active' : '' }}">
+                        <a href="{{ $documentsRoute }}" class="{{ $documentsActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>
