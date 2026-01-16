@@ -251,7 +251,7 @@
                     <li><a href="#">FAQ</a></li>
                     <li><a href="#">Contact</a></li>
                     <li><a href="#">Documentatie</a></li>
-                    <li><a href="#">Status</a></li>
+                    <li><a href="#">Help@loonstrookje.nl</a></li>
                 </ul>
             </div>
             <div class="footer-column">
