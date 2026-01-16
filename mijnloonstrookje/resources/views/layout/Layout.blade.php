@@ -60,6 +60,10 @@
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
+                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') ? 'active' : '' }}">
+                            {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
+                            <span>Documenten</span>
+                        </a>
                         <a href="{{ route('employer.admin-offices') }}" class="{{ request()->routeIs('employer.admin-offices') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/briefcase.svg')) !!}
                             <span>Administratiebureau's</span>
