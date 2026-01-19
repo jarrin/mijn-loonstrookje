@@ -89,7 +89,26 @@ class DocumentController extends Controller
                 ->get();
         }
         
-        return view('documents.upload', compact('employees', 'selectedEmployee', 'company'));
+        // Determine cancel URL based on context
+        $cancelUrl = null;
+        if ($selectedEmployee) {
+            // Coming from specific employee documents page
+            $cancelUrl = route('employer.employee.documents', $selectedEmployee->id);
+        } elseif ($company && $user->role === 'administration_office') {
+            // Coming from company documents page
+            $cancelUrl = route('administration.company.documents', $company->id);
+        } elseif ($user->role === 'administration_office') {
+            // Coming from global admin office documents page
+            $cancelUrl = route('administration.documents');
+        } elseif ($user->role === 'employer') {
+            // Coming from employer documents page
+            $cancelUrl = route('employer.documents');
+        } else {
+            // Fallback
+            $cancelUrl = route('employer.employees');
+        }
+        
+        return view('documents.upload', compact('employees', 'selectedEmployee', 'company', 'cancelUrl'));
     }
     
     /**

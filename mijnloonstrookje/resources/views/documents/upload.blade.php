@@ -110,7 +110,7 @@
             <button type="submit" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">
                 Document Uploaden
             </button>
-            <a href="{{ route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
+            <a href="{{ $cancelUrl ?? route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
                 Annuleren
             </a>
         </div>
