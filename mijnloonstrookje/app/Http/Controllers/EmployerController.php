@@ -319,7 +319,8 @@ class EmployerController extends Controller
                                         ->get();
         
         $employee = null; // No specific employee selected
+        $company = auth()->user()->company; // For branding
         
-        return view('employer.EmployerEmployeeDocuments', compact('documents', 'employee'));
+        return view('employer.EmployerEmployeeDocuments', compact('documents', 'employee', 'company'));
     }
 }

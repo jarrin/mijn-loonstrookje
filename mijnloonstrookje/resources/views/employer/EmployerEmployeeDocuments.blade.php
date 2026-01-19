@@ -154,7 +154,7 @@
             <a href="{{ route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Medewerkers</a>
         @endif
         <span style="color: #9CA3AF;">|</span>
-        <a href="{{ route('documents.deleted', ['employee' => $employee->id]) }}" style="color: var(--primary-color); cursor: pointer;">Verwijderde Documenten</a>
+        <a href="{{ isset($employee) ? route('documents.deleted', ['employee' => $employee->id]) : route('documents.deleted') }}" style="color: var(--primary-color); cursor: pointer;">Verwijderde Documenten</a>
         <span style="color: #9CA3AF;">|</span>
         <a href="{{ route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
     </div>
