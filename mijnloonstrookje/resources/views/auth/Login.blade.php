@@ -9,8 +9,8 @@
             'super_admin' => route('superadmin.dashboard'),
             'administration_office' => route('administration.dashboard'),
             'employer' => route('employer.dashboard'),
-            'employee' => route('employee.dashboard'),
-            default => route('employee.dashboard'),
+            'employee' => route('employee.documents'),
+            default => route('employee.documents'),
         } }}";
     </script>
 @endif

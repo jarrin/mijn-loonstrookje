@@ -13,14 +13,6 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Display the employee dashboard.
-     */
-    public function dashboard()
-    {
-        return view('employee.EmployeeDashboard');
-    }
-
-    /**
      * Display employee's documents.
      */
     public function documents()

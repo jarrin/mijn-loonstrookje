@@ -22,7 +22,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         $user = auth()->user();
         return match($user->role) {
-            'employee' => redirect()->route('employee.dashboard'),
+            'employee' => redirect()->route('employee.documents'),
             'employer' => redirect()->route('employer.dashboard'),
             'administration_office' => redirect()->route('administration.dashboard'),
             'super_admin' => redirect()->route('superadmin.dashboard'),
@@ -37,7 +37,7 @@ Route::get('/home', function () {
     if (auth()->check()) {
         $user = auth()->user();
         return match($user->role) {
-            'employee' => redirect()->route('employee.dashboard'),
+            'employee' => redirect()->route('employee.documents'),
             'employer' => redirect()->route('employer.dashboard'),
             'administration_office' => redirect()->route('administration.dashboard'),
             'super_admin' => redirect()->route('superadmin.dashboard'),
@@ -52,7 +52,6 @@ Route::get('/home', function () {
 Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () {
     // Employee routes
     Route::middleware('role:employee')->group(function () {
-        Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
         Route::get('/employee/documents', [EmployeeController::class, 'documents'])->name('employee.documents');
     });
     

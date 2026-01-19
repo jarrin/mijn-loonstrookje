@@ -118,9 +118,5 @@
             @endforelse
         </tbody>
     </table>
-    
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('employee.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Dashboard</a>
-    </div>
 </section>
 @endsection

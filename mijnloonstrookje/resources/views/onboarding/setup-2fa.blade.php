@@ -52,8 +52,8 @@
                                         'super_admin' => 'superadmin.dashboard',
                                         'administration_office' => 'administration.dashboard',
                                         'employer' => 'employer.dashboard',
-                                        'employee' => 'employee.dashboard',
-                                        default => 'employee.dashboard',
+                                        'employee' => 'employee.documents',
+                                        default => 'employee.documents',
                                     };
                                 @endphp
                                 <a href="{{ route($dashboardRoute) }}" 
