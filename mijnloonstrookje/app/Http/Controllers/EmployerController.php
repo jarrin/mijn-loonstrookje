@@ -52,7 +52,14 @@ class EmployerController extends Controller
                             ->orderBy('due_date', 'asc')
                             ->first();
         
-        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice'));
+        // Get recent audit logs for this company
+        $recentLogs = \App\Models\AuditLog::with(['user'])
+                            ->where('company_id', auth()->user()->company_id)
+                            ->orderBy('created_at', 'desc')
+                            ->limit(10)
+                            ->get();
+        
+        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice', 'recentLogs'));
     }
 
     /**

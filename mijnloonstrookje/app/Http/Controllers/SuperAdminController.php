@@ -103,14 +103,6 @@ class SuperAdminController extends Controller
     }
 
     /**
-     * Display audit logs.
-     */
-    public function logs()
-    {
-        return view('superadmin.SuperAdminLogs');
-    }
-
-    /**
      * Display facturation/invoices overview.
      */
     public function facturation()

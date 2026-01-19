@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Invitation;
 use App\Models\User;
 use App\Mail\EmployeeInvitation;
+use App\Services\AuditLogService;
 use Carbon\Carbon;
 
 class InvitationController extends Controller
@@ -228,6 +229,12 @@ class InvitationController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            
+            // Log the admin office addition
+            AuditLogService::logAdminOfficeAdded($user->id, $invitation->company_id);
+        } elseif ($role === 'employee' && $invitation->company_id) {
+            // Log the employee creation
+            AuditLogService::logEmployeeCreated($user->id, $invitation->company_id);
         }
 
         // Mark invitation as accepted

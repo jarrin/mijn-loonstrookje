@@ -41,6 +41,52 @@
             @endif
         </div>
     </div>
+    
+    <!-- Recent Activity Logs -->
+    <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">Recente Activiteit</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Gebruiker</th>
+                    <th>Actie</th>
+                    <th>Beschrijving</th>
+                    <th>IP Adres</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($recentLogs as $log)
+                <tr>
+                    <td>{{ $log->created_at->format('d-m-Y H:i') }}</td>
+                    <td>{{ $log->user ? $log->user->name : 'N/A' }}</td>
+                    <td>
+                        <span class="px-2 py-1 rounded text-xs" style="background-color: {{ 
+                            match($log->action) {
+                                'login' => '#10B981',
+                                'document_uploaded' => '#3B82F6',
+                                'document_revised' => '#F59E0B',
+                                'document_deleted' => '#EF4444',
+                                'document_restored' => '#8B5CF6',
+                                'employee_created' => '#06B6D4',
+                                'admin_office_added' => '#EC4899',
+                                default => '#6B7280'
+                            }
+                        }}; color: white;">
+                            {{ ucfirst(str_replace('_', ' ', $log->action)) }}
+                        </span>
+                    </td>
+                    <td>{{ $log->description ?? '-' }}</td>
+                    <td>{{ $log->ip_address ?? '-' }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="5" style="text-align: center;">Nog geen activiteit</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </section>
 
 <script>

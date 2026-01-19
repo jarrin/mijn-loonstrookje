@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
 use ZipArchive;
 
 class DocumentController extends Controller
@@ -188,6 +189,9 @@ class DocumentController extends Controller
             'note' => $validated['note'],
         ]);
         
+        // Log the document upload
+        AuditLogService::logDocumentUpload($document->id, $employee->id, $employee->company_id);
+        
         return redirect()
             ->route('employer.employee.documents', $employee->id)
             ->with('success', 'Document succesvol geüpload');
@@ -270,6 +274,9 @@ class DocumentController extends Controller
         $document->is_deleted = true;
         $document->deleted_at = now();
         $document->save();
+        
+        // Log the document deletion
+        AuditLogService::logDocumentDeleted($document->id, $document->company_id);
         
         return back()->with('success', 'Document succesvol verwijderd');
     }
@@ -376,6 +383,9 @@ class DocumentController extends Controller
         $document->is_deleted = false;
         $document->deleted_at = null;
         $document->save();
+        
+        // Log the document restoration
+        AuditLogService::logDocumentRestored($document->id, $document->company_id);
         
         return back()->with('success', 'Document succesvol hersteld');
     }
@@ -508,6 +518,9 @@ class DocumentController extends Controller
             'parent_document_id' => $parentId,
             'note' => $validated['note'],
         ]);
+        
+        // Log the document revision
+        AuditLogService::logDocumentRevision($newDocument->id, $newDocument->company_id, $newVersion);
         
         return redirect()
             ->route('employer.employee.documents', $originalDocument->employee_id)

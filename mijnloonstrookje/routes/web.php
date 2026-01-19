@@ -115,7 +115,7 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         Route::get('/superadmin/subscriptions', [SuperAdminController::class, 'subscriptions'])->name('superadmin.subscriptions');
         Route::put('/superadmin/subscriptions/{subscription}', [SuperAdminController::class, 'updateSubscription'])->name('superadmin.subscriptions.update');
         
-        Route::get('/superadmin/logs', [SuperAdminController::class, 'logs'])->name('superadmin.logs');
+        Route::get('/superadmin/logs', [\App\Http\Controllers\AuditLogController::class, 'superAdminLogs'])->name('superadmin.logs');
         Route::get('/superadmin/facturation', [SuperAdminController::class, 'facturation'])->name('superadmin.facturation');
     });
 });
