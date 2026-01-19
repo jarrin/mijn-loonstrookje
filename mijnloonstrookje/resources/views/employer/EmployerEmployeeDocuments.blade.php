@@ -147,7 +147,7 @@
         @if(isset($employee))
             <a href="{{ route('documents.upload', $employee->id) }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
             <span style="color: #9CA3AF;">|</span>
-            <a href="{{ route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Terug naar Medewerkers</a>
+            <a href="{{ $backUrl ?? route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Terug naar Medewerkers</a>
         @else
             <a href="{{ route('documents.upload') }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
             <span style="color: #9CA3AF;">|</span>

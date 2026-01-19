@@ -115,7 +115,16 @@ class EmployerController extends Controller
         // Pass company for branding context
         $company = $employee->company;
         
-        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents', 'company'));
+        // Determine back URL based on user role
+        if ($user->role === 'administration_office') {
+            // Admin office: back to company employees page
+            $backUrl = route('administration.company.employees', $company->id);
+        } else {
+            // Employer: back to their employees page
+            $backUrl = route('employer.employees');
+        }
+        
+        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents', 'company', 'backUrl'));
     }
 
     /**
