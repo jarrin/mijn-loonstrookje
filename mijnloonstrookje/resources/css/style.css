@@ -15,12 +15,46 @@ h1 {
 /* login */
 
 .loginPage {
-    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(0, 102, 255, 0.05) 100%);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+.loginPage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.loginIllustration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.9;
+    overflow: hidden;
+}
+
+.loginIllustration svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 .loginContainer {
@@ -28,8 +62,15 @@ h1 {
     width: 100%;
     background-color: white;
     padding: 50px 40px;
-    border-radius: 15px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 82, 204, 0.2);
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.loginContainer:hover {
+    box-shadow: 0 30px 80px rgba(0, 82, 204, 0.25);
 }
 
 .loginHeader {
@@ -39,9 +80,12 @@ h1 {
 
 .loginHeader h1 {
     font-size: 36px;
-    color: #4A90E2;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin: 0 0 10px 0;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .loginSubtitle {
@@ -81,8 +125,8 @@ h1 {
 .loginFormGroup input[type="email"]:focus,
 .loginFormGroup input[type="password"]:focus {
     outline: none;
-    border-color: #4A90E2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    border-color: #0052cc;
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
 }
 
 .loginFormGroup .error {
@@ -101,7 +145,7 @@ h1 {
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: #4A90E2;
+    accent-color: #0052cc;
 }
 
 .loginFormRemember label {
@@ -112,8 +156,8 @@ h1 {
 }
 
 .loginSubmitButton {
-    padding: 12px 20px;
-    background: var(--primary-color);
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -122,15 +166,34 @@ h1 {
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 10px;
+    box-shadow: 0 4px 16px rgba(0, 82, 204, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.loginSubmitButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
 }
 
 .loginSubmitButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px var(--secondary-color);
+    box-shadow: 0 8px 24px rgba(0, 82, 204, 0.4);
+}
+
+.loginSubmitButton:hover::before {
+    left: 100%;
 }
 
 .loginSubmitButton:active {
     transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 82, 204, 0.3);
 }
 
 .main-content {
