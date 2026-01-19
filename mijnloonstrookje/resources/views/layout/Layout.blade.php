@@ -24,12 +24,17 @@
                     'administration.company.employees',
                     'administration.company.documents',
                     'employer.employee.documents', // When admin views employee documents
-                    'documents.upload' // When admin uploads document for specific employee
+                    'documents.upload', // When admin uploads document for specific employee
+                    'documents.deleted' // When viewing deleted documents with context
                 ];
                 
                 if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
                     $brandingCompany = $company;
                 }
+            }
+            // For employer: also check deleted documents page
+            elseif ($user->role === 'employer' && request()->route()->getName() === 'documents.deleted') {
+                $brandingCompany = $user->company;
             }
         }
         

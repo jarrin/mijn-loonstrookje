@@ -277,7 +277,7 @@ class DocumentController extends Controller
     /**
      * Show deleted documents
      */
-    public function deleted()
+    public function deleted(Request $request)
     {
         $user = Auth::user();
         
@@ -286,10 +286,44 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
+        // Check for employee or company context
+        $employee = null;
+        $company = null;
+        $employeeId = $request->query('employee');
+        $companyId = $request->query('company');
+        
         // Get deleted documents (using withTrashed to include soft-deleted records)
         $query = Document::withTrashed()->where('is_deleted', true);
         
-        if ($user->role === 'administration_office') {
+        // If specific employee requested
+        if ($employeeId) {
+            if ($user->role === 'administration_office') {
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->firstOrFail();
+            } else {
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->where('company_id', $user->company_id)
+                    ->firstOrFail();
+            }
+            $query->where('employee_id', $employee->id);
+            $company = $employee->company;
+        }
+        // If specific company requested (admin office viewing company documents)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->firstOrFail();
+            $query->where('company_id', $company->id);
+        }
+        // Default filtering by role
+        elseif ($user->role === 'administration_office') {
             // Admin office: get documents from accessible companies
             $companyIds = $user->companies()
                 ->wherePivot('status', 'active')
@@ -298,13 +332,14 @@ class DocumentController extends Controller
         } elseif ($user->role !== 'super_admin') {
             // Employer: only their company
             $query->where('company_id', $user->company_id);
+            $company = $user->company;
         }
         
         $documents = $query->with(['employee', 'uploader'])
                           ->orderBy('deleted_at', 'desc')
                           ->get();
         
-        return view('documents.deleted', compact('documents'));
+        return view('documents.deleted', compact('documents', 'employee', 'company'));
     }
     
     /**
