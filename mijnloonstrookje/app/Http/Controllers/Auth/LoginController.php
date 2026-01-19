@@ -65,11 +65,11 @@ class LoginController extends Controller
                     return redirect()->route('employer.dashboard');
                 case 'employee':
                 default:
-                    return redirect()->route('employee.dashboard');
+                    return redirect()->route('employee.documents');
             }
         }
         
         // Default redirect if no role is set
-        return redirect()->route('employee.dashboard');
+        return redirect()->route('employee.documents');
     }
 }

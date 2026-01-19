@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use ZipArchive;
 
 class DocumentController extends Controller
 {
@@ -469,5 +470,101 @@ class DocumentController extends Controller
         if (!in_array($user->role, ['employer', 'employee'])) {
             abort(403, 'Unauthorized access');
         }
+    }
+
+    /**
+     * Bulk download documents as ZIP
+     */
+    public function bulkDownload(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validate request
+        $validated = $request->validate([
+            'type' => 'required|string|in:all,payslip,annual_statement,other',
+            'year' => 'required|string',
+        ]);
+        
+        // Build query based on user role
+        $query = Document::where('is_deleted', false);
+        
+        if ($user->role === 'employee') {
+            // Employee: only their own documents
+            $query->where('employee_id', $user->id);
+        } elseif ($user->role === 'employer') {
+            // Employer: all documents in their company
+            $query->where('company_id', $user->company_id);
+        } elseif ($user->role === 'administration_office') {
+            // Admin office: documents from accessible companies
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            $query->whereIn('company_id', $companyIds);
+        }
+        
+        // Apply filters
+        if ($validated['type'] !== 'all') {
+            $query->where('type', $validated['type']);
+        }
+        
+        if ($validated['year'] !== 'all') {
+            $query->where('year', $validated['year']);
+        }
+        
+        $documents = $query->with(['employee', 'company'])->get();
+        
+        if ($documents->isEmpty()) {
+            return back()->with('error', 'Geen documenten gevonden met de geselecteerde filters');
+        }
+        
+        // Create temporary ZIP file
+        $zipFileName = 'documenten_' . date('Y-m-d_His') . '.zip';
+        $zipFilePath = storage_path('app/temp/' . $zipFileName);
+        
+        // Ensure temp directory exists
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+        
+        $zip = new ZipArchive();
+        
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Kon ZIP-bestand niet aanmaken');
+        }
+        
+        // Add documents to ZIP
+        foreach ($documents as $document) {
+            try {
+                // Decrypt and get file content
+                $decryptedContent = $document->getDecryptedContent();
+                
+                // Create filename with employee name and period
+                $fileName = $document->employee->name . '_' . 
+                           $document->display_name . '_' . 
+                           $document->year;
+                
+                if ($document->month) {
+                    $fileName .= '_' . str_pad($document->month, 2, '0', STR_PAD_LEFT);
+                } elseif ($document->week) {
+                    $fileName .= '_week' . $document->week;
+                }
+                
+                $fileName .= '.pdf';
+                
+                // Sanitize filename
+                $fileName = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $fileName);
+                
+                // Add to ZIP
+                $zip->addFromString($fileName, $decryptedContent);
+            } catch (\Exception $e) {
+                // Continue with other files if one fails
+                continue;
+            }
+        }
+        
+        $zip->close();
+        
+        // Download and delete temp file
+        return response()->download($zipFilePath, $zipFileName)->deleteFileAfterSend(true);
     }
 }
