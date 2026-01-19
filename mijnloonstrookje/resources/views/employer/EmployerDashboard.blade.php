@@ -52,7 +52,6 @@
                     <th>Gebruiker</th>
                     <th>Actie</th>
                     <th>Beschrijving</th>
-                    <th>IP Adres</th>
                 </tr>
             </thead>
             <tbody>
@@ -77,11 +76,10 @@
                         </span>
                     </td>
                     <td>{{ $log->description ?? '-' }}</td>
-                    <td>{{ $log->ip_address ?? '-' }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" style="text-align: center;">Nog geen activiteit</td>
+                    <td colspan="4" style="text-align: center;">Nog geen activiteit</td>
                 </tr>
                 @endforelse
             </tbody>

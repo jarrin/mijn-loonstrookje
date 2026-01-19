@@ -54,7 +54,6 @@
                 <th>Bedrijf</th>
                 <th>Actie</th>
                 <th>Beschrijving</th>
-                <th>IP Adres</th>
             </tr>
         </thead>
         <tbody>
@@ -80,11 +79,10 @@
                     </span>
                 </td>
                 <td>{{ $log->description ?? '-' }}</td>
-                <td>{{ $log->ip_address ?? '-' }}</td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" style="text-align: center;">Geen logs gevonden</td>
+                <td colspan="5" style="text-align: center;">Geen logs gevonden</td>
             </tr>
             @endforelse
         </tbody>

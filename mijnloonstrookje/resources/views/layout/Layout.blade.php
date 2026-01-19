@@ -163,7 +163,7 @@
                     
                     {{-- Medewerker links --}}
                     @if(auth()->user()->hasRole('employee'))
-                        <a href="{{ route('employee.dashboard') }}" class="{{ request()->routeIs('employee.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('employee.documents') }}" class="{{ request()->routeIs('employee.documents') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Mijn Documenten</span>
                         </a>

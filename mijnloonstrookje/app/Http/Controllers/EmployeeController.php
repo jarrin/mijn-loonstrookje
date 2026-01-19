@@ -47,6 +47,6 @@ class EmployeeController extends Controller
                             ->orderBy('week', 'desc')
                             ->get();
         
-        return view('employee.EmployeeDocuments', compact('documents'));
+        return view('employee.EmployeeDashboard', compact('documents'));
     }
 }

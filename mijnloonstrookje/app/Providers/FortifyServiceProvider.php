@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Actions\Fortify\CreateNewUser;
+use App\Services\AuditLogService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Log;
 use Laravel\Fortify\Fortify;
@@ -104,6 +106,11 @@ class FortifyServiceProvider extends ServiceProvider
             
             // Na email verificatie → 2FA setup onboarding pagina
             return route('onboarding.setup-2fa');
+        });
+        
+        // Listen for successful login events and log them
+        Event::listen(\Illuminate\Auth\Events\Login::class, function ($event) {
+            AuditLogService::logLogin($event->user->id, $event->user->company_id);
         });
     }
 }
