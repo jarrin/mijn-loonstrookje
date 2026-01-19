@@ -21,7 +21,7 @@
         
         <div>
             <label for="employee_id" class="block mb-2">Medewerker *</label>
-            <select name="employee_id" id="employee_id" required class="w-full px-3 py-2 border rounded">
+            <select name="employee_id" id="employee_id" required class="w-full px-3 py-2 border rounded" {{ isset($selectedEmployee) ? 'disabled' : '' }}>
                 <option value="">Selecteer medewerker</option>
                 @foreach($employees as $employee)
                     <option value="{{ $employee->id }}" 
@@ -30,6 +30,10 @@
                     </option>
                 @endforeach
             </select>
+            @if(isset($selectedEmployee))
+                {{-- Hidden input to ensure employee_id is submitted when select is disabled --}}
+                <input type="hidden" name="employee_id" value="{{ $selectedEmployee->id }}">
+            @endif
         </div>
         
         <div>

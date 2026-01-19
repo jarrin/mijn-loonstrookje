@@ -24,27 +24,13 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get employees based on user role
-        if ($user->role === 'administration_office') {
-            // Get company IDs that admin office has access to
-            $companyIds = $user->companies()
-                ->wherePivot('status', 'active')
-                ->pluck('companies.id');
-            
-            $employees = User::where('role', 'employee')
-                ->whereIn('company_id', $companyIds)
-                ->orderBy('name')
-                ->get();
-        } else {
-            // Employer: get employees from their company
-            $employees = User::where('role', 'employee')
-                ->where('company_id', $user->company_id)
-                ->orderBy('name')
-                ->get();
-        }
-        
         $selectedEmployee = null;
         $company = null;
+        
+        // Check if coming from company context via query parameter
+        $companyId = request()->query('company');
+        
+        // Check if employee is pre-selected
         if ($employeeId) {
             if ($user->role === 'administration_office') {
                 $companyIds = $user->companies()
@@ -66,6 +52,41 @@ class DocumentController extends Controller
                     ->where('company_id', $user->company_id)
                     ->first();
             }
+        }
+        // Check if company ID provided via query parameter (from company documents page)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->first();
+        }
+        
+        // Get employees based on user role and context
+        if ($user->role === 'administration_office') {
+            // If coming from a specific company context
+            if ($company) {
+                // Only show employees from that specific company
+                $employees = User::where('role', 'employee')
+                    ->where('company_id', $company->id)
+                    ->orderBy('name')
+                    ->get();
+            } else {
+                // Show all employees from accessible companies
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                
+                $employees = User::where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->orderBy('name')
+                    ->get();
+            }
+        } else {
+            // Employer: get employees from their company
+            $employees = User::where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->orderBy('name')
+                ->get();
         }
         
         return view('documents.upload', compact('employees', 'selectedEmployee', 'company'));
