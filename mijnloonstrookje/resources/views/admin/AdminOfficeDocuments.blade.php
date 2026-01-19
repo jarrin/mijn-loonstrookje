@@ -150,10 +150,10 @@
     @endif
     
     <div class="mt-6 flex gap-4">
-        <a href="{{ route('documents.upload') }}" class="text-white font-bold py-2 px-4 rounded hover:opacity-90" style="background-color: var(--primary-color);">
+        <a href="{{ isset($company) ? route('documents.upload') . '?company=' . $company->id : route('documents.upload') }}" class="text-white font-bold py-2 px-4 rounded hover:opacity-90" style="background-color: var(--primary-color);">
             Document Uploaden
         </a>
-        <a href="{{ route('documents.deleted') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+        <a href="{{ isset($company) ? route('documents.deleted', ['company' => $company->id]) : route('documents.deleted') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
             Verwijderde Documenten
         </a>
     </div>

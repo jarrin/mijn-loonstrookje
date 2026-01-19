@@ -21,7 +21,7 @@
         
         <div>
             <label for="employee_id" class="block mb-2">Medewerker *</label>
-            <select name="employee_id" id="employee_id" required class="w-full px-3 py-2 border rounded">
+            <select name="employee_id" id="employee_id" required class="w-full px-3 py-2 border rounded" {{ isset($selectedEmployee) ? 'disabled' : '' }}>
                 <option value="">Selecteer medewerker</option>
                 @foreach($employees as $employee)
                     <option value="{{ $employee->id }}" 
@@ -30,6 +30,10 @@
                     </option>
                 @endforeach
             </select>
+            @if(isset($selectedEmployee))
+                {{-- Hidden input to ensure employee_id is submitted when select is disabled --}}
+                <input type="hidden" name="employee_id" value="{{ $selectedEmployee->id }}">
+            @endif
         </div>
         
         <div>
@@ -106,7 +110,7 @@
             <button type="submit" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">
                 Document Uploaden
             </button>
-            <a href="{{ route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
+            <a href="{{ $cancelUrl ?? route('employer.employees') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">
                 Annuleren
             </a>
         </div>

@@ -4,7 +4,15 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Verwijderde Documenten</h1>
+    <h1 class="text-2xl mb-4">
+        @if(isset($employee))
+            Verwijderde Documenten van {{ $employee->name }}
+        @elseif(isset($company))
+            Verwijderde Documenten van {{ $company->name }}
+        @else
+            Verwijderde Documenten
+        @endif
+    </h1>
     
     @if(session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -84,7 +92,15 @@
     </table>
     
     <div class="mt-6 space-x-4">
-        @if(auth()->user()->role === 'administration_office')
+        @if(isset($employee))
+            <a href="{{ route('employer.employee.documents', $employee->id) }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar {{ $employee->name }}</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ auth()->user()->role === 'administration_office' ? route('administration.dashboard') : route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+        @elseif(isset($company) && auth()->user()->role === 'administration_office')
+            <a href="{{ route('administration.company.documents', $company->id) }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar {{ $company->name }}</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ route('administration.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+        @elseif(auth()->user()->role === 'administration_office')
             <a href="{{ route('administration.documents') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Documenten</a>
             <span style="color: #9CA3AF;">|</span>
             <a href="{{ route('administration.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>

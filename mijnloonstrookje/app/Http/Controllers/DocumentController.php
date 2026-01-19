@@ -24,26 +24,13 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get employees based on user role
-        if ($user->role === 'administration_office') {
-            // Get company IDs that admin office has access to
-            $companyIds = $user->companies()
-                ->wherePivot('status', 'active')
-                ->pluck('companies.id');
-            
-            $employees = User::where('role', 'employee')
-                ->whereIn('company_id', $companyIds)
-                ->orderBy('name')
-                ->get();
-        } else {
-            // Employer: get employees from their company
-            $employees = User::where('role', 'employee')
-                ->where('company_id', $user->company_id)
-                ->orderBy('name')
-                ->get();
-        }
-        
         $selectedEmployee = null;
+        $company = null;
+        
+        // Check if coming from company context via query parameter
+        $companyId = request()->query('company');
+        
+        // Check if employee is pre-selected
         if ($employeeId) {
             if ($user->role === 'administration_office') {
                 $companyIds = $user->companies()
@@ -54,6 +41,11 @@ class DocumentController extends Controller
                     ->where('role', 'employee')
                     ->whereIn('company_id', $companyIds)
                     ->first();
+                
+                // Set company for branding if employee is selected
+                if ($selectedEmployee) {
+                    $company = $selectedEmployee->company;
+                }
             } else {
                 $selectedEmployee = User::where('id', $employeeId)
                     ->where('role', 'employee')
@@ -61,8 +53,62 @@ class DocumentController extends Controller
                     ->first();
             }
         }
+        // Check if company ID provided via query parameter (from company documents page)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->first();
+        }
         
-        return view('documents.upload', compact('employees', 'selectedEmployee'));
+        // Get employees based on user role and context
+        if ($user->role === 'administration_office') {
+            // If coming from a specific company context
+            if ($company) {
+                // Only show employees from that specific company
+                $employees = User::where('role', 'employee')
+                    ->where('company_id', $company->id)
+                    ->orderBy('name')
+                    ->get();
+            } else {
+                // Show all employees from accessible companies
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                
+                $employees = User::where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->orderBy('name')
+                    ->get();
+            }
+        } else {
+            // Employer: get employees from their company
+            $employees = User::where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->orderBy('name')
+                ->get();
+        }
+        
+        // Determine cancel URL based on context
+        $cancelUrl = null;
+        if ($selectedEmployee) {
+            // Coming from specific employee documents page
+            $cancelUrl = route('employer.employee.documents', $selectedEmployee->id);
+        } elseif ($company && $user->role === 'administration_office') {
+            // Coming from company documents page
+            $cancelUrl = route('administration.company.documents', $company->id);
+        } elseif ($user->role === 'administration_office') {
+            // Coming from global admin office documents page
+            $cancelUrl = route('administration.documents');
+        } elseif ($user->role === 'employer') {
+            // Coming from employer documents page
+            $cancelUrl = route('employer.documents');
+        } else {
+            // Fallback
+            $cancelUrl = route('employer.employees');
+        }
+        
+        return view('documents.upload', compact('employees', 'selectedEmployee', 'company', 'cancelUrl'));
     }
     
     /**
@@ -231,7 +277,7 @@ class DocumentController extends Controller
     /**
      * Show deleted documents
      */
-    public function deleted()
+    public function deleted(Request $request)
     {
         $user = Auth::user();
         
@@ -240,10 +286,44 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
+        // Check for employee or company context
+        $employee = null;
+        $company = null;
+        $employeeId = $request->query('employee');
+        $companyId = $request->query('company');
+        
         // Get deleted documents (using withTrashed to include soft-deleted records)
         $query = Document::withTrashed()->where('is_deleted', true);
         
-        if ($user->role === 'administration_office') {
+        // If specific employee requested
+        if ($employeeId) {
+            if ($user->role === 'administration_office') {
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->firstOrFail();
+            } else {
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->where('company_id', $user->company_id)
+                    ->firstOrFail();
+            }
+            $query->where('employee_id', $employee->id);
+            $company = $employee->company;
+        }
+        // If specific company requested (admin office viewing company documents)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->firstOrFail();
+            $query->where('company_id', $company->id);
+        }
+        // Default filtering by role
+        elseif ($user->role === 'administration_office') {
             // Admin office: get documents from accessible companies
             $companyIds = $user->companies()
                 ->wherePivot('status', 'active')
@@ -252,13 +332,14 @@ class DocumentController extends Controller
         } elseif ($user->role !== 'super_admin') {
             // Employer: only their company
             $query->where('company_id', $user->company_id);
+            $company = $user->company;
         }
         
         $documents = $query->with(['employee', 'uploader'])
                           ->orderBy('deleted_at', 'desc')
                           ->get();
         
-        return view('documents.deleted', compact('documents'));
+        return view('documents.deleted', compact('documents', 'employee', 'company'));
     }
     
     /**

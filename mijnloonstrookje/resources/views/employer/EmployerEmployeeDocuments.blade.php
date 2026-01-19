@@ -104,7 +104,7 @@
                         <a href="{{ route('documents.view', $document->id) }}" 
                            target="_blank" 
                            title="Bekijken"
-                           style="cursor: pointer; color: #3B82F6;">
+                           style="cursor: pointer; color: var(--primary-color);">
                             👁️
                         </a>
                         <a href="{{ route('documents.download', $document->id) }}" 
@@ -145,14 +145,18 @@
     
     <div class="mt-6 space-x-4">
         @if(isset($employee))
-            <a href="{{ route('documents.upload', $employee->id) }}">Document Uploaden</a>
-            <a href="{{ route('employer.employees') }}">Terug naar Medewerkers</a>
+            <a href="{{ route('documents.upload', $employee->id) }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ $backUrl ?? route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Terug naar Medewerkers</a>
         @else
-            <a href="{{ route('documents.upload') }}">Document Uploaden</a>
-            <a href="{{ route('employer.employees') }}">Medewerkers</a>
+            <a href="{{ route('documents.upload') }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
+            <span style="color: #9CA3AF;">|</span>
+            <a href="{{ route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Medewerkers</a>
         @endif
-        <a href="{{ route('documents.deleted') }}">Verwijderde Documenten</a>
-        <a href="{{ route('employer.dashboard') }}">Dashboard</a>
+        <span style="color: #9CA3AF;">|</span>
+        <a href="{{ isset($employee) ? route('documents.deleted', ['employee' => $employee->id]) : route('documents.deleted') }}" style="color: var(--primary-color); cursor: pointer;">Verwijderde Documenten</a>
+        <span style="color: #9CA3AF;">|</span>
+        <a href="{{ route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
     </div>
 </section>
 @endsection

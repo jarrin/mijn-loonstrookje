@@ -46,7 +46,7 @@
     <div class="mt-6 space-x-4">
         <button onclick="openInviteEmployeeModal()" class="text-white px-4 py-2 rounded hover:opacity-90" style="background-color: var(--primary-color);">Medewerker Toevoegen</button>
         <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 inline-block">Terug naar Dashboard</a>
-        <a href="{{ route('employer.documents') }}" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">Alle Documenten</a>
+        {{-- <a href="{{ route('employer.documents') }}" class="text-white px-4 py-2 rounded hover:opacity-90 inline-block" style="background-color: var(--primary-color);">Alle Documenten</a> --}}
     </div>
 </section>
 

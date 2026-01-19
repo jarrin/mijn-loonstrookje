@@ -23,12 +23,18 @@
                     'administration.company.show',
                     'administration.company.employees',
                     'administration.company.documents',
-                    'employer.employee.documents' // When admin views employee documents
+                    'employer.employee.documents', // When admin views employee documents
+                    'documents.upload', // When admin uploads document for specific employee
+                    'documents.deleted' // When viewing deleted documents with context
                 ];
                 
                 if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
                     $brandingCompany = $company;
                 }
+            }
+            // For employer: also check deleted documents page
+            elseif ($user->role === 'employer' && request()->route()->getName() === 'documents.deleted') {
+                $brandingCompany = $user->company;
             }
         }
         
@@ -95,7 +101,9 @@
                                 'administration.company.show',
                                 'administration.company.employees',
                                 'administration.company.documents',
-                                'employer.employee.documents'
+                                'employer.employee.documents',
+                                'documents.upload',
+                                'documents.deleted'
                             ]);
                             
                             // Determine routes based on context
@@ -106,8 +114,8 @@
                                 
                                 // Determine active state
                                 $homeActive = request()->routeIs('administration.company.show');
-                                $employeesActive = request()->routeIs('administration.company.employees');
-                                $documentsActive = request()->routeIs('administration.company.documents', 'employer.employee.documents');
+                                $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents');
+                                $documentsActive = request()->routeIs('administration.company.documents') || (request()->routeIs('documents.deleted') && request()->query('company'));
                             } else {
                                 $homeRoute = route('administration.dashboard');
                                 $employeesRoute = route('administration.employees');
@@ -115,7 +123,7 @@
                                 
                                 $homeActive = request()->routeIs('administration.dashboard');
                                 $employeesActive = request()->routeIs('administration.employees');
-                                $documentsActive = request()->routeIs('administration.documents');
+                                $documentsActive = request()->routeIs('administration.documents') || (request()->routeIs('documents.deleted') && !request()->query('company') && !request()->query('employee'));
                             }
                         @endphp
                         
@@ -139,11 +147,11 @@
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') ? 'active' : '' }}">
+                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') ? 'active' : '' }}">
+                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || request()->routeIs('documents.deleted') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>
