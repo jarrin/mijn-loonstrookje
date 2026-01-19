@@ -42,7 +42,7 @@
             </select>
         </div>
         
-        <div>
+        <div id="period_type_field">
             <label for="period_type" class="block mb-2">Periode Type *</label>
             <select name="period_type" id="period_type" required class="w-full px-3 py-2 border rounded">
                 <option value="">Selecteer periode type</option>
@@ -115,11 +115,35 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const documentTypeSelect = document.getElementById('document_type');
+    const periodTypeField = document.getElementById('period_type_field');
     const periodTypeSelect = document.getElementById('period_type');
     const monthField = document.getElementById('month_field');
     const weekField = document.getElementById('week_field');
     const monthInput = document.getElementById('month');
     const weekInput = document.getElementById('week');
+    
+    function updateDocumentTypeFields() {
+        const documentType = documentTypeSelect.value;
+        
+        if (documentType === 'annual_statement') {
+            // Hide period type for jaaroverzicht
+            periodTypeField.style.display = 'none';
+            periodTypeSelect.removeAttribute('required');
+            periodTypeSelect.value = 'Jaarlijks';
+            
+            // Hide month and week fields
+            monthField.style.display = 'none';
+            weekField.style.display = 'none';
+            monthInput.removeAttribute('required');
+            weekInput.removeAttribute('required');
+        } else {
+            // Show period type for other document types
+            periodTypeField.style.display = 'block';
+            periodTypeSelect.setAttribute('required', 'required');
+            updatePeriodFields();
+        }
+    }
     
     function updatePeriodFields() {
         const periodType = periodTypeSelect.value;
@@ -140,10 +164,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    documentTypeSelect.addEventListener('change', updateDocumentTypeFields);
     periodTypeSelect.addEventListener('change', updatePeriodFields);
     
     // Initialize on page load
-    updatePeriodFields();
+    updateDocumentTypeFields();
 });
 </script>
 @endsection
