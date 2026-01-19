@@ -52,8 +52,7 @@ Route::get('/home', function () {
 Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () {
     // Employee routes
     Route::middleware('role:employee')->group(function () {
-        Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
-        Route::get('/employee/documents', [EmployeeController::class, 'documents'])->name('employee.documents');
+        Route::get('/employee/documents', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
     });
     
     // Employer routes
