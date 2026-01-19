@@ -23,7 +23,8 @@
                     'administration.company.show',
                     'administration.company.employees',
                     'administration.company.documents',
-                    'employer.employee.documents' // When admin views employee documents
+                    'employer.employee.documents', // When admin views employee documents
+                    'documents.upload' // When admin uploads document for specific employee
                 ];
                 
                 if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
@@ -95,7 +96,8 @@
                                 'administration.company.show',
                                 'administration.company.employees',
                                 'administration.company.documents',
-                                'employer.employee.documents'
+                                'employer.employee.documents',
+                                'documents.upload'
                             ]);
                             
                             // Determine routes based on context

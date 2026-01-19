@@ -44,6 +44,7 @@ class DocumentController extends Controller
         }
         
         $selectedEmployee = null;
+        $company = null;
         if ($employeeId) {
             if ($user->role === 'administration_office') {
                 $companyIds = $user->companies()
@@ -54,6 +55,11 @@ class DocumentController extends Controller
                     ->where('role', 'employee')
                     ->whereIn('company_id', $companyIds)
                     ->first();
+                
+                // Set company for branding if employee is selected
+                if ($selectedEmployee) {
+                    $company = $selectedEmployee->company;
+                }
             } else {
                 $selectedEmployee = User::where('id', $employeeId)
                     ->where('role', 'employee')
@@ -62,7 +68,7 @@ class DocumentController extends Controller
             }
         }
         
-        return view('documents.upload', compact('employees', 'selectedEmployee'));
+        return view('documents.upload', compact('employees', 'selectedEmployee', 'company'));
     }
     
     /**

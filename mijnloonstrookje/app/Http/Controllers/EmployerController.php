@@ -112,7 +112,10 @@ class EmployerController extends Controller
                              ->orderBy('week', 'desc')
                              ->get();
         
-        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents'));
+        // Pass company for branding context
+        $company = $employee->company;
+        
+        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents', 'company'));
     }
 
     /**
