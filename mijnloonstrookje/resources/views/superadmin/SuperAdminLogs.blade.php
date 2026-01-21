@@ -110,9 +110,35 @@
     </table>
     
     <!-- Pagination -->
-    <div class="mt-4">
+    <div class="mt-6 flex justify-center pagination-wrapper">
         {{ $logs->links() }}
     </div>
+    
+    <style>
+        .pagination-wrapper nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .pagination-wrapper nav span,
+        .pagination-wrapper nav a {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.25rem;
+            background-color: #f3f4f6;
+            color: #374151;
+            transition: background-color 0.2s;
+        }
+        
+        .pagination-wrapper nav a:hover {
+            background-color: var(--primary-color, #3B82F6);
+            color: white;
+        }
+        
+        .pagination-wrapper nav span[aria-current="page"] {
+            background-color: var(--primary-color, #3B82F6);
+            color: white;
+        }
+    </style>
     
     <div class="mt-6 space-x-4">
         <a href="{{ route('superadmin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>

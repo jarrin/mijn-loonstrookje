@@ -38,7 +38,7 @@ class AuditLogController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
         
-        $logs = $query->paginate(50);
+        $logs = $query->paginate(25);
         
         // Get all unique actions for filter dropdown
         $actions = AuditLog::select('action')->distinct()->pluck('action');
