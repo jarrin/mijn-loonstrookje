@@ -119,13 +119,14 @@ class AuditLogService
     /**
      * Log employee creation
      */
-    public static function logEmployeeCreated(int $employeeId, int $companyId): AuditLog
+    public static function logEmployeeCreated(int $employeeId, int $companyId, int $invitedBy): AuditLog
     {
         return self::log(
             action: 'employee_created',
             description: 'New employee account created',
             targetType: 'User',
             targetId: $employeeId,
+            userId: $invitedBy,
             companyId: $companyId
         );
     }
@@ -133,13 +134,14 @@ class AuditLogService
     /**
      * Log admin office addition
      */
-    public static function logAdminOfficeAdded(int $adminOfficeId, int $companyId): AuditLog
+    public static function logAdminOfficeAdded(int $adminOfficeId, int $companyId, int $invitedBy): AuditLog
     {
         return self::log(
             action: 'admin_office_added',
             description: 'Administration office access granted',
             targetType: 'User',
             targetId: $adminOfficeId,
+            userId: $invitedBy,
             companyId: $companyId
         );
     }

@@ -212,15 +212,30 @@ class InvitationController extends Controller
         // Determine the role from invitation
         $role = $invitation->role ?? 'employee';
         
-        // Create the user (without email_verified_at so verification is required)
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $invitation->email,
-            'password' => Hash::make($request->password),
-            'role' => $role,
-            'company_id' => $role === 'employee' ? $invitation->company_id : null,
-            'status' => 'active',
-        ]);
+        // Check if user with this email already exists
+        $existingUser = User::where('email', $invitation->email)->first();
+        
+        if ($existingUser) {
+            // User already exists, update their details instead of creating new
+            $existingUser->update([
+                'name' => $request->name,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                'status' => 'active',
+            ]);
+            $user = $existingUser;
+        } else {
+            // Create new user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $invitation->email,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                'status' => 'active',
+            ]);
+        }
 
         // If this is an admin office, create the relationship with the company
         if ($role === 'administration_office' && $invitation->company_id) {
@@ -231,10 +246,10 @@ class InvitationController extends Controller
             ]);
             
             // Log the admin office addition
-            AuditLogService::logAdminOfficeAdded($user->id, $invitation->company_id);
+            AuditLogService::logAdminOfficeAdded($user->id, $invitation->company_id, $invitation->invited_by);
         } elseif ($role === 'employee' && $invitation->company_id) {
             // Log the employee creation
-            AuditLogService::logEmployeeCreated($user->id, $invitation->company_id);
+            AuditLogService::logEmployeeCreated($user->id, $invitation->company_id, $invitation->invited_by);
         }
 
         // Mark invitation as accepted
