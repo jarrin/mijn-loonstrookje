@@ -110,7 +110,16 @@ class FortifyServiceProvider extends ServiceProvider
         
         // Listen for successful login events and log them
         Event::listen(\Illuminate\Auth\Events\Login::class, function ($event) {
-            AuditLogService::logLogin($event->user->id, $event->user->company_id);
+            $user = $event->user;
+            
+            // For admin offices, log once without company_id (they work across multiple companies)
+            // Employers will still see these logins via the User relationship check
+            if ($user->role === 'administration_office') {
+                AuditLogService::logLogin($user->id, null);
+            } else {
+                // For other roles, log with their company_id
+                AuditLogService::logLogin($user->id, $user->company_id);
+            }
         });
     }
 }

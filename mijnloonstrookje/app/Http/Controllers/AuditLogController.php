@@ -62,8 +62,18 @@ class AuditLogController extends Controller
         }
         
         // Get last 10 audit logs for this company
+        // Include logs where company_id matches OR user is admin office with access to this company
+        $companyId = $user->company_id;
         $logs = AuditLog::with(['user'])
-            ->where('company_id', $user->company_id)
+            ->where(function($query) use ($companyId) {
+                $query->where('company_id', $companyId)
+                      ->orWhereHas('user', function($q) use ($companyId) {
+                          $q->where('role', 'administration_office')
+                            ->whereHas('companies', function($c) use ($companyId) {
+                                $c->where('company_id', $companyId);
+                            });
+                      });
+            })
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();

@@ -53,8 +53,18 @@ class EmployerController extends Controller
                             ->first();
         
         // Get recent audit logs for this company
+        // Include logs where company_id matches OR user is admin office with access to this company
+        $companyId = auth()->user()->company_id;
         $recentLogs = \App\Models\AuditLog::with(['user'])
-                            ->where('company_id', auth()->user()->company_id)
+                            ->where(function($query) use ($companyId) {
+                                $query->where('company_id', $companyId)
+                                      ->orWhereHas('user', function($q) use ($companyId) {
+                                          $q->where('role', 'administration_office')
+                                            ->whereHas('companies', function($c) use ($companyId) {
+                                                $c->where('company_id', $companyId);
+                                            });
+                                      });
+                            })
                             ->orderBy('created_at', 'desc')
                             ->limit(10)
                             ->get();

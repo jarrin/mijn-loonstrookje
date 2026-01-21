@@ -61,7 +61,28 @@
             <tr>
                 <td>{{ $log->created_at->format('d-m-Y H:i:s') }}</td>
                 <td>{{ $log->user ? $log->user->name : 'N/A' }}</td>
-                <td>{{ $log->company ? $log->company->name : 'N/A' }}</td>
+                <td>
+                    @if($log->company)
+                        {{ $log->company->name }}
+                    @elseif($log->user && $log->user->role === 'administration_office')
+                        @php
+                            $companies = $log->user->companies;
+                            $count = $companies->count();
+                            $allCompanies = $companies->pluck('name')->join(', ');
+                        @endphp
+                        @if($count === 1)
+                            {{ $companies->first()->name }}
+                        @elseif($count > 1)
+                            <span title="{{ $allCompanies }}" style="cursor: help; border-bottom: 1px dotted #666;">
+                                {{ $count }} Bedrijven
+                            </span>
+                        @else
+                            N/A
+                        @endif
+                    @else
+                        N/A
+                    @endif
+                </td>
                 <td>
                     <span class="px-2 py-1 rounded text-xs" style="background-color: {{ 
                         match($log->action) {
