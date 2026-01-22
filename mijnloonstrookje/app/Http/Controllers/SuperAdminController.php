@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Subscription;
 use App\Models\CustomSubscription;
 use App\Models\Invoice;
-use App\Models\Log;
+use App\Models\AuditLog;
 use App\Models\Company;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomSubscriptionInvitation;
@@ -246,7 +246,31 @@ class SuperAdminController extends Controller
      */
     public function logs()
     {
-        return view('superadmin.SuperAdminLogs');
+        $query = AuditLog::with(['user', 'company'])->orderBy('created_at', 'desc');
+
+        // Filter by action
+        if (request('action')) {
+            $query->where('action', request('action'));
+        }
+
+        // Filter by company
+        if (request('company_id')) {
+            $query->where('company_id', request('company_id'));
+        }
+
+        // Filter by date range
+        if (request('date_from')) {
+            $query->whereDate('created_at', '>=', request('date_from'));
+        }
+        if (request('date_to')) {
+            $query->whereDate('created_at', '<=', request('date_to'));
+        }
+
+        $logs = $query->paginate(25)->withQueryString();
+        $actions = AuditLog::distinct()->pluck('action');
+        $companies = Company::orderBy('name')->get();
+
+        return view('superadmin.SuperAdminLogs', compact('logs', 'actions', 'companies'));
     }
 
     /**

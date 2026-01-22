@@ -7,7 +7,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-sky-50 min-h-screen">
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <x-page-background />
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="w-full max-w-md">
             <!-- Main Card -->
             <div class="bg-white rounded-2xl shadow-sm p-8 text-center">
