@@ -26,11 +26,11 @@ Route::get('/', function () {
             'employer' => redirect()->route('employer.dashboard'),
             'administration_office' => redirect()->route('administration.dashboard'),
             'super_admin' => redirect()->route('superadmin.dashboard'),
-            default => view('auth.Login'),
+            default => view('auth.login'),
         };
     }
     
-    return view('auth.Login');
+    return view('auth.login');
 })->name('auth');
 
 Route::get('/home', function () {
@@ -114,6 +114,17 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         
         Route::get('/superadmin/subscriptions', [SuperAdminController::class, 'subscriptions'])->name('superadmin.subscriptions');
         Route::put('/superadmin/subscriptions/{subscription}', [SuperAdminController::class, 'updateSubscription'])->name('superadmin.subscriptions.update');
+        
+        // Custom subscriptions routes
+        Route::post('/superadmin/custom-subscriptions', [SuperAdminController::class, 'storeCustomSubscription'])->name('superadmin.custom-subscriptions.store');
+        Route::put('/superadmin/custom-subscriptions/{customSubscription}', [SuperAdminController::class, 'updateCustomSubscription'])->name('superadmin.custom-subscriptions.update');
+        Route::delete('/superadmin/custom-subscriptions/{customSubscription}', [SuperAdminController::class, 'destroyCustomSubscription'])->name('superadmin.custom-subscriptions.destroy');
+        Route::post('/superadmin/custom-subscriptions/{customSubscription}/invite', [SuperAdminController::class, 'inviteCustomSubscription'])->name('superadmin.custom-subscriptions.invite');
+        Route::delete('/superadmin/custom-subscriptions/{customSubscription}/invitations/{invitation}', [SuperAdminController::class, 'cancelCustomSubscriptionInvitation'])->name('superadmin.custom-subscriptions.cancel-invitation');
+        Route::delete('/superadmin/custom-subscriptions/{customSubscription}/companies/{company}', [SuperAdminController::class, 'removeCompanyFromCustomSubscription'])->name('superadmin.custom-subscriptions.remove-company');
+        
+        // Invitation cancel route (used in view)
+        Route::delete('/superadmin/invitations/{invitation}', [SuperAdminController::class, 'cancelInvitation'])->name('superadmin.invitations.cancel');
         
         Route::get('/superadmin/logs', [SuperAdminController::class, 'logs'])->name('superadmin.logs');
         Route::get('/superadmin/facturation', [SuperAdminController::class, 'facturation'])->name('superadmin.facturation');
@@ -217,6 +228,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/onboarding/setup-2fa', function () {
         return view('onboarding.setup-2fa');
     })->name('onboarding.setup-2fa');
+    
+    // Profile settings page
+    Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.settings');
+    Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::post('/profile/branding', [App\Http\Controllers\ProfileController::class, 'updateBranding'])->name('profile.update-branding');
     
     // 2FA settings page for all authenticated users
     Route::get('/profile/two-factor-authentication', function () {
