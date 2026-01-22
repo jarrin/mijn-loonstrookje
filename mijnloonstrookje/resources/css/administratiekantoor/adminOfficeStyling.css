@@ -1,0 +1,657 @@
+/* ========================================
+   ADMIN OFFICE STYLING
+   Combined CSS for all administration office views
+   ======================================== */
+
+/* ========================================
+   DASHBOARD STYLES
+   ======================================== */
+
+.admin-dashboard-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.admin-dashboard-intro {
+    color: #4B5563;
+    margin-bottom: 1.5rem;
+}
+
+.admin-companies-section {
+    margin-top: 2rem;
+}
+
+.admin-companies-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.admin-no-companies {
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.admin-no-companies p {
+    color: #374151;
+}
+
+.admin-no-companies .subtext {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-top: 0.5rem;
+}
+
+.admin-companies-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .admin-companies-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .admin-companies-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1280px) {
+    .admin-companies-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.admin-company-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s;
+    border-width: 3px;
+    border-style: solid;
+}
+
+.admin-company-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.admin-company-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.admin-company-logo {
+    width: 5rem;
+    height: 5rem;
+    max-width: 5rem;
+    max-height: 5rem;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.admin-company-logo-placeholder {
+    width: 5rem;
+    height: 5rem;
+    min-width: 5rem;
+    min-height: 5rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.admin-company-logo-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.admin-company-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 0.5rem;
+}
+
+.admin-company-kvk {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-bottom: 0.75rem;
+}
+
+.admin-company-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+}
+
+.admin-company-status.active {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.admin-company-status.inactive {
+    background-color: #F3F4F6;
+    color: #1F2937;
+}
+
+.admin-company-actions {
+    margin-top: auto;
+    width: 100%;
+}
+
+.admin-company-actions > * + * {
+    margin-top: 0.5rem;
+}
+
+.admin-company-btn {
+    display: block;
+    width: 100%;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: opacity 0.15s;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+}
+
+.admin-company-btn:hover {
+    opacity: 0.9;
+}
+
+/* ========================================
+   COMPANY DETAILS STYLES
+   ======================================== */
+
+.company-details-header {
+    margin-bottom: 1.5rem;
+}
+
+.company-back-link {
+    text-decoration: none;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.company-back-link:hover {
+    text-decoration: underline;
+}
+
+.company-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.company-kvk-text {
+    color: #4B5563;
+}
+
+.company-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .company-stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.company-stat-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.company-stat-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.company-stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.company-stat-link {
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.company-stat-link:hover {
+    text-decoration: underline;
+}
+
+.company-subscription-plan {
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.company-subscription-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.company-subscription-status.active {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.company-subscription-status.inactive {
+    background-color: #F3F4F6;
+    color: #1F2937;
+}
+
+.company-subscription-expires {
+    font-size: 0.875rem;
+    color: #4B5563;
+    margin-top: 0.5rem;
+}
+
+.company-subscription-none {
+    color: #4B5563;
+}
+
+.company-info-card {
+    background-color: white;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.company-info-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.company-info-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .company-info-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.company-info-field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4B5563;
+    margin-bottom: 0.25rem;
+}
+
+/* ========================================
+   COMPANY EMPLOYEES STYLES
+   ======================================== */
+
+.employees-header {
+    margin-bottom: 1.5rem;
+}
+
+.employees-back-link {
+    text-decoration: none;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.employees-back-link:hover {
+    text-decoration: underline;
+}
+
+.employees-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.employees-subtitle {
+    color: #4B5563;
+}
+
+.employees-no-data {
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.employees-table-container {
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+}
+
+.employees-table {
+    min-width: 100%;
+    width: 100%;
+}
+
+.employees-table thead {
+    background-color: #F3F4F6;
+}
+
+.employees-table th {
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+.employees-table tbody tr {
+    border-top: 1px solid #E5E7EB;
+}
+
+.employees-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.employees-table td {
+    padding: 0.5rem 1rem;
+}
+
+.employee-status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.employee-status-badge.active {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.employee-action-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* ========================================
+   DOCUMENTS STYLES
+   ======================================== */
+
+.documents-back-link {
+    margin-bottom: 1rem;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.documents-back-link:hover {
+    text-decoration: underline;
+}
+
+.documents-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.documents-alert-success {
+    background-color: #D1FAE5;
+    border: 1px solid #6EE7B7;
+    color: #065F46;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.documents-alert-error {
+    background-color: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.documents-no-data {
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.documents-table-container {
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.documents-table {
+    min-width: 100%;
+    width: 100%;
+}
+
+.documents-table thead {
+    background-color: #F3F4F6;
+}
+
+.documents-table th {
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+.documents-table tbody tr {
+    border-top: 1px solid #E5E7EB;
+}
+
+.documents-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.documents-table td {
+    padding: 0.5rem 1rem;
+}
+
+.document-version-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.document-version-number {
+    font-weight: 500;
+}
+
+.document-version-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: white;
+}
+
+.document-version-badge.original {
+    /* Primary color set via inline style */
+}
+
+.document-version-badge.parent {
+    background-color: #9CA3AF;
+}
+
+.document-version-badge.latest {
+    background-color: #10B981;
+}
+
+.document-actions-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.document-action-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.document-action-form {
+    display: inline;
+}
+
+.document-action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+
+.documents-button-group {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.documents-primary-btn {
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.documents-primary-btn:hover {
+    opacity: 0.9;
+}
+
+.documents-secondary-btn {
+    background-color: #6B7280;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.documents-secondary-btn:hover {
+    background-color: #4B5563;
+}
+
+.documents-footer {
+    margin-top: 1.5rem;
+}
+
+.documents-footer-link {
+    text-decoration: none;
+}
+
+.documents-footer-link:hover {
+    text-decoration: underline;
+}
+
+/* ========================================
+   EMPLOYEE LIST STYLES
+   ======================================== */
+
+.employee-list-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.employee-list-subtitle {
+    color: #4B5563;
+    margin-bottom: 1.5rem;
+}
+
+.employee-list-no-data {
+    background-color: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.employee-list-table-container {
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.employee-list-table {
+    min-width: 100%;
+    width: 100%;
+}
+
+.employee-list-table thead {
+    background-color: #F3F4F6;
+}
+
+.employee-list-table th {
+    padding: 0.5rem 1rem;
+    text-align: left;
+}
+
+.employee-list-table tbody tr {
+    border-top: 1px solid #E5E7EB;
+}
+
+.employee-list-table tbody tr:hover {
+    background-color: #F9FAFB;
+}
+
+.employee-list-table td {
+    padding: 0.5rem 1rem;
+}
+
+.employee-list-status-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+}
+
+.employee-list-status-badge.active {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+.employee-list-action-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.employee-list-footer {
+    margin-top: 1.5rem;
+}
+
+.employee-list-footer-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.employee-list-footer-link:hover {
+    text-decoration: underline;
+}

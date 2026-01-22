@@ -9,8 +9,12 @@
 @import './component/nav.css';
 @import './component/status.css';
 @import './tabellen/employees.css';
-@import './tabellen/log.css';
 @import './showcase/showcase.css';
+@import './administratiekantoor/adminOfficeStyling.css';
+@import './documents/documentsStyling.css';
+@import './employee/employeeStyling.css';
+@import './employer/employerStyling.css';
+@import './superadmin/superadminStyling.css';
 
 
 :root {

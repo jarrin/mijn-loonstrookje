@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Services\AuditLogService;
 
 class LoginController extends Controller
 {
@@ -28,6 +29,9 @@ class LoginController extends Controller
             $request->session()->regenerate();
             
             $user = Auth::user();
+            
+            // Log the login action
+            AuditLogService::logLogin($user->id, $user->company_id);
             
             // Redirect based on role
             return $this->redirectBasedOnRole($user);
@@ -65,11 +69,11 @@ class LoginController extends Controller
                     return redirect()->route('employer.dashboard');
                 case 'employee':
                 default:
-                    return redirect()->route('employee.dashboard');
+                    return redirect()->route('employee.documents');
             }
         }
         
         // Default redirect if no role is set
-        return redirect()->route('employee.dashboard');
+        return redirect()->route('employee.documents');
     }
 }

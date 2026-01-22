@@ -17,7 +17,18 @@ class EmployeeController extends Controller
      */
     public function dashboard()
     {
-        return view('employee.EmployeeDashboard');
+        $user = auth()->user();
+        
+        // Get documents for this employee only
+        $documents = Document::where('employee_id', $user->id)
+                            ->where('is_deleted', false)
+                            ->with(['uploader', 'company'])
+                            ->orderBy('year', 'desc')
+                            ->orderBy('month', 'desc')
+                            ->orderBy('week', 'desc')
+                            ->get();
+        
+        return view('employee.EmployeeDashboard', compact('documents'));
     }
 
     /**
@@ -36,6 +47,6 @@ class EmployeeController extends Controller
                             ->orderBy('week', 'desc')
                             ->get();
         
-        return view('employee.EmployeeDocuments', compact('documents'));
+        return view('employee.EmployeeDashboard', compact('documents'));
     }
 }

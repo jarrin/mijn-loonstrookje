@@ -13,7 +13,18 @@ class EnsureEmployerHasPaidSubscription
         $user = $request->user();
 
         if ($user) {
-            // Voor employer accounts
+            // Skip 2FA check for test accounts
+            $testEmails = ['superadmin@test.com', 'admin@test.com', 'employer@test.com', 'employee@test.com'];
+            $isTestAccount = in_array($user->email, $testEmails);
+            
+            // Check of 2FA is ingesteld (VOOR IEDEREEN behalve test accounts)
+            if (!$isTestAccount && !$user->two_factor_confirmed_at) {
+                return redirect()->route('onboarding.setup-2fa')
+                    ->with('error', 'Je moet eerst twee-factor authenticatie inschakelen.');
+            }
+            
+            // Alleen voor employer accounts: check abonnement
+            // Employees, admin_offices en super_admins hoeven niet te betalen
             if ($user->role === 'employer') {
                 // Custom subscription flow: redirect naar verify-and-secure als 2FA of email niet is afgerond
                 if (session('pending_custom_subscription_id')) {

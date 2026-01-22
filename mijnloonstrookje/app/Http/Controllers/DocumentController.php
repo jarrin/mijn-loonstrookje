@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Auth;
+use App\Services\AuditLogService;
+use ZipArchive;
 
 class DocumentController extends Controller
 {
@@ -23,26 +25,13 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Get employees based on user role
-        if ($user->role === 'administration_office') {
-            // Get company IDs that admin office has access to
-            $companyIds = $user->companies()
-                ->wherePivot('status', 'active')
-                ->pluck('companies.id');
-            
-            $employees = User::where('role', 'employee')
-                ->whereIn('company_id', $companyIds)
-                ->orderBy('name')
-                ->get();
-        } else {
-            // Employer: get employees from their company
-            $employees = User::where('role', 'employee')
-                ->where('company_id', $user->company_id)
-                ->orderBy('name')
-                ->get();
-        }
-        
         $selectedEmployee = null;
+        $company = null;
+        
+        // Check if coming from company context via query parameter
+        $companyId = request()->query('company');
+        
+        // Check if employee is pre-selected
         if ($employeeId) {
             if ($user->role === 'administration_office') {
                 $companyIds = $user->companies()
@@ -53,6 +42,11 @@ class DocumentController extends Controller
                     ->where('role', 'employee')
                     ->whereIn('company_id', $companyIds)
                     ->first();
+                
+                // Set company for branding if employee is selected
+                if ($selectedEmployee) {
+                    $company = $selectedEmployee->company;
+                }
             } else {
                 $selectedEmployee = User::where('id', $employeeId)
                     ->where('role', 'employee')
@@ -60,8 +54,62 @@ class DocumentController extends Controller
                     ->first();
             }
         }
+        // Check if company ID provided via query parameter (from company documents page)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->first();
+        }
         
-        return view('documents.upload', compact('employees', 'selectedEmployee'));
+        // Get employees based on user role and context
+        if ($user->role === 'administration_office') {
+            // If coming from a specific company context
+            if ($company) {
+                // Only show employees from that specific company
+                $employees = User::where('role', 'employee')
+                    ->where('company_id', $company->id)
+                    ->orderBy('name')
+                    ->get();
+            } else {
+                // Show all employees from accessible companies
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                
+                $employees = User::where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->orderBy('name')
+                    ->get();
+            }
+        } else {
+            // Employer: get employees from their company
+            $employees = User::where('role', 'employee')
+                ->where('company_id', $user->company_id)
+                ->orderBy('name')
+                ->get();
+        }
+        
+        // Determine cancel URL based on context
+        $cancelUrl = null;
+        if ($selectedEmployee) {
+            // Coming from specific employee documents page
+            $cancelUrl = route('employer.employee.documents', $selectedEmployee->id);
+        } elseif ($company && $user->role === 'administration_office') {
+            // Coming from company documents page
+            $cancelUrl = route('administration.company.documents', $company->id);
+        } elseif ($user->role === 'administration_office') {
+            // Coming from global admin office documents page
+            $cancelUrl = route('administration.documents');
+        } elseif ($user->role === 'employer') {
+            // Coming from employer documents page
+            $cancelUrl = route('employer.documents');
+        } else {
+            // Fallback
+            $cancelUrl = route('employer.employees');
+        }
+        
+        return view('documents.upload', compact('employees', 'selectedEmployee', 'company', 'cancelUrl'));
     }
     
     /**
@@ -140,6 +188,9 @@ class DocumentController extends Controller
             'period_type' => $validated['period_type'],
             'note' => $validated['note'],
         ]);
+        
+        // Log the document upload
+        AuditLogService::logDocumentUpload($document->id, $employee->id, $employee->company_id);
         
         return redirect()
             ->route('employer.employee.documents', $employee->id)
@@ -224,13 +275,16 @@ class DocumentController extends Controller
         $document->deleted_at = now();
         $document->save();
         
+        // Log the document deletion
+        AuditLogService::logDocumentDeleted($document->id, $document->company_id);
+        
         return back()->with('success', 'Document succesvol verwijderd');
     }
     
     /**
      * Show deleted documents
      */
-    public function deleted()
+    public function deleted(Request $request)
     {
         $user = Auth::user();
         
@@ -239,18 +293,60 @@ class DocumentController extends Controller
             abort(403, 'Unauthorized access');
         }
         
+        // Check for employee or company context
+        $employee = null;
+        $company = null;
+        $employeeId = $request->query('employee');
+        $companyId = $request->query('company');
+        
         // Get deleted documents (using withTrashed to include soft-deleted records)
         $query = Document::withTrashed()->where('is_deleted', true);
         
-        if ($user->role !== 'super_admin') {
+        // If specific employee requested
+        if ($employeeId) {
+            if ($user->role === 'administration_office') {
+                $companyIds = $user->companies()
+                    ->wherePivot('status', 'active')
+                    ->pluck('companies.id');
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->whereIn('company_id', $companyIds)
+                    ->firstOrFail();
+            } else {
+                $employee = User::where('id', $employeeId)
+                    ->where('role', 'employee')
+                    ->where('company_id', $user->company_id)
+                    ->firstOrFail();
+            }
+            $query->where('employee_id', $employee->id);
+            $company = $employee->company;
+        }
+        // If specific company requested (admin office viewing company documents)
+        elseif ($companyId && $user->role === 'administration_office') {
+            $company = $user->companies()
+                ->wherePivot('status', 'active')
+                ->where('companies.id', $companyId)
+                ->firstOrFail();
+            $query->where('company_id', $company->id);
+        }
+        // Default filtering by role
+        elseif ($user->role === 'administration_office') {
+            // Admin office: get documents from accessible companies
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            $query->whereIn('company_id', $companyIds);
+        } elseif ($user->role !== 'super_admin') {
+            // Employer: only their company
             $query->where('company_id', $user->company_id);
+            $company = $user->company;
         }
         
         $documents = $query->with(['employee', 'uploader'])
                           ->orderBy('deleted_at', 'desc')
                           ->get();
         
-        return view('documents.deleted', compact('documents'));
+        return view('documents.deleted', compact('documents', 'employee', 'company'));
     }
     
     /**
@@ -287,6 +383,9 @@ class DocumentController extends Controller
         $document->is_deleted = false;
         $document->deleted_at = null;
         $document->save();
+        
+        // Log the document restoration
+        AuditLogService::logDocumentRestored($document->id, $document->company_id);
         
         return back()->with('success', 'Document succesvol hersteld');
     }
@@ -420,6 +519,9 @@ class DocumentController extends Controller
             'note' => $validated['note'],
         ]);
         
+        // Log the document revision
+        AuditLogService::logDocumentRevision($newDocument->id, $newDocument->company_id, $newVersion);
+        
         return redirect()
             ->route('employer.employee.documents', $originalDocument->employee_id)
             ->with('success', "Document succesvol bijgewerkt naar versie " . number_format($newVersion, 1));
@@ -462,5 +564,101 @@ class DocumentController extends Controller
         if (!in_array($user->role, ['employer', 'employee'])) {
             abort(403, 'Unauthorized access');
         }
+    }
+
+    /**
+     * Bulk download documents as ZIP
+     */
+    public function bulkDownload(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Validate request
+        $validated = $request->validate([
+            'type' => 'required|string|in:all,payslip,annual_statement,other',
+            'year' => 'required|string',
+        ]);
+        
+        // Build query based on user role
+        $query = Document::where('is_deleted', false);
+        
+        if ($user->role === 'employee') {
+            // Employee: only their own documents
+            $query->where('employee_id', $user->id);
+        } elseif ($user->role === 'employer') {
+            // Employer: all documents in their company
+            $query->where('company_id', $user->company_id);
+        } elseif ($user->role === 'administration_office') {
+            // Admin office: documents from accessible companies
+            $companyIds = $user->companies()
+                ->wherePivot('status', 'active')
+                ->pluck('companies.id');
+            $query->whereIn('company_id', $companyIds);
+        }
+        
+        // Apply filters
+        if ($validated['type'] !== 'all') {
+            $query->where('type', $validated['type']);
+        }
+        
+        if ($validated['year'] !== 'all') {
+            $query->where('year', $validated['year']);
+        }
+        
+        $documents = $query->with(['employee', 'company'])->get();
+        
+        if ($documents->isEmpty()) {
+            return back()->with('error', 'Geen documenten gevonden met de geselecteerde filters');
+        }
+        
+        // Create temporary ZIP file
+        $zipFileName = 'documenten_' . date('Y-m-d_His') . '.zip';
+        $zipFilePath = storage_path('app/temp/' . $zipFileName);
+        
+        // Ensure temp directory exists
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+        
+        $zip = new ZipArchive();
+        
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            return back()->with('error', 'Kon ZIP-bestand niet aanmaken');
+        }
+        
+        // Add documents to ZIP
+        foreach ($documents as $document) {
+            try {
+                // Decrypt and get file content
+                $decryptedContent = $document->getDecryptedContent();
+                
+                // Create filename with employee name and period
+                $fileName = $document->employee->name . '_' . 
+                           $document->display_name . '_' . 
+                           $document->year;
+                
+                if ($document->month) {
+                    $fileName .= '_' . str_pad($document->month, 2, '0', STR_PAD_LEFT);
+                } elseif ($document->week) {
+                    $fileName .= '_week' . $document->week;
+                }
+                
+                $fileName .= '.pdf';
+                
+                // Sanitize filename
+                $fileName = preg_replace('/[^A-Za-z0-9_\-.]/', '_', $fileName);
+                
+                // Add to ZIP
+                $zip->addFromString($fileName, $decryptedContent);
+            } catch (\Exception $e) {
+                // Continue with other files if one fails
+                continue;
+            }
+        }
+        
+        $zip->close();
+        
+        // Download and delete temp file
+        return response()->download($zipFilePath, $zipFileName)->deleteFileAfterSend(true);
     }
 }

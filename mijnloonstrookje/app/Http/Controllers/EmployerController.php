@@ -52,7 +52,24 @@ class EmployerController extends Controller
                             ->orderBy('due_date', 'asc')
                             ->first();
         
-        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice'));
+        // Get recent audit logs for this company
+        // Include logs where company_id matches OR user is admin office with access to this company
+        $companyId = auth()->user()->company_id;
+        $recentLogs = \App\Models\AuditLog::with(['user'])
+                            ->where(function($query) use ($companyId) {
+                                $query->where('company_id', $companyId)
+                                      ->orWhereHas('user', function($q) use ($companyId) {
+                                          $q->where('role', 'administration_office')
+                                            ->whereHas('companies', function($c) use ($companyId) {
+                                                $c->where('company_id', $companyId);
+                                            });
+                                      });
+                            })
+                            ->orderBy('created_at', 'desc')
+                            ->limit(10)
+                            ->get();
+        
+        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice', 'recentLogs'));
     }
 
     /**
@@ -112,7 +129,19 @@ class EmployerController extends Controller
                              ->orderBy('week', 'desc')
                              ->get();
         
-        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents'));
+        // Pass company for branding context
+        $company = $employee->company;
+        
+        // Determine back URL based on user role
+        if ($user->role === 'administration_office') {
+            // Admin office: back to company employees page
+            $backUrl = route('administration.company.employees', $company->id);
+        } else {
+            // Employer: back to their employees page
+            $backUrl = route('employer.employees');
+        }
+        
+        return view('employer.EmployerEmployeeDocuments', compact('employee', 'documents', 'company', 'backUrl'));
     }
 
     /**
@@ -307,7 +336,8 @@ class EmployerController extends Controller
                                         ->get();
         
         $employee = null; // No specific employee selected
+        $company = auth()->user()->company; // For branding
         
-        return view('employer.EmployerEmployeeDocuments', compact('documents', 'employee'));
+        return view('employer.EmployerEmployeeDocuments', compact('documents', 'employee', 'company'));
     }
 }

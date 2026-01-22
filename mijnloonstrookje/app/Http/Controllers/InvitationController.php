@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Invitation;
 use App\Models\User;
 use App\Mail\EmployeeInvitation;
+use App\Services\AuditLogService;
 use Carbon\Carbon;
 
 class InvitationController extends Controller
@@ -247,20 +248,30 @@ class InvitationController extends Controller
             $existingUser->restore();
         }
         
-        // User already exists - just log them in and proceed with the invitation flow
-        Auth::login($existingUser);
-        $user = $existingUser;
-    } else {
-        // Create the user (without email_verified_at so verification is required)
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $invitation->email,
-            'password' => Hash::make($request->password),
-            'role' => $role,
-            'company_id' => $role === 'employee' ? $invitation->company_id : null,
-            'status' => 'active',
-        ]);
-    }
+        // Check if user with this email already exists
+        $existingUser = User::where('email', $invitation->email)->first();
+
+        if ($existingUser) {
+            // User already exists, update their details instead of creating new
+            $existingUser->update([
+                'name' => $request->name,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                'status' => 'active',
+            ]);
+            $user = $existingUser;
+        } else {
+            // Create new user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $invitation->email,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                'status' => 'active',
+            ]);
+        }
 
     // If this is an employer with a custom subscription, create a company
     if ($role === 'employer' && $invitation->custom_subscription_id) {
@@ -284,6 +295,12 @@ class InvitationController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            
+            // Log the admin office addition
+            AuditLogService::logAdminOfficeAdded($user->id, $invitation->company_id, $invitation->invited_by);
+        } elseif ($role === 'employee' && $invitation->company_id) {
+            // Log the employee creation
+            AuditLogService::logEmployeeCreated($user->id, $invitation->company_id, $invitation->invited_by);
         }
 
         // Mark invitation as accepted

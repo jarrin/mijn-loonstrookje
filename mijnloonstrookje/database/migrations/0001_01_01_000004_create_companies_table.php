@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('kvk_number')->unique();
             $table->string('logo_path')->nullable();
-            $table->string('primary_color')->nullable();
+            $table->string('primary_color')->default('#3B82F6'); // Default blue color
             $table->foreignId('subscription_id')->nullable()->constrained()->onDelete('set null');
             $table->boolean('is_deleted')->default(false);
             $table->timestamp('deleted_at')->nullable();

@@ -11,7 +11,7 @@ return [
     'username' => 'email',
     'email' => 'email',
     'views' => true,
-    'home' => '/employee/dashboard',
+    'home' => '/employee/documents',
     'prefix' => '',
     'domain' => null,
     'limiters' => [

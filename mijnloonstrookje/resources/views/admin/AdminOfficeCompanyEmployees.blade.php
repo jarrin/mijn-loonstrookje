@@ -4,22 +4,22 @@
 
 @section('content')
 <section>
-    <div class="mb-6">
-        <a href="{{ route('administration.company.show', $company->id) }}" class="text-blue-500 hover:underline mb-4 inline-block">
+    <div class="employees-header">
+        <a href="{{ route('administration.company.show', $company->id) }}" class="employees-back-link" style="color: var(--primary-color);">
             ← Terug naar {{ $company->name }}
         </a>
         
-        <h1 class="text-2xl font-bold mb-2">Medewerkers - {{ $company->name }}</h1>
-        <p class="text-gray-600">Overzicht van alle medewerkers van dit bedrijf</p>
+        <h1 class="employees-title">Medewerkers - {{ $company->name }}</h1>
+        <p class="employees-subtitle">Overzicht van alle medewerkers van dit bedrijf</p>
     </div>
 
     @if($employees->isEmpty())
-        <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-center">
+        <div class="employees-no-data">
             <p>Dit bedrijf heeft nog geen medewerkers.</p>
         </div>
     @else
-        <div class="bg-white shadow overflow-x-auto">
-            <table class="min-w-full">
+        <div class="employees-table-container">
+            <table class="employees-table">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Naam</th>
@@ -34,13 +34,15 @@
                             <td class="px-4 py-2">{{ $employee->name }}</td>
                             <td class="px-4 py-2">{{ $employee->email }}</td>
                             <td class="px-4 py-2">
-                                <span class="text-xs px-2 py-1 rounded bg-green-100 text-green-800">
+                                <span class="employee-status-badge active">
                                     Actief
                                 </span>
                             </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="text-blue-500 hover:underline">
-                                    Documenten
+                            <td class="icon-cell">
+                                <a href="{{ route('employer.employee.documents', $employee->id) }}" 
+                                   class="employee-action-link"
+                                   style="color: var(--primary-color);">
+                                    📄 Bekijk Documenten
                                 </a>
                             </td>
                         </tr>

@@ -4,8 +4,8 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Gebruikers</h1>
-    <p>Welkom {{ auth()->user()->name }}, Beheer hier alle gebruikers</p>
+    <h1 class="superadmin-page-title">Gebruikers</h1>
+    <p class="superadmin-page-subtitle">Welkom {{ auth()->user()->name }}, Beheer hier alle gebruikers</p>
 
     @include('components.TableFilterBar', [
         'filters' => [
@@ -44,13 +44,13 @@
                     <td>{{ $user->role }}</td>
                     <td><span class="status-label">Ready</span></td>
                     <td class="icon-cell">
-                        <button type="button" onclick='openEditUserModal(@json($user))' title="Bewerk gebruiker" style="background:transparent; border:none; cursor:pointer; margin-right:0.5rem;">
+                        <button type="button" onclick='openEditUserModal(@json($user))' title="Bewerk gebruiker" class="superadmin-action-edit">
                             {!! file_get_contents(resource_path('assets/icons/Edit.svg')) !!}
                         </button>
                         <form action="{{ route('superadmin.users.destroy', $user) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je deze gebruiker wilt verwijderen?');">
                             @csrf
                             @method('DELETE')
-                            <button id="delete-table-button" type="submit" title="Verwijder gebruiker" class="text-red-600">
+                            <button id="delete-table-button" type="submit" title="Verwijder gebruiker" class="superadmin-action-delete">
                                 {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
                             </button>
                         </form>
@@ -67,36 +67,36 @@
 
 <section>
     <!-- Edit User Modal -->
-    <div id="editUserModal" style="display:none; position:fixed; inset:0; z-index:50; background:rgba(15, 23, 42, 0.4); align-items:center; justify-content:center;">
-        <div style="background:white; border-radius:0.75rem; width:100%; max-width:640px; box-shadow:0 10px 40px rgba(15,23,42,0.25);">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem 1.75rem; border-bottom:1px solid #e5e7eb;">
-                <h2 style="font-size:1.5rem; font-weight:600; color:#111827; margin:0;">Gebruiker bewerken</h2>
-                <button type="button" onclick="closeEditUserModal()" aria-label="Sluiten" style="background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:#6b7280;">&times;</button>
+    <div id="editUserModal" class="superadmin-modal-overlay" style="display:none;">
+        <div class="superadmin-modal-content">
+            <div class="superadmin-modal-header">
+                <h2 class="superadmin-modal-title">Gebruiker bewerken</h2>
+                <button type="button" onclick="closeEditUserModal()" aria-label="Sluiten" class="superadmin-modal-close">&times;</button>
             </div>
 
-            <form id="editUserForm" method="POST" style="padding:1.75rem;">
+            <form id="editUserForm" method="POST" class="superadmin-modal-body">
                 @csrf
                 @method('PUT')
 
-                <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="superadmin-form-group">
                     <div>
-                        <label for="editUserName" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Naam</label>
-                        <input id="editUserName" name="name" type="text" style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;" />
+                        <label for="editUserName" class="superadmin-form-label">Naam</label>
+                        <input id="editUserName" name="name" type="text" class="superadmin-form-input" />
                     </div>
 
                     <div>
-                        <label for="editUserCompany" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Bedrijf</label>
-                        <input id="editUserCompany" type="text" disabled style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;" />
+                        <label for="editUserCompany" class="superadmin-form-label">Bedrijf</label>
+                        <input id="editUserCompany" type="text" disabled class="superadmin-form-input" />
                     </div>
 
                     <div>
-                        <label for="editUserEmail" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Email</label>
-                        <input id="editUserEmail" name="email" type="email" style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;" />
+                        <label for="editUserEmail" class="superadmin-form-label">Email</label>
+                        <input id="editUserEmail" name="email" type="email" class="superadmin-form-input" />
                     </div>
 
                     <div>
-                        <label for="editUserRole" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Type gebruiker</label>
-                        <select id="editUserRole" name="role" style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;">
+                        <label for="editUserRole" class="superadmin-form-label">Type gebruiker</label>
+                        <select id="editUserRole" name="role" class="superadmin-form-select">
                             <option value="employee">Werknemer</option>
                             <option value="employer">Werkgever</option>
                             <option value="administration_office">Administratiekantoor</option>
@@ -105,8 +105,8 @@
                     </div>
 
                     <div>
-                        <label for="editUserStatus" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Status</label>
-                        <select id="editUserStatus" name="status" style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;">
+                        <label for="editUserStatus" class="superadmin-form-label">Status</label>
+                        <select id="editUserStatus" name="status" class="superadmin-form-select">
                             <option value="active">Active</option>
                             <option value="pending">Pending</option>
                             <option value="inactive">Inactive</option>
@@ -114,9 +114,9 @@
                     </div>
                 </div>
 
-                <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
-                    <button type="button" onclick="closeEditUserModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px;">Annuleren</button>
-                    <button type="submit" style="background:#111827; color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer;">Opslaan</button>
+                <div class="superadmin-modal-footer">
+                    <button type="button" onclick="closeEditUserModal()" class="superadmin-button-secondary">Annuleren</button>
+                    <button type="submit" class="superadmin-button-primary">Opslaan</button>
                 </div>
             </form>
         </div>

@@ -4,16 +4,16 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Alle Medewerkers</h1>
-    <p class="text-gray-600 mb-6">Overzicht van alle medewerkers van bedrijven waartoe je toegang hebt</p>
+    <h1 class="employee-list-title">Alle Medewerkers</h1>
+    <p class="employee-list-subtitle">Overzicht van alle medewerkers van bedrijven waartoe je toegang hebt</p>
     
     @if($employees->isEmpty())
-        <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-center mb-4">
+        <div class="employee-list-no-data">
             <p>Er zijn nog geen medewerkers beschikbaar.</p>
         </div>
     @else
-        <div class="bg-white shadow overflow-x-auto mb-4">
-            <table class="min-w-full">
+        <div class="employee-list-table-container">
+            <table class="employee-list-table">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Naam</th>
@@ -30,13 +30,15 @@
                             <td class="px-4 py-2">{{ $employee->email }}</td>
                             <td class="px-4 py-2">{{ $employee->company->name ?? 'N/A' }}</td>
                             <td class="px-4 py-2">
-                                <span class="text-xs px-2 py-1 rounded bg-green-100 text-green-800">
+                                <span class="employee-list-status-badge active">
                                     Actief
                                 </span>
                             </td>
-                            <td class="px-4 py-2">
-                                <a href="{{ route('employer.employee.documents', $employee->id) }}" class="text-blue-500 hover:underline">
-                                    Documenten
+                            <td class="icon-cell">
+                                <a href="{{ route('employer.employee.documents', $employee->id) }}" 
+                                   class="employee-list-action-link"
+                                   style="color: var(--primary-color);">
+                                    📄 Documenten
                                 </a>
                             </td>
                         </tr>
@@ -46,8 +48,10 @@
         </div>
     @endif
     
-    <div class="mt-6">
-        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+    <div class="employee-list-footer">
+        <a href="{{ route('administration.dashboard') }}" 
+           class="employee-list-footer-link"
+           style="color: var(--primary-color);">← Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

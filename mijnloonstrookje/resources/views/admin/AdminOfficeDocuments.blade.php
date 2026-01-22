@@ -4,27 +4,36 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Alle Documenten</h1>
+    @if(isset($company))
+        <div class="documents-back-link">
+            <a href="{{ route('administration.company.show', $company->id) }}" style="color: var(--primary-color);">
+                ← Terug naar {{ $company->name }}
+            </a>
+        </div>
+        <h1 class="documents-title">Documenten - {{ $company->name }}</h1>
+    @else
+        <h1 class="documents-title">Alle Documenten</h1>
+    @endif
     
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="documents-alert-success">
             {{ session('success') }}
         </div>
     @endif
     
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="documents-alert-error">
             {{ session('error') }}
         </div>
     @endif
     
     @if($documents->isEmpty())
-        <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-center mb-4">
+        <div class="documents-no-data">
             <p>Er zijn nog geen documenten beschikbaar.</p>
         </div>
     @else
-        <div class="bg-white shadow overflow-x-auto mb-4">
-            <table class="min-w-full">
+        <div class="documents-table-container">
+            <table class="documents-table">
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left">Bedrijf</th>
@@ -80,55 +89,58 @@
                                 $versionCount = $allVersions->count();
                             @endphp
                             
-                            <div class="flex items-center gap-1">
-                                <span class="font-medium">v{{ number_format($document->version, 1) }}</span>
+                            <div class="document-version-container">
+                                <span class="document-version-number">v{{ number_format($document->version, 1) }}</span>
                                 
                                 @if($isOriginal)
-                                    <span class="text-xs px-2 py-1 rounded bg-blue-500 text-white">
+                                    <span class="document-version-badge original" style="background-color: var(--primary-color);">
                                         #{{ $document->id }}
                                     </span>
                                 @else
-                                    <span class="text-xs px-2 py-1 rounded bg-gray-400 text-white">
+                                    <span class="document-version-badge parent">
                                         van #{{ $parentId }}
                                     </span>
                                 @endif
                                 
                                 @if($isLatest && $document->version > 1.0)
-                                    <span class="text-xs px-2 py-1 rounded bg-green-500 text-white">
+                                    <span class="document-version-badge latest">
                                         NIEUWSTE
                                     </span>
                                 @endif
                             </div>
                         </td>
                         <td class="px-4 py-2">{{ $document->created_at->format('d-m-Y') }}</td>
-                        <td class="px-4 py-2">
-                            <div class="flex gap-2">
+                        <td class="icon-cell">
+                            <div class="document-actions-container">
                                 <a href="{{ route('documents.view', $document->id) }}" 
                                    target="_blank" 
                                    title="Bekijken"
-                                   class="text-blue-500 hover:underline">
+                                   class="document-action-link"
+                                   style="color: var(--primary-color);">
                                     👁️
                                 </a>
                                 <a href="{{ route('documents.download', $document->id) }}" 
                                    title="Downloaden"
-                                   class="text-green-500 hover:underline">
+                                   class="document-action-link"
+                                   style="color: #10B981;">
                                     ⬇️
                                 </a>
                                 <a href="{{ route('documents.edit', $document->id) }}" 
                                    title="Bijwerken"
-                                   class="text-yellow-500 hover:underline">
+                                   class="document-action-link"
+                                   style="color: #F59E0B;">
                                     ✏️
                                 </a>
                                 <form action="{{ route('documents.destroy', $document->id) }}" 
                                       method="POST" 
-                                      style="display: inline;"
+                                      class="document-action-form"
                                       onsubmit="return confirm('Weet je zeker dat je dit document wilt verwijderen?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
                                             title="Verwijderen"
-                                            class="text-red-500 hover:underline"
-                                            style="background: none; border: none; cursor: pointer; padding: 0;">
+                                            class="document-action-btn"
+                                            style="color: #EF4444;">
                                         🗑️
                                     </button>
                                 </form>
@@ -141,8 +153,21 @@
         </div>
     @endif
     
-    <div class="mt-6">
-        <a href="{{ route('administration.dashboard') }}" class="text-blue-500 hover:underline">← Terug naar Dashboard</a>
+    <div class="documents-button-group">
+        <a href="{{ isset($company) ? route('documents.upload') . '?company=' . $company->id : route('documents.upload') }}" class="documents-primary-btn" style="background-color: var(--primary-color);">
+            Document Uploaden
+        </a>
+        <a href="{{ isset($company) ? route('documents.deleted', ['company' => $company->id]) : route('documents.deleted') }}" class="documents-secondary-btn">
+            Verwijderde Documenten
+        </a>
+    </div>
+    
+    <div class="documents-footer">
+        @if(isset($company))
+            <a href="{{ route('administration.company.show', $company->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $company->name }}</a>
+        @else
+            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Dashboard</a>
+        @endif
     </div>
 </section>
 @endsection
