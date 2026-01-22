@@ -4,7 +4,7 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">
+    <h1 class="documents-page-title">
         @if(isset($employee))
             Verwijderde Documenten van {{ $employee->name }}
         @elseif(isset($company))
@@ -15,13 +15,13 @@
     </h1>
     
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="documents-alert-success">
             {{ session('success') }}
         </div>
     @endif
     
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="documents-alert-error">
             {{ session('error') }}
         </div>
     @endif
@@ -72,12 +72,13 @@
                 <td class="icon-cell">
                     <form action="{{ route('documents.restore', $document->id) }}" 
                           method="POST" 
-                          style="display: inline;"
+                          class="documents-action-form"
                           onsubmit="return confirm('Weet je zeker dat je dit document wilt herstellen?');">
                         @csrf
                         <button type="submit" 
                                 title="Herstellen"
-                                style="background: none; border: none; color: #10B981; cursor: pointer; padding: 0; font-size: inherit;">
+                                class="documents-action-button"
+                                style="color: #10B981;">
                             ↩️
                         </button>
                     </form>
@@ -91,23 +92,23 @@
         </tbody>
     </table>
     
-    <div class="mt-6 space-x-4">
+    <div class="documents-footer-links">
         @if(isset($employee))
-            <a href="{{ route('employer.employee.documents', $employee->id) }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar {{ $employee->name }}</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ auth()->user()->role === 'administration_office' ? route('administration.dashboard') : route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+            <a href="{{ route('employer.employee.documents', $employee->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $employee->name }}</a>
+            <span class="documents-footer-separator">|</span>
+            <a href="{{ auth()->user()->role === 'administration_office' ? route('administration.dashboard') : route('employer.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @elseif(isset($company) && auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.company.documents', $company->id) }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar {{ $company->name }}</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ route('administration.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+            <a href="{{ route('administration.company.documents', $company->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $company->name }}</a>
+            <span class="documents-footer-separator">|</span>
+            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @elseif(auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.documents') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Documenten</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ route('administration.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+            <a href="{{ route('administration.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
+            <span class="documents-footer-separator">|</span>
+            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @else
-            <a href="{{ route('employer.documents') }}" style="color: var(--primary-color); cursor: pointer;">← Terug naar Documenten</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+            <a href="{{ route('employer.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
+            <span class="documents-footer-separator">|</span>
+            <a href="{{ route('employer.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @endif
     </div>
 </section>

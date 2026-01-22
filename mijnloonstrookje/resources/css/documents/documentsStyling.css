@@ -1,0 +1,206 @@
+/* ========================================
+   DOCUMENTS STYLING
+   CSS for all document-related views
+   ======================================== */
+
+/* Common Elements */
+.documents-page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.documents-alert-success {
+    background-color: #D1FAE5;
+    border: 1px solid #6EE7B7;
+    color: #065F46;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.documents-alert-error {
+    background-color: #FEE2E2;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.documents-alert-info {
+    background-color: #DBEAFE;
+    border: 1px solid #93C5FD;
+    color: #1E40AF;
+    padding: 0.75rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Upload Form Styles */
+.documents-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.documents-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.documents-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.documents-form-input,
+.documents-form-select,
+.documents-form-textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.25rem;
+}
+
+.documents-form-input:focus,
+.documents-form-select:focus,
+.documents-form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.documents-form-helper {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-top: 0.25rem;
+}
+
+.documents-button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.documents-button-primary {
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.documents-button-primary:hover {
+    opacity: 0.9;
+}
+
+.documents-button-secondary {
+    background-color: #6B7280;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+
+.documents-button-secondary:hover {
+    background-color: #4B5563;
+}
+
+/* Document Info Card */
+.documents-info-card {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.25rem;
+}
+
+.documents-info-title {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.documents-info-card p {
+    margin-bottom: 0.25rem;
+}
+
+/* Deleted Documents */
+.documents-footer-links {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.documents-footer-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.documents-footer-link:hover {
+    text-decoration: underline;
+}
+
+.documents-footer-separator {
+    color: #9CA3AF;
+}
+
+/* Version Badge Styles */
+.document-version-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.document-version-number {
+    font-weight: 500;
+}
+
+.document-version-badge {
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    color: white;
+}
+
+.document-version-badge.original {
+    /* Background set via inline style */
+}
+
+.document-version-badge.parent {
+    background-color: #9CA3AF;
+}
+
+.document-version-badge.latest {
+    background-color: #10B981;
+}
+
+/* Action Icons */
+.documents-actions-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.documents-action-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.documents-action-form {
+    display: inline;
+}
+
+.documents-action-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}

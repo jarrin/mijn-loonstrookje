@@ -4,17 +4,17 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Mijn Documenten</h1>
-    <p>Welkom {{ auth()->user()->name }}, hier vind je al je documenten.</p>
+    <h1 class="employee-page-title">Mijn Documenten</h1>
+    <p class="employee-welcome-text">Welkom {{ auth()->user()->name }}, hier vind je al je documenten.</p>
     
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="employee-alert-success">
             {{ session('success') }}
         </div>
     @endif
     
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="employee-alert-error">
             {{ session('error') }}
         </div>
     @endif
@@ -73,21 +73,21 @@
                         $versionCount = $allVersions->count();
                     @endphp
                     
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span style="font-weight: 500;">v{{ number_format($document->version, 1) }}</span>
+                    <div class="employee-version-container">
+                        <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
                         
                         @if($isOriginal)
-                            <span style="background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="employee-version-badge original" style="background: var(--primary-color);">
                                 #{{ $document->id }}
                             </span>
                         @else
-                            <span style="background: #9CA3AF; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="employee-version-badge parent">
                                 van #{{ $parentId }}
                             </span>
                         @endif
                         
                         @if($isLatest && $document->version > 1.0)
-                            <span style="background: #10B981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="employee-version-badge latest">
                                 NIEUWSTE
                             </span>
                         @endif
@@ -97,16 +97,18 @@
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
                 <td>{{ $document->uploader->name ?? 'N/A' }}</td>
                 <td class="icon-cell">
-                    <div style="display: flex; gap: 8px; justify-content: center;">
+                    <div class="employee-actions-container">
                         <a href="{{ route('documents.view', $document->id) }}" 
                            target="_blank" 
                            title="Bekijken"
-                           style="cursor: pointer; color: var(--primary-color);">
+                           class="employee-action-link"
+                           style="color: var(--primary-color);">
                             👁️
                         </a>
                         <a href="{{ route('documents.download', $document->id) }}" 
                            title="Downloaden"
-                           style="cursor: pointer; color: #10B981;">
+                           class="employee-action-link"
+                           style="color: #10B981;">
                             ⬇️
                         </a>
                     </div>
