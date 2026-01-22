@@ -4,13 +4,13 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Facturatie Beheer</h1>
-    <p>Hier komt het facturatie overzicht te staan.</p>
+    <h1 class="superadmin-page-title">Facturatie Beheer</h1>
+    <p class="superadmin-page-subtitle">Hier komt het facturatie overzicht te staan.</p>
     
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('superadmin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('superadmin.subscriptions') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Abonnementen</a>
-        <a href="{{ route('superadmin.logs') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logs</a>
+    <div class="superadmin-actions-container">
+        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
+        <a href="{{ route('superadmin.subscriptions') }}" class="superadmin-button-primary">Abonnementen</a>
+        <a href="{{ route('superadmin.logs') }}" class="superadmin-button-primary">Logs</a>
     </div>
     <table id="super-admin-facturation">
         <thead>

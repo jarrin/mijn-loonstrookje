@@ -4,16 +4,16 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
+    <h1 class="employer-page-title">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
     
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="employer-alert-success">
             {{ session('success') }}
         </div>
     @endif
     
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="employer-alert-error">
             {{ session('error') }}
         </div>
     @endif
@@ -78,21 +78,21 @@
                         $versionCount = $allVersions->count();
                     @endphp
                     
-                    <div style="display: flex; align-items: center; gap: 4px;">
-                        <span style="font-weight: 500;">v{{ number_format($document->version, 1) }}</span>
+                    <div class="document-version-container">
+                        <span class="document-version-number">v{{ number_format($document->version, 1) }}</span>
                         
                         @if($isOriginal)
-                            <span style="background: var(--primary-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="document-version-badge document-version-original">
                                 #{{ $document->id }}
                             </span>
                         @else
-                            <span style="background: #9CA3AF; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="document-version-badge document-version-derived">
                                 van #{{ $parentId }}
                             </span>
                         @endif
                         
                         @if($isLatest && $document->version > 1.0)
-                            <span style="background: #10B981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">
+                            <span class="document-version-badge document-version-latest">
                                 NIEUWSTE
                             </span>
                         @endif
@@ -100,21 +100,21 @@
                 </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td class="icon-cell">
-                    <div style="display: flex; gap: 8px; justify-content: center;">
+                    <div class="document-actions-container">
                         <a href="{{ route('documents.view', $document->id) }}" 
                            target="_blank" 
                            title="Bekijken"
-                           style="cursor: pointer; color: var(--primary-color);">
+                           class="document-action-view">
                             👁️
                         </a>
                         <a href="{{ route('documents.download', $document->id) }}" 
                            title="Downloaden"
-                           style="cursor: pointer; color: #10B981;">
+                           class="document-action-download">
                             ⬇️
                         </a>
                         <a href="{{ route('documents.edit', $document->id) }}" 
                            title="Bijwerken (nieuwe versie)"
-                           style="cursor: pointer; color: #F59E0B;">
+                           class="document-action-edit">
                             ✏️
                         </a>
                         <form action="{{ route('documents.destroy', $document->id) }}" 
@@ -125,7 +125,7 @@
                             @method('DELETE')
                             <button type="submit" 
                                     title="Verwijderen"
-                                    style="cursor: pointer; background: none; border: none; padding: 0; color: #EF4444;">
+                                    class="document-action-delete">
                                 {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
                             </button>
                         </form>
@@ -143,20 +143,20 @@
     <p>Hier komen alle documenten te staan.</p>
     @endif
     
-    <div class="mt-6 space-x-4">
+    <div class="employer-footer-nav">
         @if(isset($employee))
-            <a href="{{ route('documents.upload', $employee->id) }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ $backUrl ?? route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Terug naar Medewerkers</a>
+            <a href="{{ route('documents.upload', $employee->id) }}" class="employer-footer-link">Document Uploaden</a>
+            <span class="employer-footer-separator">|</span>
+            <a href="{{ $backUrl ?? route('employer.employees') }}" class="employer-footer-link">Terug naar Medewerkers</a>
         @else
-            <a href="{{ route('documents.upload') }}" style="color: var(--primary-color); cursor: pointer;">Document Uploaden</a>
-            <span style="color: #9CA3AF;">|</span>
-            <a href="{{ route('employer.employees') }}" style="color: var(--primary-color); cursor: pointer;">Medewerkers</a>
+            <a href="{{ route('documents.upload') }}" class="employer-footer-link">Document Uploaden</a>
+            <span class="employer-footer-separator">|</span>
+            <a href="{{ route('employer.employees') }}" class="employer-footer-link">Medewerkers</a>
         @endif
-        <span style="color: #9CA3AF;">|</span>
-        <a href="{{ isset($employee) ? route('documents.deleted', ['employee' => $employee->id]) : route('documents.deleted') }}" style="color: var(--primary-color); cursor: pointer;">Verwijderde Documenten</a>
-        <span style="color: #9CA3AF;">|</span>
-        <a href="{{ route('employer.dashboard') }}" style="color: var(--primary-color); cursor: pointer;">Dashboard</a>
+        <span class="employer-footer-separator">|</span>
+        <a href="{{ isset($employee) ? route('documents.deleted', ['employee' => $employee->id]) : route('documents.deleted') }}" class="employer-footer-link">Verwijderde Documenten</a>
+        <span class="employer-footer-separator">|</span>
+        <a href="{{ route('employer.dashboard') }}" class="employer-footer-link">Dashboard</a>
     </div>
 </section>
 @endsection

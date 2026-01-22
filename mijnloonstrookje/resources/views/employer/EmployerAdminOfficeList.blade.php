@@ -4,7 +4,7 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Administratiekantoren</h1>
+    <h1 class="employer-page-title">Administratiekantoren</h1>
     <p>Beheer hier de administratiekantoren die toegang hebben tot jouw bedrijf.</p>
 
     <div style="margin-bottom:1rem;">
@@ -31,29 +31,24 @@
                     <td>
                         @php
                             $status = $office->pivot->status ?? 'pending';
-                            $statusColors = [
-                                'active' => 'bg-green-100 text-green-800',
-                                'pending' => 'bg-yellow-100 text-yellow-800',
-                                'inactive' => 'bg-gray-100 text-gray-800'
-                            ];
                             $statusLabels = [
                                 'active' => 'Actief',
                                 'pending' => 'In behandeling',
                                 'inactive' => 'Inactief'
                             ];
                         @endphp
-                        <span class="text-xs px-2 py-1 rounded {{ $statusColors[$status] ?? 'bg-gray-100 text-gray-800' }}">
+                        <span class="employer-status-badge employer-status-{{ $status }}">
                             {{ $statusLabels[$status] ?? ucfirst($status) }}
                         </span>
                     </td>
                     <td class="icon-cell">
-                        <button type="button" onclick='openEditAdminOfficeModal(@json($office))' title="Bewerk administratiekantoor" style="background:transparent; border:none; cursor:pointer; margin-right:0.5rem;">
+                        <button type="button" onclick='openEditAdminOfficeModal(@json($office))' title="Bewerk administratiekantoor" class="employer-action-edit">
                             {!! file_get_contents(resource_path('assets/icons/Edit.svg')) !!}
                         </button>
                         <form action="{{ route('employer.admin-offices.destroy', $office) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je de toegang van dit administratiekantoor wilt intrekken?');">
                             @csrf
                             @method('DELETE')
-                            <button id="delete-table-button" type="submit" title="Toegang intrekken" class="text-red-600">
+                            <button id="delete-table-button" type="submit" title="Toegang intrekken" class="employer-action-delete">
                                 {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
                             </button>
                         </form>
@@ -93,32 +88,32 @@
 
 <!-- Add Admin Office Modal -->
 <section>
-    <div id="addAdminOfficeModal" style="display:none; position:fixed; inset:0; z-index:50; background:rgba(15, 23, 42, 0.4); align-items:center; justify-content:center;">
-        <div style="background:white; border-radius:0.75rem; width:100%; max-width:640px; box-shadow:0 10px 40px rgba(15,23,42,0.25);">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem 1.75rem; border-bottom:1px solid #e5e7eb;">
-                <h2 style="font-size:1.5rem; font-weight:600; color:#111827; margin:0;">Administratiekantoor toevoegen</h2>
-                <button type="button" onclick="closeAddAdminOfficeModal()" aria-label="Sluiten" style="background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:#6b7280;">&times;</button>
+    <div id="addAdminOfficeModal" class="employer-modal-overlay" style="display:none;">
+        <div class="employer-modal-content">
+            <div class="employer-modal-header">
+                <h2 class="employer-modal-title">Administratiekantoor toevoegen</h2>
+                <button type="button" onclick="closeAddAdminOfficeModal()" aria-label="Sluiten" class="employer-modal-close">&times;</button>
             </div>
 
-            <form id="addAdminOfficeForm" action="{{ route('employer.admin-offices.invite') }}" method="POST" style="padding:1.75rem;">
+            <form id="addAdminOfficeForm" action="{{ route('employer.admin-offices.invite') }}" method="POST" class="employer-modal-body">
                 @csrf
 
-                <div style="margin-bottom:1rem;">
-                    <p style="color:#6b7280; font-size:0.875rem; line-height:1.5;">
+                <div class="employer-form-description">
+                    <p>
                         Voer het e-mailadres in. Als het administratiekantoor nog geen account heeft, ontvangt het een e-mail om een account aan te maken. Anders ontvangt het een uitnodiging voor toegang tot uw bedrijf.
                     </p>
                 </div>
 
-                <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="employer-form-group">
                     <div>
-                        <label for="addAdminOfficeEmail" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Email *</label>
-                        <input id="addAdminOfficeEmail" name="email" type="email" required placeholder="administratie@example.com" style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;" />
+                        <label for="addAdminOfficeEmail" class="employer-form-label">Email *</label>
+                        <input id="addAdminOfficeEmail" name="email" type="email" required placeholder="administratie@example.com" class="employer-form-input" />
                     </div>
                 </div>
 
-                <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
-                    <button type="button" onclick="closeAddAdminOfficeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px; cursor:pointer;">Annuleren</button>
-                    <button type="submit" style="background-color: var(--primary-color); color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Uitnodiging Versturen</button>
+                <div class="employer-modal-footer">
+                    <button type="button" onclick="closeAddAdminOfficeModal()" class="employer-button-secondary">Annuleren</button>
+                    <button type="submit" class="employer-button-primary">Uitnodiging Versturen</button>
                 </div>
             </form>
         </div>
@@ -127,28 +122,28 @@
 
 <!-- Edit Admin Office Modal -->
 <section>
-    <div id="editAdminOfficeModal" style="display:none; position:fixed; inset:0; z-index:50; background:rgba(15, 23, 42, 0.4); align-items:center; justify-content:center;">
-        <div style="background:white; border-radius:0.75rem; width:100%; max-width:640px; box-shadow:0 10px 40px rgba(15,23,42,0.25);">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:1.5rem 1.75rem; border-bottom:1px solid #e5e7eb;">
-                <h2 style="font-size:1.5rem; font-weight:600; color:#111827; margin:0;">Administratiekantoor bewerken</h2>
-                <button type="button" onclick="closeEditAdminOfficeModal()" aria-label="Sluiten" style="background:transparent; border:none; font-size:1.25rem; cursor:pointer; color:#6b7280;">&times;</button>
+    <div id="editAdminOfficeModal" class="employer-modal-overlay" style="display:none;">
+        <div class="employer-modal-content">
+            <div class="employer-modal-header">
+                <h2 class="employer-modal-title">Administratiekantoor bewerken</h2>
+                <button type="button" onclick="closeEditAdminOfficeModal()" aria-label="Sluiten" class="employer-modal-close">&times;</button>
             </div>
 
-            <form id="editAdminOfficeForm" method="POST" style="padding:1.75rem;">
+            <form id="editAdminOfficeForm" method="POST" class="employer-modal-body">
                 @csrf
                 @method('PUT')
 
-                <div style="margin-bottom:1rem;">
-                    <p style="color:#6b7280; font-size:0.875rem; line-height:1.5;">
+                <div class="employer-form-description">
+                    <p>
                         Naam: <strong id="editAdminOfficeName"></strong><br>
                         Email: <strong id="editAdminOfficeEmail"></strong>
                     </p>
                 </div>
 
-                <div style="display:flex; flex-direction:column; gap:1rem;">
+                <div class="employer-form-group">
                     <div>
-                        <label for="editAdminOfficeStatus" style="display:block; font-size:0.875rem; font-weight:500; color:#374151; margin-bottom:0.25rem;">Toegangsstatus</label>
-                        <select id="editAdminOfficeStatus" name="status" required style="width:100%; border-radius:0.75rem; border:1px solid #e5e7eb; padding:0.75rem 1rem; background:#f9fafb;">
+                        <label for="editAdminOfficeStatus" class="employer-form-label">Toegangsstatus</label>
+                        <select id="editAdminOfficeStatus" name="status" required class="employer-form-select">
                             <option value="active">Actief</option>
                             <option value="pending">In behandeling</option>
                             <option value="inactive">Inactief</option>
@@ -156,9 +151,9 @@
                     </div>
                 </div>
 
-                <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.75rem; border-top:1px solid #e5e7eb; padding-top:1.25rem;">
-                    <button type="button" onclick="closeEditAdminOfficeModal()" style="background:transparent; border:none; color:#6b7280; font-weight:500; padding:0.75rem 1.5rem; border-radius:9999px;">Annuleren</button>
-                    <button type="submit" style="background-color: var(--primary-color); color:white; border:none; font-weight:500; padding:0.75rem 1.75rem; border-radius:9999px; cursor:pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Opslaan</button>
+                <div class="employer-modal-footer">
+                    <button type="button" onclick="closeEditAdminOfficeModal()" class="employer-button-secondary">Annuleren</button>
+                    <button type="submit" class="employer-button-primary">Opslaan</button>
                 </div>
             </form>
         </div>

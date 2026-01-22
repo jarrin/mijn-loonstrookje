@@ -4,14 +4,14 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Systeem Logs</h1>
+    <h1 class="superadmin-page-title">Systeem Logs</h1>
     
     <!-- Filters -->
-    <form method="GET" class="mb-6 p-4 bg-gray-50 rounded-lg">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <form method="GET" class="superadmin-filter-form">
+        <div class="superadmin-filter-grid">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Actie</label>
-                <select name="action" class="w-full border-gray-300 rounded-md shadow-sm">
+                <label class="superadmin-filter-label">Actie</label>
+                <select name="action" class="superadmin-filter-select">
                     <option value="">Alle acties</option>
                     @foreach($actions as $action)
                         <option value="{{ $action }}" {{ request('action') == $action ? 'selected' : '' }}>
@@ -21,8 +21,8 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Bedrijf</label>
-                <select name="company_id" class="w-full border-gray-300 rounded-md shadow-sm">
+                <label class="superadmin-filter-label">Bedrijf</label>
+                <select name="company_id" class="superadmin-filter-select">
                     <option value="">Alle bedrijven</option>
                     @foreach($companies as $company)
                         <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
@@ -32,17 +32,17 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Van Datum</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="w-full border-gray-300 rounded-md shadow-sm">
+                <label class="superadmin-filter-label">Van Datum</label>
+                <input type="date" name="date_from" value="{{ request('date_from') }}" class="superadmin-filter-input">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tot Datum</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="w-full border-gray-300 rounded-md shadow-sm">
+                <label class="superadmin-filter-label">Tot Datum</label>
+                <input type="date" name="date_to" value="{{ request('date_to') }}" class="superadmin-filter-input">
             </div>
         </div>
-        <div class="mt-4 flex gap-2">
-            <button type="submit" class="text-white px-4 py-2 rounded" style="background-color: #3B82F6; hover:opacity-90;">Filter</button>
-            <a href="{{ route('superadmin.logs') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Reset</a>
+        <div class="superadmin-filter-actions">
+            <button type="submit" class="superadmin-button-primary">Filter</button>
+            <a href="{{ route('superadmin.logs') }}" class="superadmin-button-secondary">Reset</a>
         </div>
     </form>
     
@@ -84,18 +84,19 @@
                     @endif
                 </td>
                 <td>
-                    <span class="px-2 py-1 rounded text-xs" style="background-color: {{ 
-                        match($log->action) {
-                            'login' => '#10B981',
-                            'document_uploaded' => '#3B82F6',
-                            'document_revised' => '#F59E0B',
-                            'document_deleted' => '#EF4444',
-                            'document_restored' => '#8B5CF6',
-                            'employee_created' => '#06B6D4',
-                            'admin_office_added' => '#EC4899',
-                            default => '#6B7280'
-                        }
-                    }}; color: white;">
+                    @php
+                        $badgeClass = match($log->action) {
+                            'login' => 'superadmin-log-badge-login',
+                            'document_uploaded' => 'superadmin-log-badge-upload',
+                            'document_revised' => 'superadmin-log-badge-revised',
+                            'document_deleted' => 'superadmin-log-badge-deleted',
+                            'document_restored' => 'superadmin-log-badge-restored',
+                            'employee_created' => 'superadmin-log-badge-created',
+                            'admin_office_added' => 'superadmin-log-badge-added',
+                            default => 'superadmin-log-badge-default'
+                        };
+                    @endphp
+                    <span class="superadmin-log-badge {{ $badgeClass }}">
                         {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                     </span>
                 </td>
@@ -110,38 +111,12 @@
     </table>
     
     <!-- Pagination -->
-    <div class="mt-6 flex justify-center pagination-wrapper">
+    <div class="superadmin-pagination-wrapper">
         {{ $logs->links() }}
     </div>
     
-    <style>
-        .pagination-wrapper nav {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .pagination-wrapper nav span,
-        .pagination-wrapper nav a {
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.25rem;
-            background-color: #f3f4f6;
-            color: #374151;
-            transition: background-color 0.2s;
-        }
-        
-        .pagination-wrapper nav a:hover {
-            background-color: var(--primary-color, #3B82F6);
-            color: white;
-        }
-        
-        .pagination-wrapper nav span[aria-current="page"] {
-            background-color: var(--primary-color, #3B82F6);
-            color: white;
-        }
-    </style>
-    
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('superadmin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
+    <div class="superadmin-actions-container">
+        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
     </div>
 </section>
 @endsection
