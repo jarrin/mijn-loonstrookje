@@ -13,12 +13,17 @@ class EnsureEmployerHasPaidSubscription
         $user = $request->user();
 
         if ($user) {
-            // Alleen voor employer accounts: check abonnement en 2FA
+            // Voor employer accounts
             if ($user->role === 'employer') {
                 // Custom subscription flow: redirect naar verify-and-secure als 2FA of email niet is afgerond
                 if (session('pending_custom_subscription_id')) {
                     if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
                         return redirect()->route('registration.verify-and-secure');
+                    }
+                } else {
+                    // Regular employer flow: check 2FA en email verificatie
+                    if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                        return redirect()->route('employer.verify-and-secure');
                     }
                 }
                 
@@ -45,7 +50,14 @@ class EnsureEmployerHasPaidSubscription
                 }
             }
             
-            // Employees, administration_office, en super_admin kunnen direct door
+            // Voor employee accounts: check 2FA en email verificatie
+            if ($user->role === 'employee') {
+                if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                    return redirect()->route('employee.verify-and-secure');
+                }
+            }
+            
+            // Administration office en super_admin kunnen direct door
         }
 
         return $next($request);

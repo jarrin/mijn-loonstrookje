@@ -108,9 +108,23 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
 // Email verification routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/email/verify', function () {
+        $user = auth()->user();
+        
+        // Custom subscription flow
         if (session('pending_custom_subscription_id')) {
             return redirect()->route('registration.verify-and-secure');
         }
+        
+        // Employer flow
+        if ($user && $user->role === 'employer') {
+            return redirect()->route('employer.verify-and-secure');
+        }
+        
+        // Employee flow
+        if ($user && $user->role === 'employee') {
+            return redirect()->route('employee.verify-and-secure');
+        }
+        
         return view('auth.verify-email');
     })->name('verification.notice');
     
@@ -121,6 +135,47 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/email/verified-success', function () {
         return view('auth.email-verified-simple');
     })->name('verification.success');
+});
+
+// Employer verify-and-secure route (Step 2)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/employer/verify-and-secure', function () {
+        $user = auth()->user();
+        
+        // Check if user is employer
+        if (!$user || $user->role !== 'employer') {
+            return redirect()->route('auth');
+        }
+        
+        // If already verified and has 2FA, redirect appropriately
+        if ($user->hasVerifiedEmail() && $user->two_factor_confirmed_at) {
+            if (session('pending_subscription_id')) {
+                return redirect()->route('payment.checkout', ['subscription' => session('pending_subscription_id')]);
+            }
+            return redirect()->route('employer.dashboard');
+        }
+        
+        return view('registration.employer.verify-and-secure');
+    })->name('employer.verify-and-secure');
+});
+
+// Employee verify-and-secure route (Step 2)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/employee/verify-and-secure', function () {
+        $user = auth()->user();
+        
+        // Check if user is employee
+        if (!$user || $user->role !== 'employee') {
+            return redirect()->route('auth');
+        }
+        
+        // If already verified and has 2FA, redirect to dashboard
+        if ($user->hasVerifiedEmail() && $user->two_factor_confirmed_at) {
+            return redirect()->route('employee.dashboard');
+        }
+        
+        return view('registration.employee.verify-and-secure');
+    })->name('employee.verify-and-secure');
 });
 
 // Custom subscription flow routes (Step 2 & 3) - met flow guard
@@ -156,7 +211,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('employer.dashboard');
         }
         
-        return view('onboarding.checkout', compact('subscription'));
+        return view('registration.employer.checkout', compact('subscription'));
     })->name('payment.checkout');
 });
 

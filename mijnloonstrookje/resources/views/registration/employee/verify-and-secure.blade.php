@@ -15,8 +15,14 @@
                 <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
             </div>
 
-            <!-- Step Progress -->
-            <x-registration.step-progress :currentStep="2" :showPaymentStep="true" />
+            <!-- Step Progress - alleen 2 stappen voor employee -->
+            @php
+                $steps = [
+                    ['label' => 'Maak account', 'number' => 1],
+                    ['label' => 'Verifieer & beveilig', 'number' => 2],
+                ];
+            @endphp
+            <x-registration.step-progress :currentStep="2" :steps="$steps" :showPaymentStep="false" />
 
             <!-- Main Card -->
             <div class="bg-white rounded-2xl shadow-sm p-8">
@@ -43,7 +49,7 @@
                 <!-- Email Verification Card -->
                 <x-registration.email-verification-card 
                     :emailVerified="$emailVerified" 
-                    :refreshUrl="route('registration.verify-and-secure')" 
+                    :refreshUrl="route('employee.verify-and-secure')" 
                 />
 
                 <!-- 2FA Card -->
@@ -56,9 +62,9 @@
 
                 <!-- Navigation -->
                 @if($emailVerified && $has2FAConfirmed)
-                    <a href="{{ route('payment.custom-checkout', ['customSubscription' => session('pending_custom_subscription_id')]) }}" 
+                    <a href="{{ route('employee.dashboard') }}" 
                        class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg cursor-pointer transition-colors">
-                        Ga verder naar betaling
+                        Ga naar dashboard
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>

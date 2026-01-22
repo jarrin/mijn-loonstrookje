@@ -34,15 +34,29 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         // Views
-        Fortify::loginView(fn () => view('auth.Login'));
+        Fortify::loginView(fn () => view('auth.login'));
         Fortify::registerView(fn () => view('auth.register'));
         Fortify::confirmPasswordView(fn () => view('auth.confirm-password'));
         Fortify::twoFactorChallengeView(fn () => view('auth.two-factor-challenge'));
 
         Fortify::verifyEmailView(function () {
-            if (session('pending_custom_subscription_id') && auth()->check()) {
+            $user = auth()->user();
+            
+            // Custom subscription flow
+            if (session('pending_custom_subscription_id') && $user) {
                 return redirect()->route('registration.verify-and-secure');
             }
+            
+            // Employer flow
+            if ($user && $user->role === 'employer') {
+                return redirect()->route('employer.verify-and-secure');
+            }
+            
+            // Employee flow
+            if ($user && $user->role === 'employee') {
+                return redirect()->route('employee.verify-and-secure');
+            }
+            
             return view('auth.verify-email');
         });
 

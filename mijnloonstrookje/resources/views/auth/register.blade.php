@@ -3,132 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registreren - Mijn Loonstrookje</title>
+    <title>Account Registratie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-50">
-    <div class="min-h-screen flex items-center justify-center py-12 px-4">
-        <div class="max-w-md w-full">
+<body class="bg-sky-50 min-h-screen">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-xl">
+            <!-- Header -->
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-semibold text-gray-900">Maak je account aan</h2>
-                @if(session('subscription_id'))
-                    <p class="mt-2 text-sm text-gray-600">Stap 0 van 3</p>
-                @endif
+                <h1 class="text-3xl font-bold text-gray-900">Account registratie</h1>
+                <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
             </div>
 
-            @if(session('subscription_id'))
-                <div class="w-full bg-gray-200 rounded-full h-1 mb-8">
-                    <div class="bg-blue-600 h-1 rounded-full" style="width: 10%"></div>
-                </div>
-            @endif
+            <!-- Step Progress -->
+            <x-registration.step-progress :currentStep="1" :showPaymentStep="true" />
 
-            @if(session('error'))
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded text-sm text-red-600">
-                    {{ session('error') }}
+            <!-- Main Card -->
+            <div class="bg-white rounded-2xl shadow-sm p-8">
+                <!-- Header Icon -->
+                <div class="flex justify-center mb-4">
+                    <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                    </div>
                 </div>
-            @endif
 
-            @if(session('subscription_id'))
-                <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded text-sm text-blue-700">
-                    Je hebt een abonnement gekozen. Maak eerst je account aan.
-                </div>
-            @endif
-        
-            <div class="bg-white border border-gray-200 rounded p-8">
-                <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Maak je account aan</h2>
+                <p class="text-gray-500 text-center mb-8">Vul je gegevens in om te beginnen</p>
+
+                <x-registration.status-messages />
+
+                @if(session('subscription_id'))
+                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
+                        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-sm text-blue-600">Je hebt een abonnement gekozen. Maak eerst je account aan.</p>
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('register') }}" class="space-y-5">
                     @csrf
                     
                     @if(session('subscription_id'))
                         <input type="hidden" name="subscription_id" value="{{ session('subscription_id') }}">
                     @endif
-                    
+
+                    <!-- Volledige naam -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Naam</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value="{{ old('name') }}"
-                            required
-                            autofocus
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        >
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1.5">Volledige naam</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                value="{{ old('name') }}"
+                                required
+                                autofocus
+                                placeholder="Jan Jansen"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
                         @error('name')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-            
+
+                    <!-- KVK Nummer -->
                     <div>
-                        <label for="kvk_number" class="block text-sm font-medium text-gray-700 mb-2">KVK Nummer</label>
-                        <input
-                            type="text"
-                            id="kvk_number"
-                            name="kvk_number"
-                            value="{{ old('kvk_number') }}"
-                            required
-                            maxlength="8"
-                            pattern="[0-9]{8}"
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        >
+                        <label for="kvk_number" class="block text-sm font-medium text-gray-700 mb-1.5">KVK Nummer</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="kvk_number" 
+                                name="kvk_number" 
+                                value="{{ old('kvk_number') }}"
+                                required
+                                maxlength="8"
+                                pattern="[0-9]{8}"
+                                placeholder="12345678"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
                         @error('kvk_number')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-            
+
+                    <!-- E-mailadres -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">E-mailadres</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            required
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        >
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">E-mailadres</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                value="{{ old('email') }}"
+                                required
+                                placeholder="jan@voorbeeld.nl"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
                         @error('email')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
+                    <!-- Wachtwoord -->
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Wachtwoord</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            required
-                            minlength="8"
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        >
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Wachtwoord</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required
+                                minlength="8"
+                                placeholder="Minimaal 8 tekens"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
                         @error('password')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-                    
+
+                    <!-- Bevestig Wachtwoord -->
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">Bevestig Wachtwoord</label>
-                        <input
-                            type="password"
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            required
-                            minlength="8"
-                            class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-                        >
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1.5">Bevestig wachtwoord</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                required
+                                minlength="8"
+                                placeholder="Herhaal je wachtwoord"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
                     </div>
-                    
-                    <div class="pt-2">
-                        <button type="submit" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium">
-                            Account Aanmaken
-                        </button>
-                    </div>
-            </div>
-            
-            <div class="text-center mt-6">
-                <p class="text-sm text-gray-600">
-                    Heb je al een account? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-700">Log hier in</a>
-                </p>
+
+                    <button type="submit" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors">
+                        Account aanmaken
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-500">
+                        Heb je al een account? 
+                        <a href="{{ route('login') }}" class="text-blue-500 hover:text-blue-600 font-medium">Log hier in</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>

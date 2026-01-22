@@ -43,7 +43,7 @@
                 <!-- Email Verification Card -->
                 <x-registration.email-verification-card 
                     :emailVerified="$emailVerified" 
-                    :refreshUrl="route('registration.verify-and-secure')" 
+                    :refreshUrl="route('employer.verify-and-secure')" 
                 />
 
                 <!-- 2FA Card -->
@@ -56,13 +56,23 @@
 
                 <!-- Navigation -->
                 @if($emailVerified && $has2FAConfirmed)
-                    <a href="{{ route('payment.custom-checkout', ['customSubscription' => session('pending_custom_subscription_id')]) }}" 
-                       class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg cursor-pointer transition-colors">
-                        Ga verder naar betaling
-                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
+                    @if(session('pending_subscription_id'))
+                        <a href="{{ route('payment.checkout', ['subscription' => session('pending_subscription_id')]) }}" 
+                           class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg cursor-pointer transition-colors">
+                            Ga verder naar betaling
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    @else
+                        <a href="{{ route('employer.dashboard') }}" 
+                           class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg cursor-pointer transition-colors">
+                            Ga naar dashboard
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    @endif
                 @else
                     <div class="text-center">
                         <form method="POST" action="{{ route('logout') }}">
