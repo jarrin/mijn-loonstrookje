@@ -15,6 +15,7 @@
 @import './documents/documentsStyling.css';
 @import './employee/employeeStyling.css';
 @import './employer/employerStyling.css';
+@import './superadmin/superadminStyling.css';
 
 
 :root {

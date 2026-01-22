@@ -4,25 +4,25 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Abonnementen Beheer</h1>
-    <p>Hier komen alle abonnementen te staan.</p>
+    <h1 class="superadmin-page-title">Abonnementen Beheer</h1>
+    <p class="superadmin-page-subtitle">Hier komen alle abonnementen te staan.</p>
     
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('superadmin.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('superadmin.logs') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Logs</a>
-        <a href="{{ route('superadmin.facturation') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Facturatie</a>
+    <div class="superadmin-actions-container">
+        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
+        <a href="{{ route('superadmin.logs') }}" class="superadmin-button-primary">Logs</a>
+        <a href="{{ route('superadmin.facturation') }}" class="superadmin-button-primary">Facturatie</a>
     </div>
 </section>
 <section>
 
-    <h2>Alle abonnementen</h2>
+    <h2 class="superadmin-subs-section-title">Alle abonnementen</h2>
 
-    <div style="display: flex; gap: 20px;">
+    <div class="superadmin-subs-grid">
     @foreach ($subscriptions as $subscription)
         @php
             $isEditing = request('edit') == $subscription->id;
         @endphp
-        <div class="subscription-tile" style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; width: 250px;">
+        <div class="superadmin-subscription-tile">
             @if(! $isEditing)
                 {{-- Alleen lezen modus --}}
                 <p><strong>Naam:</strong></p>
