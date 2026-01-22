@@ -355,3 +355,322 @@ button#primairy {
 table#super-admin-facturation {
     margin-top: 20px;
 }
+
+/* Settings Page Styles */
+.settings-page {
+    min-height: 100vh;
+}
+
+.settings-title {
+    font-size: 48px;
+    color: #333;
+    margin: 0 0 30px 0;
+    font-weight: 700;
+}
+
+.settings-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.settings-card-title {
+    font-size: 24px;
+    color: #333;
+    margin: 0 0 24px 0;
+    font-weight: 600;
+}
+
+.settings-card-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    color: #333;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.form-hint {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+.form-input-error {
+    border-color: #dc3545;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* Button Styles */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+.alert-title {
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.alert-text {
+    margin: 0 0 12px 0;
+}
+
+/* Two-Factor Authentication Styles */
+.two-factor-section {
+    margin-bottom: 24px;
+}
+
+.status-badge-wrapper {
+    margin-bottom: 12px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-badge-enabled {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge-disabled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.two-factor-description {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+.two-factor-qr-section {
+    margin: 24px 0;
+}
+
+.section-subtitle {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 12px 0;
+    font-weight: 600;
+}
+
+.section-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.qr-code-wrapper {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.qr-code-wrapper svg {
+    display: block;
+}
+
+/* Recovery Codes */
+.two-factor-recovery-section {
+    margin: 24px 0;
+}
+
+.recovery-codes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.recovery-code {
+    display: block;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Color Picker Styles */
+.color-picker-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.color-picker-input {
+    width: 60px;
+    height: 50px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.color-text-input {
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: monospace;
+    width: 120px;
+}
+
+.color-hint-text {
+    color: #666;
+    font-size: 13px;
+}
+
+/* Logo Upload Styles */
+.logo-preview-wrapper {
+    margin: 16px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.logo-preview-label {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.logo-preview-image {
+    max-width: 200px;
+    max-height: 100px;
+    object-fit: contain;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: white;
+}
+
+.file-input {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    width: 100%;
+    cursor: pointer;
+}
+
+.file-input::-webkit-file-upload-button {
+    padding: 8px 16px;
+    background-color: #f1f3f4;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 12px;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+    background-color: #e8eaed;
+}
