@@ -120,7 +120,7 @@ class PaymentController extends Controller
      */
     public function customCheckout(\App\Models\CustomSubscription $customSubscription)
     {
-        return view('onboarding.custom-checkout', [
+        return view('registration.custom.checkout', [
             'customSubscription' => $customSubscription
         ]);
     }
@@ -182,7 +182,7 @@ class PaymentController extends Controller
                                 ]);
                                 
                                 // Redirect naar success pagina
-                                return view('onboarding.payment-success', [
+                                return view('registration.shared.payment-success', [
                                     'subscription' => $subscription,
                                     'customSubscription' => null
                                 ]);
@@ -351,15 +351,17 @@ class PaymentController extends Controller
 
             $payment = $this->mollie->payments->create($paymentData);
 
+            $checkoutUrl = $payment->getCheckoutUrl();
+            
             Log::info('Mollie custom payment created', [
                 'payment_id' => $payment->id,
                 'custom_subscription_id' => $customSubscription->id,
-                'metadata' => $metadata,
+                'checkout_url' => $checkoutUrl,
                 'amount' => $customSubscription->price,
             ]);
 
             // Redirect gebruiker naar Mollie checkout pagina
-            return redirect($payment->getCheckoutUrl());
+            return redirect()->away($checkoutUrl);
 
         } catch (\Exception $e) {
             Log::error('Custom payment creation failed', [
@@ -419,7 +421,7 @@ class PaymentController extends Controller
                                 session()->forget('pending_custom_subscription_id');
                                 
                                 // Redirect naar success pagina
-                                return view('onboarding.payment-success', [
+                                return view('registration.shared.payment-success', [
                                     'subscription' => null,
                                     'customSubscription' => $customSubscription
                                 ]);

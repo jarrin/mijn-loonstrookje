@@ -89,7 +89,7 @@ class InvitationController extends Controller
         // Check if this is for an existing user (company_access type)
         if ($invitation->invitation_type === 'company_access') {
             // For existing users, show login page to accept invitation
-            return view('auth.accept-invitation', compact('invitation'));
+            return view('registration.employee.accept-invitation', compact('invitation'));
         }
 
         // Store custom subscription info in session if applicable
@@ -104,7 +104,12 @@ class InvitationController extends Controller
                 ->with('info', 'Je bent uitgelogd. Maak nu je nieuwe account aan.');
         }
 
-        return view('auth.register-invited', compact('invitation'));
+        // Use custom registration view for custom subscription invites
+        if ($invitation->invitation_type === 'custom_subscription_invite' && $invitation->custom_subscription_id) {
+            return view('registration.custom.register', compact('invitation'));
+        }
+
+        return view('registration.employee.register', compact('invitation'));
     }
 
     /**
@@ -290,7 +295,13 @@ class InvitationController extends Controller
         // Send email verification notification automatically
         $user->sendEmailVerificationNotification();
 
-        // Redirect to verification notice page
+        // For custom subscription invitations, redirect to combined verify-and-secure page
+        if ($role === 'employer' && $invitation->custom_subscription_id) {
+            return redirect()->route('registration.verify-and-secure')
+                ->with('success', 'Account succesvol aangemaakt! Voltooi de volgende stappen om je account te activeren.');
+        }
+
+        // For regular employee invitations, redirect to verification notice page
         return redirect()->route('verification.notice')
             ->with('success', 'Account succesvol aangemaakt! Check je inbox voor de verificatie email.');
     }

@@ -130,7 +130,7 @@ class SuperAdminController extends Controller
 
         CustomSubscription::create($data);
 
-        return redirect()->route('superadmin.subscriptions');
+        return back();
     }
 
     /**
@@ -172,7 +172,7 @@ class SuperAdminController extends Controller
         // Delete the invitation
         $invitation->delete();
         
-        return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscriptionId]);
+        return back();
     }
 
     /**
@@ -189,7 +189,7 @@ class SuperAdminController extends Controller
         $company->custom_subscription_id = null;
         $company->save();
         
-        return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscription->id]);
+        return back();
     }
 
     /**
@@ -231,7 +231,7 @@ class SuperAdminController extends Controller
         try {
             Mail::to($request->email)->send(new CustomSubscriptionInvitation($invitation, $customSubscription));
             
-            return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscription->id]);
+            return back();
         } catch (\Exception $e) {
             // Delete invitation if email fails
             $invitation->delete();

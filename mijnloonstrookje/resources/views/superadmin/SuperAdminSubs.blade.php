@@ -123,7 +123,7 @@
                 </select>
             </div>
             <div style="width: 200px;">
-                <input type="number" name="max_users" placeholder="Aantal bedrijven" required min="1" style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px;">
+                <input type="number" name="max_users" placeholder="Aantal gebruikers" required min="1" style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px;">
             </div>
             <div style="margin-left: auto;">
                 <button type="submit" style="padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
@@ -150,27 +150,15 @@
         </thead>
         <tbody>
             @forelse($customSubscriptions as $customSub)
-                @php
-                    $isExpanded = request('expand_custom') == $customSub->id;
-                    $showingInvite = request('invite_custom') == $customSub->id;
-                @endphp
+
                 
                 <!-- Main subscription row -->
                 <tr>
                     <!-- Expand/Collapse Arrow - ALWAYS SHOW -->
                     <td>
-                        <form method="GET" action="{{ route('superadmin.subscriptions') }}" style="margin: 0;">
-                            @if(!$isExpanded)
-                                <input type="hidden" name="expand_custom" value="{{ $customSub->id }}">
-                                <button type="submit" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
-                                    {!! file_get_contents(resource_path('assets/icons/chevron-up.svg')) !!}
-                                </button>
-                            @else
-                                <button type="submit" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
-                                    {!! file_get_contents(resource_path('assets/icons/chevron-down.svg')) !!}
-                                </button>
-                            @endif
-                        </form>
+                        <button type="button" onclick="toggleExpandCustomSubscription({{ $customSub->id }})" id="chevron-{{ $customSub->id }}" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1; transition: transform 0.2s;">
+                            {!! file_get_contents(resource_path('assets/icons/chevron-up.svg')) !!}
+                        </button>
                     </td>
                     
                     <td>€ {{ number_format($customSub->price, 2, ',', '.') }}</td>
@@ -182,13 +170,9 @@
                     <td style="text-align: right;">
                         <div style="display: flex; gap: 0.75rem; justify-content: flex-end; align-items: center;">
                             <!-- Invite button - triggers expand with invite form -->
-                            <form method="GET" action="{{ route('superadmin.subscriptions') }}" style="margin: 0; display: inline;">
-                                <input type="hidden" name="expand_custom" value="{{ $customSub->id }}">
-                                <input type="hidden" name="invite_custom" value="{{ $customSub->id }}">
-                                <button type="submit" title="Uitnodigen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
-                                    {!! file_get_contents(resource_path('assets/icons/plus.svg')) !!}
-                                </button>
-                            </form>
+                            <button type="button" onclick="showInviteForm({{ $customSub->id }})" title="Uitnodigen" style="background: transparent; border: none; cursor: pointer; padding: 0; line-height: 1;">
+                                {!! file_get_contents(resource_path('assets/icons/plus.svg')) !!}
+                            </button>
                             
                             <!-- Delete button -->
                             <form method="POST" action="{{ route('superadmin.custom-subscriptions.destroy', $customSub) }}" style="margin: 0; display: inline;" onsubmit="return confirm('Weet je zeker dat je dit custom abonnement wilt verwijderen?');">
@@ -203,15 +187,13 @@
                 </tr>
                 
                 <!-- Expanded section -->
-                @if($isExpanded)
-                    <!-- Show companies if they exist -->
-                    @if($customSub->companies->count() > 0)
-                        @foreach($customSub->companies as $company)
+                @if($customSub->companies->count() > 0)
+                    @foreach($customSub->companies as $company)
+                        <tr class="custom-sub-expanded custom-sub-{{ $customSub->id }}-expanded" style="background-color: #f9fafb; display: none;">
                             @php
                                 $employer = $company->users->where('role', 'employer')->first();
                                 $employeeCount = $company->users->where('role', 'employee')->count();
                             @endphp
-                            <tr style="background-color: #f9fafb;">
                                 <td></td>
                                 <td style="padding-left: 2rem; font-size: 14px;">
                                     {{ $company->name }}
@@ -233,13 +215,14 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
-                    @endif
+                        </tr>
+                    @endforeach
+                @endif
                     
-                    <!-- Show pending invitations -->
-                    @if($customSub->invitations->count() > 0)
-                        @foreach($customSub->invitations as $invitation)
-                            <tr style="background-color: #fffbeb;">
+                <!-- Show pending invitations -->
+                @if($customSub->invitations->count() > 0)
+                    @foreach($customSub->invitations as $invitation)
+                        <tr class="custom-sub-expanded custom-sub-{{ $customSub->id }}-expanded" style="background-color: #fffbeb; display: none;">
                                 <td></td>
                                 <td style="padding-left: 2rem; font-size: 14px; color: #92400e;">
                                     {{ $invitation->email }}
@@ -259,13 +242,12 @@
                                         </button>
                                     </form>
                                 </td>
-                            </tr>
-                        @endforeach
-                    @endif
+                        </tr>
+                    @endforeach
+                @endif
                     
-                    <!-- Invitation form row - always show when expanded and invite_custom is set -->
-                    @if($showingInvite)
-                        <tr style="background-color: #eff6ff;">
+                <!-- Invitation form row -->
+                <tr id="invite-form-{{ $customSub->id }}" class="custom-sub-{{ $customSub->id }}-expanded" style="background-color: #eff6ff; display: none;">
                             <td></td>
                             <td colspan="5" style="padding: 1rem 0.75rem 1rem 2rem;">
                                 <div style="display: flex; align-items: center; gap: 1rem;">
@@ -274,13 +256,11 @@
                                         @csrf
                                         <input type="email" name="email" placeholder="email@voorbeeld.nl" required autofocus style="padding: 8px 14px; border: 1px solid #D4D4D4; border-radius: 6px; font-size: 14px; flex: 1; max-width: 400px;">
                                         <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; white-space: nowrap;">Uitnodigen</button>
-                                        <a href="{{ route('superadmin.subscriptions', ['expand_custom' => $customSub->id]) }}" style="color: #6b7280; font-size: 1.25rem; text-decoration: none; line-height: 1; cursor: pointer; padding: 0 0.5rem;">×</a>
+                                        <button type="button" onclick="hideInviteForm({{ $customSub->id }})" style="background: transparent; border: none; color: #6b7280; font-size: 1.25rem; cursor: pointer; padding: 0 0.5rem; line-height: 1;">×</button>
                                     </form>
                                 </div>
                             </td>
-                        </tr>
-                    @endif
-                @endif
+                </tr>
             @empty
                 <tr>
                     <td colspan="6" style="padding: 2rem; text-align: center; color: #9ca3af; font-size: 0.875rem;">Geen custom abonnementen gevonden.</td>
@@ -289,4 +269,74 @@
         </tbody>
     </table>
 </section>
+
+@push('scripts')
+<script>
+function toggleExpandCustomSubscription(id) {
+    const rows = document.querySelectorAll('.custom-sub-' + id + '-expanded');
+    const chevron = document.getElementById('chevron-' + id);
+    const inviteForm = document.getElementById('invite-form-' + id);
+    
+    // Toggle all expanded rows (companies, invitations, and invite form)
+    rows.forEach(row => {
+        if (row.style.display === 'none' || row.style.display === '') {
+            row.style.display = 'table-row';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Rotate chevron icon
+    if (chevron.style.transform === 'rotate(180deg)') {
+        chevron.style.transform = 'rotate(0deg)';
+    } else {
+        chevron.style.transform = 'rotate(180deg)';
+    }
+}
+
+function showInviteForm(id) {
+    const rows = document.querySelectorAll('.custom-sub-' + id + '-expanded');
+    const chevron = document.getElementById('chevron-' + id);
+    const inviteForm = document.getElementById('invite-form-' + id);
+    
+    // First expand if not already expanded
+    let isExpanded = false;
+    rows.forEach(row => {
+        if (row.style.display === 'table-row') {
+            isExpanded = true;
+        }
+    });
+    
+    if (!isExpanded) {
+        // Expand all rows
+        rows.forEach(row => {
+            row.style.display = 'table-row';
+        });
+        chevron.style.transform = 'rotate(180deg)';
+    } else {
+        // Just show the invite form
+        inviteForm.style.display = 'table-row';
+    }
+    
+    // Focus the email input
+    setTimeout(() => {
+        const emailInput = inviteForm.querySelector('input[type="email"]');
+        if (emailInput) {
+            emailInput.focus();
+        }
+    }, 100);
+}
+
+function hideInviteForm(id) {
+    const inviteForm = document.getElementById('invite-form-' + id);
+    inviteForm.style.display = 'none';
+    
+    // Clear the email input
+    const emailInput = inviteForm.querySelector('input[type="email"]');
+    if (emailInput) {
+        emailInput.value = '';
+    }
+}
+</script>
+@endpush
 @endsection

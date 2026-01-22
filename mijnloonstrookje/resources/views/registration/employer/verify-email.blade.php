@@ -51,7 +51,7 @@
                         Bedankt voor je registratie! We hebben zojuist een verificatielink naar je e-mailadres gestuurd.
                     </p>
                     
-                    <p class="text-sm text-gray-600">
+                    <p class="text-sm text-gray-600 mb-6">
                         Klik op de link in de e-mail om je account te verifiëren en door te gaan naar de volgende stap.
                     </p>
                 </div>
