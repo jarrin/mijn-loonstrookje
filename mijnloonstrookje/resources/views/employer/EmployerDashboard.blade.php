@@ -10,7 +10,7 @@
     <div class="dashboard-tiles">
         <!-- Tile 1: Company Info with Date/Time -->
         <div class="dashboard-tile">
-            <h3 class="tile-company-name">{{ auth()->user()->company->name ?? 'DMG' }}</h3>
+            <h3 class="tile-company-name">{{ $company ? $company->name : 'DMG' }}</h3>
             <div class="tile-time" id="current-time">12:38</div>
             <div class="tile-date" id="current-date">Dinsdag, 29-10</div>
         </div>
@@ -25,8 +25,20 @@
         <!-- Tile 3: Subscription Plan -->
         <div class="dashboard-tile">
             <h3 class="tile-title">Mijn huidige<br>abonnement</h3>
-            <div class="tile-plan-name">{{ ucfirst($company->subscription->subscription_plan ?? 'Basic') }}</div>
-            <div class="tile-price">€{{ number_format($company->subscription->price ?? 0, 2, ',', '.') }}</div>
+            @php
+                $subscriptionName = 'Geen abonnement';
+                $subscriptionPrice = 0;
+                
+                if ($company && $company->subscription) {
+                    $subscriptionName = ucfirst($company->subscription->subscription_plan);
+                    $subscriptionPrice = $company->subscription->price;
+                } elseif ($company && $company->customSubscription) {
+                    $subscriptionName = $company->customSubscription->title;
+                    $subscriptionPrice = $company->customSubscription->price;
+                }
+            @endphp
+            <div class="tile-plan-name">{{ $subscriptionName }}</div>
+            <div class="tile-price">€{{ number_format($subscriptionPrice, 2, ',', '.') }}</div>
         </div>
 
         <!-- Tile 4: Next Payment -->
