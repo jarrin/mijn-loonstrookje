@@ -91,6 +91,35 @@ class EmployerController extends Controller
     }
 
     /**
+     * Delete an employee from the company.
+     */
+    public function destroyEmployee(User $employee)
+    {
+        // Verify user is actually an employer
+        if (auth()->user()->role !== 'employer') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Verify target is an employee
+        if ($employee->role !== 'employee') {
+            abort(403, 'Invalid user type');
+        }
+
+        // Verify employee belongs to this employer's company
+        if ($employee->company_id !== auth()->user()->company_id) {
+            abort(403, 'Unauthorized access to this employee');
+        }
+
+        // Soft delete: set status to inactive and remove company_id
+        $employee->update([
+            'status' => 'inactive',
+            'company_id' => null,
+        ]);
+
+        return redirect()->route('employer.employees')->with('success', 'Medewerker is verwijderd.');
+    }
+
+    /**
      * Display documents for a specific employee.
      */
     public function employeeDocuments($employeeId)
