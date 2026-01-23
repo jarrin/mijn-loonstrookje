@@ -29,11 +29,19 @@
         </thead>
         <tbody>
             @forelse($employees ?? [] as $employee)
-            <tr style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">
-                <td>{{ $employee->name }}</td>
-                <td>{{ $employee->email }}</td>
-                <td>Actief</td>
-                <td class="icon-cell">{!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}</td>
+            <tr>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->name }}</td>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->email }}</td>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">Actief</td>
+                <td class="icon-cell">
+                    <form action="{{ route('employer.employee.destroy', $employee->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Weet je zeker dat je deze medewerker wilt verwijderen?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;">
+                            {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                        </button>
+                    </form>
+                </td>
             </tr>
             @empty
             <tr>
