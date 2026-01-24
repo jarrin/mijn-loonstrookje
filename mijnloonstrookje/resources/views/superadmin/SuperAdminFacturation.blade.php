@@ -6,12 +6,24 @@
 <section>
     <h1 class="superadmin-page-title">Facturatie Beheer</h1>
     <p class="superadmin-page-subtitle">Hier komt het facturatie overzicht te staan.</p>
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Status',
+                'options' => ['Betaald', 'Open', 'Vervallen', 'Geannuleerd']
+            ],
+            [
+                'label' => 'Periode',
+                'options' => ['Deze maand', 'Vorige maand', 'Dit kwartaal', 'Dit jaar']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Nieuwste eerst', 'Oudste eerst', 'Bedrag oplopend', 'Bedrag aflopend']
+            ]
+        ]
+    ])
     
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
-        <a href="{{ route('superadmin.subscriptions') }}" class="superadmin-button-primary">Abonnementen</a>
-        <a href="{{ route('superadmin.logs') }}" class="superadmin-button-primary">Logs</a>
-    </div>
     <table id="super-admin-facturation">
         <thead>
             <th>Bedrijf</th>

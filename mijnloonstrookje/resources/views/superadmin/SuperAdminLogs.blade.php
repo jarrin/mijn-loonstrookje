@@ -5,46 +5,24 @@
 @section('content')
 <section>
     <h1 class="superadmin-page-title">Systeem Logs</h1>
-    
-    <!-- Filters -->
-    <form method="GET" class="superadmin-filter-form">
-        <div class="superadmin-filter-grid">
-            <div>
-                <label class="superadmin-filter-label">Actie</label>
-                <select name="action" class="superadmin-filter-select">
-                    <option value="">Alle acties</option>
-                    @foreach($actions as $action)
-                        <option value="{{ $action }}" {{ request('action') == $action ? 'selected' : '' }}>
-                            {{ ucfirst(str_replace('_', ' ', $action)) }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Bedrijf</label>
-                <select name="company_id" class="superadmin-filter-select">
-                    <option value="">Alle bedrijven</option>
-                    @foreach($companies as $company)
-                        <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
-                            {{ $company->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Van Datum</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="superadmin-filter-input">
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Tot Datum</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="superadmin-filter-input">
-            </div>
-        </div>
-        <div class="superadmin-filter-actions">
-            <button type="submit" class="superadmin-button-primary">Filter</button>
-            <a href="{{ route('superadmin.logs') }}" class="superadmin-button-secondary">Reset</a>
-        </div>
-    </form>
+    <p class="superadmin-page-subtitle">Bekijk en filter alle systeem activiteiten</p>
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Type actie',
+                'options' => ['Login', 'Document uploaded', 'Document revised', 'Document deleted', 'Document restored', 'Employee created', 'Admin office added']
+            ],
+            [
+                'label' => 'Alle logs',
+                'options' => ['Vandaag', 'Deze week', 'Deze maand', 'Dit jaar']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Nieuwste eerst', 'Oudste eerst', 'Gebruiker', 'Bedrijf']
+            ]
+        ]
+    ])
     
     <table>
         <thead>
@@ -113,10 +91,6 @@
     <!-- Pagination -->
     <div class="superadmin-pagination-wrapper">
         {{ $logs->links() }}
-    </div>
-    
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
     </div>
 </section>
 @endsection
