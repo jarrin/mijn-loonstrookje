@@ -190,6 +190,7 @@
 
 .employer-button-primary {
     color: white;
+    background-color: var(--primary-color);
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
     border: none;
@@ -198,7 +199,8 @@
 }
 
 .employer-button-primary:hover {
-    opacity: 0.9;
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
 }
 
 .employer-button-secondary {
@@ -212,6 +214,22 @@
 
 .employer-button-secondary:hover {
     background-color: #4B5563;
+}
+
+.employer-button-add {
+    color: white;
+    background-color: var(--primary-color);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.employer-button-primary:hover {
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
 }
 
 /* Version Badge Styles */

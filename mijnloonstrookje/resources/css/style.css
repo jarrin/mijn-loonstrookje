@@ -249,6 +249,14 @@ button#primairy {
     box-shadow: 0 16px 32px 16px rgba(0, 0, 0, 0.1);
 }
 
+.table-filter-action {
+    margin-left: auto;
+}
+
+.table-filter-action button {
+    white-space: nowrap;
+}
+
 .search-container {
     display: flex;
     align-items: center;

@@ -23,4 +23,10 @@
         </div>
     </div>
     @endforeach
+    
+    @if(isset($actionButton))
+    <div class="table-filter-action">
+        {!! $actionButton !!}
+    </div>
+    @endif
 </div>
