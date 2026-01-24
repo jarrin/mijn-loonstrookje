@@ -60,18 +60,19 @@
                     <td>{{ $log->created_at->format('d-m-Y H:i') }}</td>
                     <td>{{ $log->user ? $log->user->name : 'N/A' }}</td>
                     <td>
-                        <span class="employer-activity-badge" style="background-color: {{ 
-                            match($log->action) {
-                                'login' => '#10B981',
-                                'document_uploaded' => '#3B82F6',
-                                'document_revised' => '#F59E0B',
-                                'document_deleted' => '#EF4444',
-                                'document_restored' => '#8B5CF6',
-                                'employee_created' => '#06B6D4',
-                                'admin_office_added' => '#EC4899',
-                                default => '#6B7280'
-                            }
-                        }};">
+                        @php
+                            $colors = match($log->action) {
+                                'login' => ['bg' => '#A7F3D0', 'text' => '#059669'],
+                                'document_uploaded' => ['bg' => '#BFDBFE', 'text' => '#1D4ED8'],
+                                'document_revised' => ['bg' => '#FDE68A', 'text' => '#D97706'],
+                                'document_deleted' => ['bg' => '#FECACA', 'text' => '#DC2626'],
+                                'document_restored' => ['bg' => '#DDD6FE', 'text' => '#7C3AED'],
+                                'employee_created' => ['bg' => '#A5F3FC', 'text' => '#0891B2'],
+                                'admin_office_added' => ['bg' => '#FBCFE8', 'text' => '#DB2777'],
+                                default => ['bg' => '#E5E7EB', 'text' => '#4B5563']
+                            };
+                        @endphp
+                        <span class="employer-activity-badge" style="background-color: {{ $colors['bg'] }}; color: {{ $colors['text'] }};">
                             {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                         </span>
                     </td>
