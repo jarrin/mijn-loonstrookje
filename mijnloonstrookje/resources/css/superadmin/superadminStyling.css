@@ -235,43 +235,9 @@
 
 /* Log Action Badges */
 .superadmin-log-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
     font-size: 0.75rem;
-    color: white;
-    display: inline-block;
-}
-
-.superadmin-log-badge-login {
-    background-color: #10B981;
-}
-
-.superadmin-log-badge-upload {
-    background-color: #3B82F6;
-}
-
-.superadmin-log-badge-revised {
-    background-color: #F59E0B;
-}
-
-.superadmin-log-badge-deleted {
-    background-color: #EF4444;
-}
-
-.superadmin-log-badge-restored {
-    background-color: #8B5CF6;
-}
-
-.superadmin-log-badge-created {
-    background-color: #06B6D4;
-}
-
-.superadmin-log-badge-added {
-    background-color: #EC4899;
-}
-
-.superadmin-log-badge-default {
-    background-color: #6B7280;
 }
 
 /* Pagination */

@@ -80,14 +80,14 @@
                     <td>
                         @php
                             $colors = match($log->action) {
-                                'login' => ['bg' => '#A7F3D0', 'text' => '#059669'],
-                                'document_uploaded' => ['bg' => '#BFDBFE', 'text' => '#1D4ED8'],
-                                'document_revised' => ['bg' => '#FDE68A', 'text' => '#D97706'],
-                                'document_deleted' => ['bg' => '#FECACA', 'text' => '#DC2626'],
-                                'document_restored' => ['bg' => '#DDD6FE', 'text' => '#7C3AED'],
-                                'employee_created' => ['bg' => '#A5F3FC', 'text' => '#0891B2'],
-                                'admin_office_added' => ['bg' => '#FBCFE8', 'text' => '#DB2777'],
-                                default => ['bg' => '#E5E7EB', 'text' => '#4B5563']
+                                'login' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
+                                'document_uploaded' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
+                                'document_revised' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
+                                'document_deleted' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
+                                'document_restored' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
+                                'employee_created' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
+                                'admin_office_added' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                                default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563']
                             };
                         @endphp
                         <span class="employer-activity-badge" style="background-color: {{ $colors['bg'] }}; color: {{ $colors['text'] }};">

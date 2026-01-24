@@ -36,6 +36,7 @@ tbody tr:nth-last-child(1){
     align-items: center;
     justify-content: center;
     padding-inline: 0;
+    gap: 3px;
 }
 
 .icon-cell form{
@@ -51,6 +52,8 @@ tbody tr:nth-last-child(1){
 
 .icon-cell svg {
     display: block;
+    height: 22px;
+    width: 22px;
 }
 
 .document-action-view {
