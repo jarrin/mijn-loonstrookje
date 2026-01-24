@@ -57,15 +57,15 @@ tbody tr:nth-last-child(1){
 }
 
 .document-action-view {
-    color: #3B82F6;
+    color: var(--primary-color);
 }
 
 .document-action-download {
-    color: #10B981;
+    color: var(--primary-color);
 }
 
 .document-action-edit {
-    color: #F59E0B;
+    color: var(--primary-color);
 }
 
 .document-action-delete {

@@ -200,9 +200,9 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     text-align: left;
     padding: 0.75rem 1rem;
-    background: none;
+    background: var(--primary-color);
     border: none;
-    color: #121826;
+    color: white;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -210,5 +210,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .user-menu-dropdown .logout-button:hover {
-    background-color: #F6F7F8;
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
 }

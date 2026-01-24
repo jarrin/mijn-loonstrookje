@@ -63,6 +63,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 'document restored': ['document_restored', 'document restored'],
                 'employee created': ['employee_created', 'employee created']
             }
+        },
+        'employee-dashboard': {
+            0: { // Type document
+                'loonstrook': ['payslip', 'loonstrook'],
+                'jaaroverzicht': ['annual_statement', 'annual statement', 'jaaroverzicht'],
+                'overig': ['other', 'overig']
+            }
         }
     };
     
@@ -76,6 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (document.querySelector('.employer-page-title')?.textContent.includes('Medewerkers Lijst')) return 'employer-employees';
         if (document.querySelector('.employer-page-title')?.textContent.includes('Documenten van')) return 'employer-documents';
         if (document.querySelector('.employer-activity-section')) return 'employer-activity';
+        
+        // Employee pages
+        if (document.querySelector('.employee-page-title')?.textContent.includes('Mijn Documenten')) return 'employee-dashboard';
         
         return 'dashboard';
     }
@@ -201,6 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         showRow = applyEmployerDocumentsFilter(filterIndex, filterValue, cells, row);
                     } else if (pageType === 'employer-activity') {
                         showRow = applyEmployerActivityFilter(filterIndex, filterValue, cells, row);
+                    } else if (pageType === 'employee-dashboard') {
+                        showRow = applyEmployeeDashboardFilter(filterIndex, filterValue, cells, row);
                     }
                 }
             });
@@ -226,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'employer-employees': return [0, 1]; // Naam, Email
             case 'employer-documents': return [0, 1]; // Document Naam (and Medewerker if present)
             case 'employer-activity': return [1, 3]; // Gebruiker, Beschrijving
+            case 'employee-dashboard': return [0, 1]; // Document Naam, Type
             default: return [0];
         }
     }
@@ -319,6 +332,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // Dropdown 1 (Periode) - filter based on timestamp
         else if (filterIndex === '1' && cells[0]) {
             return filterByPeriod(filterValue, cells[0].textContent);
+        }
+        // Dropdown 2 is for sorting
+        return true;
+    }
+    
+    function applyEmployeeDashboardFilter(filterIndex, filterValue, cells, row) {
+        // Dropdown 0 (Type document) -> column 1 (Type)
+        if (filterIndex === '0' && cells[1]) {
+            const cellText = cells[1].textContent.toLowerCase();
+            const mappedValues = filterMappings['employee-dashboard'][0][filterValue] || [];
+            return mappedValues.some(val => cellText.includes(val));
+        }
+        // Dropdown 1 (Periode) - filter based on upload date (column 5)
+        else if (filterIndex === '1' && cells[5]) {
+            return filterByPeriod(filterValue, cells[5].textContent);
         }
         // Dropdown 2 is for sorting
         return true;
@@ -445,6 +473,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     return aCells[0].textContent.localeCompare(bCells[0].textContent);
                 } else if (sortValueLower.includes('gebruiker')) {
                     return aCells[1].textContent.localeCompare(bCells[1].textContent);
+                }
+            } else if (pageType === 'employee-dashboard') {
+                if (sortValueLower.includes('nieuwste')) {
+                    return bCells[5].textContent.localeCompare(aCells[5].textContent);
+                } else if (sortValueLower.includes('oudste')) {
+                    return aCells[5].textContent.localeCompare(bCells[5].textContent);
+                } else if (sortValueLower.includes('naam a-z')) {
+                    return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower.includes('naam z-a')) {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
                 }
             }
             return 0;

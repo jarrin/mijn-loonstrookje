@@ -181,7 +181,7 @@
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="inline">
                                     @csrf
-                                    <button id="primairy" type="submit" class="logout-button">Uitloggen</button>
+                                    <button type="submit" class="logout-button">Uitloggen</button>
                                 </form>
                             </li>
                         </ul>
