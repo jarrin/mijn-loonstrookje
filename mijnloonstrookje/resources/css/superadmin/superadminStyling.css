@@ -332,6 +332,9 @@
     width: 250px;
     background: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
 }
 
 .superadmin-subscription-tile p {
@@ -383,9 +386,25 @@
 }
 
 .superadmin-subscription-tile button:hover {
-    opacity: 0.9;
+    color: var(--primary-color);
+    background-color: var(--light-bg-color);
 }
 
 .superadmin-subscription-tile form div {
     margin-bottom: 0.5rem;
 }
+
+.superadmin-subs-actions {
+    margin-top: auto;
+}
+
+.superadmin-subs-actions button{
+    font-size: 16px;
+}
+
+.superadmin-subs-edit {
+    display: flex;
+    flex-direction: column;
+}   
+
+

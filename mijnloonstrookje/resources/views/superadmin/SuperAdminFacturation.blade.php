@@ -7,11 +7,6 @@
     <h1 class="superadmin-page-title">Facturatie Beheer</h1>
     <p class="superadmin-page-subtitle">Hier komt het facturatie overzicht te staan.</p>
     
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
-        <a href="{{ route('superadmin.subscriptions') }}" class="superadmin-button-primary">Abonnementen</a>
-        <a href="{{ route('superadmin.logs') }}" class="superadmin-button-primary">Logs</a>
-    </div>
     <table id="super-admin-facturation">
         <thead>
             <th>Bedrijf</th>

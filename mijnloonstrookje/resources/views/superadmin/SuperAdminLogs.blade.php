@@ -114,9 +114,5 @@
     <div class="superadmin-pagination-wrapper">
         {{ $logs->links() }}
     </div>
-    
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
-    </div>
 </section>
 @endsection
