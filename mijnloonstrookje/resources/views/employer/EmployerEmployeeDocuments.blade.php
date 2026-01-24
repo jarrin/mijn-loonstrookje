@@ -17,6 +17,23 @@
             {{ session('error') }}
         </div>
     @endif
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Type document',
+                'options' => ['Loonstrook', 'Jaaroverzicht', 'Overig']
+            ],
+            [
+                'label' => 'Periode',
+                'options' => ['Deze maand', 'Vorige maand', 'Dit kwartaal', 'Dit jaar']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Nieuwste eerst', 'Oudste eerst', 'Naam A-Z', 'Naam Z-A']
+            ]
+        ]
+    ])
     
     @if(isset($documents))
     <table>

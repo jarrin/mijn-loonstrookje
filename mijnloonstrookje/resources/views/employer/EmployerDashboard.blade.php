@@ -45,6 +45,24 @@
     <!-- Recent Activity Logs -->
     <div class="employer-activity-section">
         <h2 class="employer-activity-title">Recente Activiteit</h2>
+        
+        @include('components.TableFilterBar', [
+            'filters' => [
+                [
+                    'label' => 'Type actie',
+                    'options' => ['Login', 'Document uploaded', 'Document revised', 'Document deleted', 'Document restored', 'Employee created']
+                ],
+                [
+                    'label' => 'Periode',
+                    'options' => ['Vandaag', 'Deze week', 'Deze maand']
+                ],
+                [
+                    'label' => 'Sorteer op',
+                    'options' => ['Nieuwste eerst', 'Oudste eerst', 'Gebruiker']
+                ]
+            ]
+        ])
+        
         <table>
             <thead>
                 <tr>

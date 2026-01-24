@@ -45,13 +45,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 'vervallen': ['overdue', 'vervallen'],
                 'geannuleerd': ['cancelled', 'canceled', 'geannuleerd']
             }
+        },
+        'employer-employees': {},
+        'employer-documents': {
+            0: { // Type document
+                'loonstrook': ['payslip', 'loonstrook'],
+                'jaaroverzicht': ['annual_statement', 'annual statement', 'jaaroverzicht'],
+                'overig': ['other', 'overig']
+            }
+        },
+        'employer-activity': {
+            0: { // Type actie (same as logs)
+                'login': ['login'],
+                'document uploaded': ['document_uploaded', 'document uploaded'],
+                'document revised': ['document_revised', 'document revised'],
+                'document deleted': ['document_deleted', 'document deleted'],
+                'document restored': ['document_restored', 'document restored'],
+                'employee created': ['employee_created', 'employee created']
+            }
         }
     };
     
     function detectPageType() {
+        // Super Admin pages
         if (document.querySelector('#superadmin-table')) return 'dashboard';
         if (document.querySelector('.superadmin-page-title')?.textContent.includes('Systeem Logs')) return 'logs';
         if (document.querySelector('#super-admin-facturation')) return 'facturation';
+        
+        // Employer pages
+        if (document.querySelector('.employer-page-title')?.textContent.includes('Medewerkers Lijst')) return 'employer-employees';
+        if (document.querySelector('.employer-page-title')?.textContent.includes('Documenten van')) return 'employer-documents';
+        if (document.querySelector('.employer-activity-section')) return 'employer-activity';
+        
         return 'dashboard';
     }
     
@@ -170,6 +195,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         showRow = applyLogsFilter(filterIndex, filterValue, cells, row);
                     } else if (pageType === 'facturation') {
                         showRow = applyFacturationFilter(filterIndex, filterValue, cells, row);
+                    } else if (pageType === 'employer-employees') {
+                        showRow = applyEmployerEmployeesFilter(filterIndex, filterValue, cells);
+                    } else if (pageType === 'employer-documents') {
+                        showRow = applyEmployerDocumentsFilter(filterIndex, filterValue, cells, row);
+                    } else if (pageType === 'employer-activity') {
+                        showRow = applyEmployerActivityFilter(filterIndex, filterValue, cells, row);
                     }
                 }
             });
@@ -192,6 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'dashboard': return [0, 1, 2]; // Gebruiker, Bedrijf, Email
             case 'logs': return [1, 2, 4]; // Gebruiker, Bedrijf, Beschrijving
             case 'facturation': return [0]; // Bedrijf
+            case 'employer-employees': return [0, 1]; // Naam, Email
+            case 'employer-documents': return [0, 1]; // Document Naam (and Medewerker if present)
+            case 'employer-activity': return [1, 3]; // Gebruiker, Beschrijving
             default: return [0];
         }
     }
@@ -237,6 +271,54 @@ document.addEventListener('DOMContentLoaded', function() {
         // Dropdown 1 (Periode) - filter based on date
         else if (filterIndex === '1' && cells[1]) {
             return filterByPeriod(filterValue, cells[1].textContent);
+        }
+        // Dropdown 2 is for sorting
+        return true;
+    }
+    
+    function applyEmployerEmployeesFilter(filterIndex, filterValue, cells) {
+        // Dropdown 0 (Status) -> column 2 (Status)
+        if (filterIndex === '0' && cells[2]) {
+            const cellText = cells[2].textContent.toLowerCase();
+            return cellText.includes(filterValue.toLowerCase());
+        }
+        // Dropdown 1 is for sorting
+        return true;
+    }
+    
+    function applyEmployerDocumentsFilter(filterIndex, filterValue, cells, row) {
+        // Check if employee column exists (cells[0] would be employee in all-documents view)
+        const hasEmployeeColumn = !document.querySelector('.employer-page-title')?.textContent.match(/Documenten van [A-Z]/);
+        const typeColumnIndex = hasEmployeeColumn ? 2 : 1;
+        const dateColumnIndex = hasEmployeeColumn ? 6 : 5;
+        
+        // Dropdown 0 (Type document)
+        if (filterIndex === '0' && cells[typeColumnIndex]) {
+            const cellText = cells[typeColumnIndex].textContent.toLowerCase();
+            const mappedValues = filterMappings['employer-documents'][0][filterValue] || [];
+            return mappedValues.some(val => cellText.includes(val));
+        }
+        // Dropdown 1 (Periode) - filter based on upload date
+        else if (filterIndex === '1' && cells[dateColumnIndex]) {
+            return filterByPeriod(filterValue, cells[dateColumnIndex].textContent);
+        }
+        // Dropdown 2 is for sorting
+        return true;
+    }
+    
+    function applyEmployerActivityFilter(filterIndex, filterValue, cells, row) {
+        // Dropdown 0 (Type actie) -> column 2 (Actie)
+        if (filterIndex === '0' && cells[2]) {
+            const badgeElement = cells[2].querySelector('.employer-activity-badge');
+            if (badgeElement) {
+                const cellText = badgeElement.textContent.toLowerCase();
+                const mappedValues = filterMappings['employer-activity'][0][filterValue] || [];
+                return mappedValues.some(val => cellText.includes(val));
+            }
+        }
+        // Dropdown 1 (Periode) - filter based on timestamp
+        else if (filterIndex === '1' && cells[0]) {
+            return filterByPeriod(filterValue, cells[0].textContent);
         }
         // Dropdown 2 is for sorting
         return true;
@@ -330,6 +412,39 @@ document.addEventListener('DOMContentLoaded', function() {
                     const aAmount = parseFloat(aCells[4].textContent.replace('€', '').replace(',', '.'));
                     const bAmount = parseFloat(bCells[4].textContent.replace('€', '').replace(',', '.'));
                     return bAmount - aAmount;
+                }
+            } else if (pageType === 'employer-employees') {
+                if (sortValueLower.includes('naam a-z')) {
+                    return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower.includes('naam z-a')) {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                } else if (sortValueLower.includes('nieuwste')) {
+                    // Could be enhanced with actual date comparison if available
+                    return 0;
+                } else if (sortValueLower.includes('oudste')) {
+                    return 0;
+                }
+            } else if (pageType === 'employer-documents') {
+                const hasEmployeeColumn = !document.querySelector('.employer-page-title')?.textContent.match(/Documenten van [A-Z]/);
+                const nameColumnIndex = hasEmployeeColumn ? 1 : 0;
+                const dateColumnIndex = hasEmployeeColumn ? 6 : 5;
+                
+                if (sortValueLower.includes('nieuwste')) {
+                    return bCells[dateColumnIndex].textContent.localeCompare(aCells[dateColumnIndex].textContent);
+                } else if (sortValueLower.includes('oudste')) {
+                    return aCells[dateColumnIndex].textContent.localeCompare(bCells[dateColumnIndex].textContent);
+                } else if (sortValueLower.includes('naam a-z')) {
+                    return aCells[nameColumnIndex].textContent.localeCompare(bCells[nameColumnIndex].textContent);
+                } else if (sortValueLower.includes('naam z-a')) {
+                    return bCells[nameColumnIndex].textContent.localeCompare(aCells[nameColumnIndex].textContent);
+                }
+            } else if (pageType === 'employer-activity') {
+                if (sortValueLower.includes('nieuwste')) {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                } else if (sortValueLower.includes('oudste')) {
+                    return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower.includes('gebruiker')) {
+                    return aCells[1].textContent.localeCompare(bCells[1].textContent);
                 }
             }
             return 0;

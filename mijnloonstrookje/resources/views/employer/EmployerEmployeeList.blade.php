@@ -17,6 +17,19 @@
             {{ session('error') }}
         </div>
     @endif
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Status',
+                'options' => ['Actief', 'Inactief', 'Uitgenodigd']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Naam A-Z', 'Naam Z-A', 'Nieuwste eerst', 'Oudste eerst']
+            ]
+        ]
+    ])
     
     <table>
         <thead>
