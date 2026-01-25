@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         Route::get('/administration/company/{company}', [AdministrationController::class, 'showCompany'])->name('administration.company.show');
         Route::get('/administration/company/{company}/employees', [AdministrationController::class, 'companyEmployees'])->name('administration.company.employees');
         Route::get('/administration/company/{company}/documents', [AdministrationController::class, 'companyDocuments'])->name('administration.company.documents');
-    })
+    });
     
     // Document routes - accessible by employer, administration_office, and employee (for view/download)
     Route::middleware('role:employer,administration_office,employee')->group(function () {
