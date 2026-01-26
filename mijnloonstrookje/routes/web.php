@@ -232,8 +232,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Profile settings page
     Route::get('/profile/settings', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.settings');
-    Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.update-password');
-    Route::post('/profile/branding', [App\Http\Controllers\ProfileController::class, 'updateBranding'])->name('profile.update-branding');
+    Route::post('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::post('/profile/branding', [App\Http\Controllers\ProfileController::class, 'updateBranding'])->name('profile.branding.update');
     
     // 2FA settings page for all authenticated users
     Route::get('/profile/two-factor-authentication', function () {
