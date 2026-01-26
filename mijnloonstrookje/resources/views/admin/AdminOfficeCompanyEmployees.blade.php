@@ -5,8 +5,8 @@
 @section('content')
 <section>
     <div class="employees-header">
-        <a href="{{ route('administration.company.show', $company->id) }}" class="employees-back-link" style="color: var(--primary-color);">
-            ← Terug naar {{ $company->name }}
+        <a href="{{ route('administration.dashboard') }}" class="employees-back-link" style="color: var(--primary-color);">
+            ← Terug naar Dashboard
         </a>
         
         <h1 class="employees-title">Medewerkers - {{ $company->name }}</h1>

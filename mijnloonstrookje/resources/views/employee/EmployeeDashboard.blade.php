@@ -93,16 +93,6 @@
                     <div class="employee-version-container">
                         <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
                         
-                        @if($isOriginal)
-                            <span class="employee-version-badge original" style="background: var(--primary-color);">
-                                #{{ $document->id }}
-                            </span>
-                        @else
-                            <span class="employee-version-badge parent">
-                                van #{{ $parentId }}
-                            </span>
-                        @endif
-                        
                         @if($isLatest && $document->version > 1.0)
                             <span class="employee-version-badge latest">
                                 NIEUWSTE

@@ -62,7 +62,7 @@
 
                 <!-- Navigation -->
                 @if($emailVerified && $has2FAConfirmed)
-                    <a href="{{ route('employee.dashboard') }}" 
+                    <a href="{{ route('employee.documents') }}" 
                        class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg cursor-pointer transition-colors">
                         Ga naar dashboard
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

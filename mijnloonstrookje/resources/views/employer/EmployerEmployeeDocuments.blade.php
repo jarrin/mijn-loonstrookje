@@ -4,6 +4,14 @@
 
 @section('content')
 <section>
+    @if(auth()->user()->role === 'administration_office' && isset($employee))
+        <div class="employer-back-link">
+            <a href="{{ route('administration.company.employees', $employee->company_id) }}" style="color: var(--primary-color);">
+                ← Terug naar Medewerkers
+            </a>
+        </div>
+    @endif
+    
     <h1 class="employer-page-title">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
     
     @if(session('success'))
@@ -97,16 +105,6 @@
                     
                     <div class="document-version-container">
                         <span class="document-version-number">v{{ number_format($document->version, 1) }}</span>
-                        
-                        @if($isOriginal)
-                            <span class="document-version-badge document-version-original">
-                                #{{ $document->id }}
-                            </span>
-                        @else
-                            <span class="document-version-badge document-version-derived">
-                                van #{{ $parentId }}
-                            </span>
-                        @endif
                         
                         @if($isLatest && $document->version > 1.0)
                             <span class="document-version-badge document-version-latest">

@@ -39,7 +39,20 @@
                         <td>{{ $invoice->company ? $invoice->company->name : 'Onbekend' }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->due_date)->format('d-m-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($invoice->created_at)->format('H:i') }}</td>
-                        <td>{{ ucfirst($invoice->status) }}</td>
+                        <td>
+                            @php
+                                $statusColors = match($invoice->status) {
+                                    'paid' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D', 'label' => 'Betaald'],
+                                    'pending' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400', 'label' => 'Open'],
+                                    'overdue' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616', 'label' => 'Vervallen'],
+                                    'cancelled' => ['bg' => 'rgba(107, 114, 128, 0.3)', 'text' => '#6B7280', 'label' => 'Geannuleerd'],
+                                    default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563', 'label' => ucfirst($invoice->status)]
+                                };
+                            @endphp
+                            <span class="superadmin-log-badge" style="background-color: {{ $statusColors['bg'] }}; color: {{ $statusColors['text'] }};">
+                                {{ $statusColors['label'] }}
+                            </span>
+                        </td>
                         <td>€{{ number_format($invoice->amount, 2) }}</td>
                     </tr>
                 @endforeach

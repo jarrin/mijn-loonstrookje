@@ -42,11 +42,6 @@
                 @enderror
             </div>
 
-            <div class="loginFormRemember">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Onthoud mij</label>
-            </div>
-
             <button type="submit" class="loginSubmitButton">Inloggen</button>
         </form>
     </div>

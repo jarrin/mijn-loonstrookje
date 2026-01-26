@@ -65,7 +65,23 @@ class FortifyServiceProvider extends ServiceProvider
         // Custom authentication
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
+            
             if ($user && Hash::check($request->password, $user->password)) {
+                // Check if user is inactive
+                if ($user->status === 'inactive') {
+                    // Log to super admin (no company_id)
+                    AuditLogService::logInactiveLoginAttempt($user->id, null);
+                    
+                    // Also log to employer if user has a company
+                    if ($user->company_id) {
+                        AuditLogService::logInactiveLoginAttempt($user->id, $user->company_id);
+                    }
+                    
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'email' => ['Uw account is inactief. Neem contact op met uw werkgever of beheerder om uw account te activeren.'],
+                    ]);
+                }
+                
                 return $user;
             }
         });
@@ -73,7 +89,7 @@ class FortifyServiceProvider extends ServiceProvider
         // Redirects
         Fortify::redirects('login', function () {
             $user = auth()->user();
-            if (!$user) return route('employee.dashboard');
+            if (!$user) return route('employee.documents');
             
             if (!$user) {
                 return route('employee.documents');

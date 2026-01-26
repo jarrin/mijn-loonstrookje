@@ -20,12 +20,9 @@
             elseif ($user->role === 'administration_office') {
                 // Only apply branding on specific company routes, not on dashboard
                 $companyRoutes = [
-                    'administration.company.show',
                     'administration.company.employees',
-                    'administration.company.documents',
                     'employer.employee.documents', // When admin views employee documents
-                    'documents.upload', // When admin uploads document for specific employee
-                    'documents.deleted' // When viewing deleted documents with context
+                    'documents.deleted', // When viewing deleted documents with company or employee context
                 ];
                 
                 if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
@@ -96,49 +93,41 @@
                     {{-- Administratiekantoor links --}}
                     @if(auth()->user()->hasRole('administration_office'))
                         @php
-                            // Check if viewing a specific company
-                            $viewingCompany = isset($company) && in_array(request()->route()->getName(), [
-                                'administration.company.show',
+                            // Check if viewing a specific company's employees or employee documents
+                            $viewingCompany = in_array(request()->route()->getName(), [
                                 'administration.company.employees',
-                                'administration.company.documents',
                                 'employer.employee.documents',
-                                'documents.upload',
                                 'documents.deleted'
-                            ]);
+                            ]) && (isset($company) || isset($employee));
                             
                             // Determine routes based on context
                             if ($viewingCompany) {
-                                $homeRoute = route('administration.company.show', $company->id);
-                                $employeesRoute = route('administration.company.employees', $company->id);
-                                $documentsRoute = route('administration.company.documents', $company->id);
-                                
-                                // Determine active state
-                                $homeActive = request()->routeIs('administration.company.show');
-                                $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents');
-                                $documentsActive = request()->routeIs('administration.company.documents') || (request()->routeIs('documents.deleted') && request()->query('company'));
+                                // When viewing a specific company, only show medewerkers tab
+                                $companyForRoute = $company ?? (isset($employee) ? $employee->company : null);
+                                if ($companyForRoute) {
+                                    $employeesRoute = route('administration.company.employees', $companyForRoute->id);
+                                    $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents') || request()->routeIs('documents.deleted');
+                                }
                             } else {
+                                // When on dashboard, only show home tab
                                 $homeRoute = route('administration.dashboard');
-                                $employeesRoute = route('administration.employees');
-                                $documentsRoute = route('administration.documents');
-                                
                                 $homeActive = request()->routeIs('administration.dashboard');
-                                $employeesActive = request()->routeIs('administration.employees');
-                                $documentsActive = request()->routeIs('administration.documents') || (request()->routeIs('documents.deleted') && !request()->query('company') && !request()->query('employee'));
                             }
                         @endphp
                         
-                        <a href="{{ $homeRoute }}" class="{{ $homeActive ? 'active' : '' }}">
-                            {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
-                            <span>Home</span>
-                        </a>
-                        <a href="{{ $employeesRoute }}" class="{{ $employeesActive ? 'active' : '' }}">
-                            {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
-                            <span>Werknemers</span>
-                        </a>
-                        <a href="{{ $documentsRoute }}" class="{{ $documentsActive ? 'active' : '' }}">
-                            {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
-                            <span>Documenten</span>
-                        </a>
+                        @if($viewingCompany)
+                            {{-- Only show Medewerkers tab when viewing a company --}}
+                            <a href="{{ $employeesRoute }}" class="{{ $employeesActive ? 'active' : '' }}">
+                                {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
+                                <span>Medewerkers</span>
+                            </a>
+                        @else
+                            {{-- Only show Home tab when on dashboard --}}
+                            <a href="{{ $homeRoute }}" class="{{ $homeActive ? 'active' : '' }}">
+                                {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
+                                <span>Home</span>
+                            </a>
+                        @endif
                     @endif
 
                     {{-- Werkgever links --}}
@@ -147,11 +136,11 @@
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') ? 'active' : '' }}">
+                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') || (request()->routeIs('documents.deleted') && request()->query('employee')) ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || request()->routeIs('documents.deleted') ? 'active' : '' }}">
+                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || (request()->routeIs('documents.deleted') && !request()->query('employee')) ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>

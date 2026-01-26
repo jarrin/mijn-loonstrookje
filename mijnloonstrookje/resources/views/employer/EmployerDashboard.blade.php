@@ -92,18 +92,41 @@
                     <td>
                         @php
                             $colors = match($log->action) {
-                                'login' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
-                                'document_uploaded' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
-                                'document_revised' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
-                                'document_deleted' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
-                                'document_restored' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
-                                'employee_created' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
-                                'admin_office_added' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                                'login', 'inloggen' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
+                                'document_uploaded', 'document_geupload' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
+                                'document_revised', 'document_herzien' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
+                                'document_deleted', 'document_verwijderd' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
+                                'document_restored', 'document_hersteld' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
+                                'employee_created', 'medewerker_aangemaakt' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
+                                'admin_office_added', 'admin_bureau_toegevoegd' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                                'gebruiker_status_gewijzigd' => ['bg' => 'rgba(251, 191, 36, 0.3)', 'text' => '#F59E0B'],
+                                'inactief_inlogpoging' => ['bg' => 'rgba(239, 68, 68, 0.3)', 'text' => '#DC2626'],
                                 default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563']
                             };
+                            
+                            $actionTranslations = [
+                                'login' => 'Inloggen',
+                                'inloggen' => 'Inloggen',
+                                'document_uploaded' => 'Document geüpload',
+                                'document_geupload' => 'Document geüpload',
+                                'document_revised' => 'Document herzien',
+                                'document_herzien' => 'Document herzien',
+                                'document_deleted' => 'Document verwijderd',
+                                'document_verwijderd' => 'Document verwijderd',
+                                'document_restored' => 'Document hersteld',
+                                'document_hersteld' => 'Document hersteld',
+                                'employee_created' => 'Medewerker aangemaakt',
+                                'medewerker_aangemaakt' => 'Medewerker aangemaakt',
+                                'admin_office_added' => 'Admin bureau toegevoegd',
+                                'admin_bureau_toegevoegd' => 'Admin bureau toegevoegd',
+                                'gebruiker_status_gewijzigd' => 'Gebruiker status gewijzigd',
+                                'inactief_inlogpoging' => 'Inactief inlogpoging',
+                            ];
+                            
+                            $displayAction = $actionTranslations[$log->action] ?? ucfirst(str_replace('_', ' ', $log->action));
                         @endphp
                         <span class="employer-activity-badge" style="background-color: {{ $colors['bg'] }}; color: {{ $colors['text'] }};">
-                            {{ ucfirst(str_replace('_', ' ', $log->action)) }}
+                            {{ $displayAction }}
                         </span>
                     </td>
                     <td>{{ $log->description ?? '-' }}</td>
@@ -115,6 +138,12 @@
                 @endforelse
             </tbody>
         </table>
+        
+        @if($recentLogs->hasPages())
+        <div class="employer-pagination-container">
+            {{ $recentLogs->links('vendor.pagination.custom') }}
+        </div>
+        @endif
     </div>
 </section>
 

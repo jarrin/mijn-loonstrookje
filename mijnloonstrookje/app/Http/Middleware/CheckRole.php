@@ -33,7 +33,7 @@ class CheckRole
             'super_admin' => redirect()->route('superadmin.dashboard'),
             'administration_office' => redirect()->route('administration.dashboard'),
             'employer' => redirect()->route('employer.dashboard'),
-            'employee' => redirect()->route('employee.dashboard'),
+            'employee' => redirect()->route('employee.documents'),
             default => redirect()->route('home'),
         };
     }

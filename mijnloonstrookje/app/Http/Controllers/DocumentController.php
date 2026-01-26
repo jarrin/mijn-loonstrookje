@@ -251,13 +251,20 @@ class DocumentController extends Controller
         $user = Auth::user();
         $document = Document::findOrFail($id);
         
-        // Only uploader or super admin can delete
-        if ($user->role !== 'super_admin' && $document->uploader_id !== $user->id) {
-            abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
-        }
-        
-        // Verify user has access to this company
-        if ($user->role === 'administration_office') {
+        // Authorization check based on role
+        if ($user->role === 'super_admin') {
+            // Super admin can delete anything
+        } elseif ($user->role === 'employer') {
+            // Employers can delete any document in their company
+            if ($document->company_id !== $user->company_id) {
+                abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
+            }
+        } elseif ($user->role === 'administration_office') {
+            // Admin office can only delete documents they uploaded in companies they have access to
+            if ($document->uploader_id !== $user->id) {
+                abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
+            }
+            
             $hasAccess = $user->companies()
                 ->where('companies.id', $document->company_id)
                 ->wherePivot('status', 'active')
@@ -266,8 +273,8 @@ class DocumentController extends Controller
             if (!$hasAccess) {
                 abort(403, 'Je hebt geen toegang tot dit bedrijf');
             }
-        } elseif ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
-            abort(403, 'Unauthorized access');
+        } else {
+            abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
         }
         
         // Soft delete - set is_deleted to true and deleted_at timestamp
@@ -360,13 +367,20 @@ class DocumentController extends Controller
                            ->where('is_deleted', true)
                            ->firstOrFail();
         
-        // Only uploader or super admin can restore
-        if ($user->role !== 'super_admin' && $document->uploader_id !== $user->id) {
-            abort(403, 'Je hebt geen toestemming om dit document te herstellen');
-        }
-        
-        // Verify user has access to this company
-        if ($user->role === 'administration_office') {
+        // Authorization check based on role
+        if ($user->role === 'super_admin') {
+            // Super admin can restore anything
+        } elseif ($user->role === 'employer') {
+            // Employers can restore any document in their company
+            if ($document->company_id !== $user->company_id) {
+                abort(403, 'Je hebt geen toestemming om dit document te herstellen');
+            }
+        } elseif ($user->role === 'administration_office') {
+            // Admin office can only restore documents they uploaded in companies they have access to
+            if ($document->uploader_id !== $user->id) {
+                abort(403, 'Je hebt geen toestemming om dit document te herstellen');
+            }
+            
             $hasAccess = $user->companies()
                 ->where('companies.id', $document->company_id)
                 ->wherePivot('status', 'active')
@@ -375,8 +389,8 @@ class DocumentController extends Controller
             if (!$hasAccess) {
                 abort(403, 'Je hebt geen toegang tot dit bedrijf');
             }
-        } elseif ($document->company_id !== $user->company_id && $user->role !== 'super_admin') {
-            abort(403, 'Unauthorized access');
+        } else {
+            abort(403, 'Je hebt geen toestemming om dit document te herstellen');
         }
         
         // Restore document

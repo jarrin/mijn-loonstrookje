@@ -52,7 +52,33 @@ class SuperAdminController extends Controller
             'status' => ['required', 'string', 'max:255'],
         ]);
 
-        $user->update($validated);
+        // Check if status changed and log it
+        if (isset($validated['status']) && $user->status !== $validated['status']) {
+            $oldStatus = $user->status;
+            $newStatus = $validated['status'];
+            
+            $user->update($validated);
+            
+            // Log to super admin (no company_id)
+            \App\Services\AuditLogService::logUserStatusChange(
+                $user->id,
+                $oldStatus,
+                $newStatus,
+                null
+            );
+            
+            // Also log to employer if user has a company
+            if ($user->company_id) {
+                \App\Services\AuditLogService::logUserStatusChange(
+                    $user->id,
+                    $oldStatus,
+                    $newStatus,
+                    $user->company_id
+                );
+            }
+        } else {
+            $user->update($validated);
+        }
 
         return redirect()->route('superadmin.dashboard');
     }
@@ -266,7 +292,7 @@ class SuperAdminController extends Controller
             $query->whereDate('created_at', '<=', request('date_to'));
         }
 
-        $logs = $query->paginate(25)->withQueryString();
+        $logs = $query->paginate(20)->withQueryString();
         $actions = AuditLog::distinct()->pluck('action');
         $companies = Company::orderBy('name')->get();
 
