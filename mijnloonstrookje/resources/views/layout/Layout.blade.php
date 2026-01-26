@@ -136,11 +136,11 @@
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') ? 'active' : '' }}">
+                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') || (request()->routeIs('documents.deleted') && request()->query('employee')) ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || request()->routeIs('documents.deleted') ? 'active' : '' }}">
+                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || (request()->routeIs('documents.deleted') && !request()->query('employee')) ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>

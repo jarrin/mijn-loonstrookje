@@ -66,8 +66,8 @@ class EmployerController extends Controller
                                       });
                             })
                             ->orderBy('created_at', 'desc')
-                            ->limit(10)
-                            ->get();
+                            ->paginate(10)
+                            ->appends(request()->query());
         
         return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice', 'recentLogs'));
     }

@@ -115,6 +115,12 @@
                 @endforelse
             </tbody>
         </table>
+        
+        @if($recentLogs->hasPages())
+        <div class="employer-pagination-container">
+            {{ $recentLogs->links('vendor.pagination.custom') }}
+        </div>
+        @endif
     </div>
 </section>
 
