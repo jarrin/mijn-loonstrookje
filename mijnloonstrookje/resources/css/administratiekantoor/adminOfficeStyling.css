@@ -82,6 +82,7 @@
     color: inherit;
     cursor: pointer;
     transition : transform 0.1s;
+    max-width: 25rem;
 }
 
 .admin-company-card:hover {
