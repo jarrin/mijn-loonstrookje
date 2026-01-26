@@ -22,7 +22,7 @@
         <!-- Password Change Section -->
         <div class="settings-card">
             <h2 class="settings-card-title">Wachtwoord Wijzigen</h2>
-            <form method="POST" action="{{ route('profile.update-password') }}">
+            <form method="POST" action="{{ route('profile.password.update') }}">
                 @csrf
                 
                 <div class="form-group">
@@ -189,7 +189,7 @@
             <h2 class="settings-card-title">Bedrijfsinstellingen</h2>
             <p class="settings-card-description">Pas de huisstijl van je bedrijf aan. Deze instellingen bepalen hoe je bedrijf eruitziet in het systeem.</p>
             
-            <form method="POST" action="{{ route('profile.update-branding') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('profile.branding.update') }}" enctype="multipart/form-data">
                 @csrf
                 
                 <div class="form-group">
