@@ -5,11 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Mijn Loonstrookje')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    @php
+        // Get company branding based on user role and context
+        $brandingCompany = null;
+        if (auth()->check()) {
+            $user = auth()->user();
+            
+            // For employer and employee: use their company
+            if ($user->role === 'employer' || $user->role === 'employee') {
+                $brandingCompany = $user->company;
+            }
+            // For admin office: only apply branding when viewing specific company pages
+            elseif ($user->role === 'administration_office') {
+                // Only apply branding on specific company routes, not on dashboard
+                $companyRoutes = [
+                    'administration.company.show',
+                    'administration.company.employees',
+                    'administration.company.documents',
+                    'employer.employee.documents', // When admin views employee documents
+                    'documents.upload', // When admin uploads document for specific employee
+                    'documents.deleted' // When viewing deleted documents with context
+                ];
+                
+                if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
+                    $brandingCompany = $company;
+                }
+            }
+            // For employer: also check deleted documents page
+            elseif ($user->role === 'employer' && request()->route()->getName() === 'documents.deleted') {
+                $brandingCompany = $user->company;
+            }
+        }
+        
+        $primaryColor = $brandingCompany && $brandingCompany->primary_color ? $brandingCompany->primary_color : '#3B82F6';
+        $secondaryColor = $brandingCompany ? $brandingCompany->secondary_color : 'rgba(59, 130, 246, 0.6)';
+        
+        // Calculate a lighter background color (15% opacity) for hover/active states
+        if ($brandingCompany && $brandingCompany->primary_color) {
+            $hex = str_replace('#', '', $brandingCompany->primary_color);
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+            $lightBgColor = "rgba($r, $g, $b, 0.15)";
+        } else {
+            $lightBgColor = 'rgba(59, 130, 246, 0.15)';
+        }
+        
+        $logoPath = $brandingCompany && $brandingCompany->logo_path 
+            ? asset('storage/' . $brandingCompany->logo_path) 
+            : asset('images/loonstrookje-breed-logo-upscale-transparent.png');
+    @endphp
+    
+    <style>
+        :root {
+            --primary-color: {{ $primaryColor }};
+            --secondary-color: {{ $secondaryColor }};
+            --light-bg-color: {{ $lightBgColor }};
+        }
+    </style>
 </head>
 <body>
     <nav class="main-side-nav">
         <div class="logo"> 
-            <img src="{{ asset('images/loonstrookje-breed-logo-upscale-transparent.png') }}" alt="Mijn Loonstrookje">
+            <img src="{{ $logoPath }}" alt="Logo">
         </div>
         <div class="buttons">
             <div class="nav-tabs">
@@ -36,15 +95,47 @@
 
                     {{-- Administratiekantoor links --}}
                     @if(auth()->user()->hasRole('administration_office'))
-                        <a href="{{ route('administration.dashboard') }}" class="{{ request()->routeIs('administration.dashboard') ? 'active' : '' }}">
+                        @php
+                            // Check if viewing a specific company
+                            $viewingCompany = isset($company) && in_array(request()->route()->getName(), [
+                                'administration.company.show',
+                                'administration.company.employees',
+                                'administration.company.documents',
+                                'employer.employee.documents',
+                                'documents.upload',
+                                'documents.deleted'
+                            ]);
+                            
+                            // Determine routes based on context
+                            if ($viewingCompany) {
+                                $homeRoute = route('administration.company.show', $company->id);
+                                $employeesRoute = route('administration.company.employees', $company->id);
+                                $documentsRoute = route('administration.company.documents', $company->id);
+                                
+                                // Determine active state
+                                $homeActive = request()->routeIs('administration.company.show');
+                                $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents');
+                                $documentsActive = request()->routeIs('administration.company.documents') || (request()->routeIs('documents.deleted') && request()->query('company'));
+                            } else {
+                                $homeRoute = route('administration.dashboard');
+                                $employeesRoute = route('administration.employees');
+                                $documentsRoute = route('administration.documents');
+                                
+                                $homeActive = request()->routeIs('administration.dashboard');
+                                $employeesActive = request()->routeIs('administration.employees');
+                                $documentsActive = request()->routeIs('administration.documents') || (request()->routeIs('documents.deleted') && !request()->query('company') && !request()->query('employee'));
+                            }
+                        @endphp
+                        
+                        <a href="{{ $homeRoute }}" class="{{ $homeActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Home</span>
                         </a>
-                        <a href="{{ route('administration.employees') }}" class="{{ request()->routeIs('administration.employees') ? 'active' : '' }}">
+                        <a href="{{ $employeesRoute }}" class="{{ $employeesActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
                         </a>
-                        <a href="{{ route('administration.documents') }}" class="{{ request()->routeIs('administration.documents') ? 'active' : '' }}">
+                        <a href="{{ $documentsRoute }}" class="{{ $documentsActive ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>
@@ -56,9 +147,13 @@
                             {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
                             <span>Dashboard</span>
                         </a>
-                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') ? 'active' : '' }}">
+                        <a href="{{ route('employer.employees') }}" class="{{ request()->routeIs('employer.employees') || request()->routeIs('employer.employee.documents') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/users.svg')) !!}
                             <span>Werknemers</span>
+                        </a>
+                        <a href="{{ route('employer.documents') }}" class="{{ request()->routeIs('employer.documents') || request()->routeIs('documents.deleted') ? 'active' : '' }}">
+                            {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
+                            <span>Documenten</span>
                         </a>
                         <a href="{{ route('employer.admin-offices') }}" class="{{ request()->routeIs('employer.admin-offices') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/briefcase.svg')) !!}
@@ -68,9 +163,9 @@
                     
                     {{-- Medewerker links --}}
                     @if(auth()->user()->hasRole('employee'))
-                        <a href="{{ route('employee.dashboard') }}" class="{{ request()->routeIs('employee.dashboard') ? 'active' : '' }}">
-                            {!! file_get_contents(resource_path('assets/icons/home.svg')) !!}
-                            <span>Dashboard</span>
+                        <a href="{{ route('employee.documents') }}" class="{{ request()->routeIs('employee.documents') ? 'active' : '' }}">
+                            {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
+                            <span>Mijn Documenten</span>
                         </a>
                     @endif
                 @endauth
@@ -80,11 +175,13 @@
                 @auth
                     <div class="user-menu-container">
                         <ul class="user-menu-dropdown" id="userMenuDropdown">
-                            <li><a href="{{ route('profile.two-factor-authentication') }}">2FA Instellingen</a></li>
+                            <li>
+                                <a href="{{ route('profile.settings') }}" class="dropdown-link">Profiel Instellingen</a>
+                            </li>
                             <li>
                                 <form action="{{ route('logout') }}" method="POST" class="inline">
                                     @csrf
-                                    <button id="primairy" type="submit" class="logout-button">Uitloggen</button>
+                                    <button type="submit" class="logout-button">Uitloggen</button>
                                 </form>
                             </li>
                         </ul>
@@ -107,5 +204,53 @@
     <main class="main-content">
         @yield('content')
     </main>
+
+    <!-- Toast Notification -->
+    @if(session('success') || session('error') || session('info'))
+        <div id="toast" class="toast toast-{{ session('success') ? 'success' : (session('error') ? 'error' : 'info') }}">
+            <div class="toast-content">
+                <span class="toast-icon">
+                    @if(session('success'))
+                        ✓
+                    @elseif(session('error'))
+                        ✕
+                    @else
+                        ℹ
+                    @endif
+                </span>
+                <span class="toast-message">
+                    {{ session('success') ?? session('error') ?? session('info') }}
+                </span>
+            </div>
+            <button onclick="closeToast()" class="toast-close">×</button>
+        </div>
+        <script>
+            // Show toast and auto-hide after 5 seconds
+            document.addEventListener('DOMContentLoaded', function() {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    setTimeout(() => {
+                        toast.classList.add('show');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        closeToast();
+                    }, 5000);
+                }
+            });
+            
+            function closeToast() {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }
+            }
+        </script>
+    @endif
+
+    @stack('scripts')
 </body>
 </html>

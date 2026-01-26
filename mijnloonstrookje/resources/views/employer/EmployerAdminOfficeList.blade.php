@@ -4,13 +4,207 @@
 
 @section('content')
 <section>
-    <h1 class="text-2xl mb-4">Administratiekantoren</h1>
-    <p>Hier komen de administratiekantoren te staan.</p>
+    <div>
+        <h1 class="employer-page-title">Administratiekantoren</h1>
+        <p>Beheer hier de administratiekantoren die toegang hebben tot jouw bedrijf.</p>
+    </div>
     
-    <div class="mt-6 space-x-4">
-        <a href="{{ route('employer.dashboard') }}" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Terug naar Dashboard</a>
-        <a href="{{ route('employer.employees') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Medewerkers</a>
-        <a href="{{ route('employer.documents') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Documenten</a>
+    <div class="employer-add-office">
+        <button class="employer-button-primary" type="button" onclick="openAddAdminOfficeModal()">
+            Administratiekantoor toevoegen
+        </button>
+    </div>
+
+    <table id="admin-office-table">
+        <thead>
+            <tr>
+                <th>Naam</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th class="icon-cell">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{-- Active/linked admin offices --}}
+            @forelse($adminOffices as $office)
+                <tr>
+                    <td>{{ $office->name }}</td>
+                    <td>{{ $office->email }}</td>
+                    <td>
+                        @php
+                            $status = $office->pivot->status ?? 'pending';
+                            $statusLabels = [
+                                'active' => 'Actief',
+                                'pending' => 'In behandeling',
+                                'inactive' => 'Inactief'
+                            ];
+                        @endphp
+                        <span class="employer-status-badge employer-status-{{ $status }}">
+                            {{ $statusLabels[$status] ?? ucfirst($status) }}
+                        </span>
+                    </td>
+                    <td class="icon-cell">
+                        <button class="document-action-edit" type="button" onclick='openEditAdminOfficeModal(@json($office))' title="Bewerk administratiekantoor" class="employer-action-edit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen-icon lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
+                        </button>
+                        <form action="{{ route('employer.admin-offices.destroy', $office) }}" method="POST" style="display:inline" onsubmit="return confirm('Weet je zeker dat je de toegang van dit administratiekantoor wilt intrekken?');">
+                            @csrf
+                            @method('DELETE')
+                            <button class="document-action-delete" type="submit" title="Toegang intrekken" class="employer-action-delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+            @endforelse
+
+            {{-- Pending invitations --}}
+            @foreach($pendingInvitations as $invitation)
+                <tr>
+                    <td style="opacity: 0.6;">{{ $invitation->invitation_type === 'new_account' ? 'Nieuw account' : 'Bestaand account' }}</td>
+                    <td>{{ $invitation->email }}</td>
+                    <td><span class="status-label" style="background-color: #FFA500;">Uitnodiging verstuurd</span></td>
+                    <td class="icon-cell">
+                        <form action="{{ route('invitation.delete', $invitation->id) }}" method="POST" style="display: inline;" 
+                              onsubmit="return confirm('Weet je zeker dat je de uitnodiging voor {{ $invitation->email }} wilt verwijderen?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="icon-btn icon-btn-destructive" title="Uitnodiging verwijderen">
+                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+
+            {{-- Empty state --}}
+            @if($adminOffices->isEmpty() && $pendingInvitations->isEmpty())
+                <tr>
+                    <td colspan="4">Geen administratiekantoren gevonden.</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+</section>
+
+<!-- Add Admin Office Modal -->
+<section>
+    <div id="addAdminOfficeModal" class="employer-modal-overlay" style="display:none;">
+        <div class="employer-modal-content">
+            <div class="employer-modal-header">
+                <h2 class="employer-modal-title">Administratiekantoor toevoegen</h2>
+                <button type="button" onclick="closeAddAdminOfficeModal()" aria-label="Sluiten" class="employer-modal-close">&times;</button>
+            </div>
+
+            <form id="addAdminOfficeForm" action="{{ route('employer.admin-offices.invite') }}" method="POST" class="employer-modal-body">
+                @csrf
+
+                <div class="employer-form-description">
+                    <p>
+                        Voer het e-mailadres in. Als het administratiekantoor nog geen account heeft, ontvangt het een e-mail om een account aan te maken. Anders ontvangt het een uitnodiging voor toegang tot uw bedrijf.
+                    </p>
+                </div>
+
+                <div class="employer-form-group">
+                    <div>
+                        <label for="addAdminOfficeEmail" class="employer-form-label">Email *</label>
+                        <input id="addAdminOfficeEmail" name="email" type="email" required placeholder="administratie@example.com" class="employer-form-input" />
+                    </div>
+                </div>
+
+                <div class="employer-modal-footer">
+                    <button type="button" onclick="closeAddAdminOfficeModal()" class="employer-button-secondary">Annuleren</button>
+                    <button type="submit" class="employer-button-primary">Uitnodiging Versturen</button>
+                </div>
+            </form>
+        </div>
     </div>
 </section>
+
+<!-- Edit Admin Office Modal -->
+<section>
+    <div id="editAdminOfficeModal" class="employer-modal-overlay" style="display:none;">
+        <div class="employer-modal-content">
+            <div class="employer-modal-header">
+                <h2 class="employer-modal-title">Administratiekantoor bewerken</h2>
+                <button type="button" onclick="closeEditAdminOfficeModal()" aria-label="Sluiten" class="employer-modal-close">&times;</button>
+            </div>
+
+            <form id="editAdminOfficeForm" method="POST" class="employer-modal-body">
+                @csrf
+                @method('PUT')
+
+                <div class="employer-form-description">
+                    <p>
+                        Naam: <strong id="editAdminOfficeName"></strong><br>
+                        Email: <strong id="editAdminOfficeEmail"></strong>
+                    </p>
+                </div>
+
+                <div class="employer-form-group">
+                    <div>
+                        <label for="editAdminOfficeStatus" class="employer-form-label">Toegangsstatus</label>
+                        <select id="editAdminOfficeStatus" name="status" required class="employer-form-select">
+                            <option value="active">Actief</option>
+                            <option value="pending">In behandeling</option>
+                            <option value="inactive">Inactief</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="employer-modal-footer">
+                    <button type="button" onclick="closeEditAdminOfficeModal()" class="employer-button-secondary">Annuleren</button>
+                    <button type="submit" class="employer-button-primary">Opslaan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@push('scripts')
+<script>
+    function openAddAdminOfficeModal() {
+        const modal = document.getElementById('addAdminOfficeModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeAddAdminOfficeModal() {
+        const modal = document.getElementById('addAdminOfficeModal');
+        modal.style.display = 'none';
+        document.getElementById('addAdminOfficeForm').reset();
+    }
+
+    function openEditAdminOfficeModal(office) {
+        const modal = document.getElementById('editAdminOfficeModal');
+        const form = document.getElementById('editAdminOfficeForm');
+
+        form.action = '{{ url('/employer/admin-offices') }}/' + office.id;
+
+        document.getElementById('editAdminOfficeName').textContent = office.name || '';
+        document.getElementById('editAdminOfficeEmail').textContent = office.email || '';
+        document.getElementById('editAdminOfficeStatus').value = office.pivot?.status || 'pending';
+
+        modal.style.display = 'flex';
+    }
+
+    function closeEditAdminOfficeModal() {
+        const modal = document.getElementById('editAdminOfficeModal');
+        modal.style.display = 'none';
+    }
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+        const addModal = document.getElementById('addAdminOfficeModal');
+        const editModal = document.getElementById('editAdminOfficeModal');
+        
+        if (event.target === addModal) {
+            closeAddAdminOfficeModal();
+        }
+        if (event.target === editModal) {
+            closeEditAdminOfficeModal();
+        }
+    }
+</script>
+@endpush
 @endsection

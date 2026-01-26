@@ -1,0 +1,14 @@
+    
+    public function cancelInvitation(Request $request, $invitationId)
+    {
+        $invitation = \App\Models\Invitation::findOrFail($invitationId);
+        
+        // Store custom subscription ID for redirect
+        $customSubscriptionId = $invitation->custom_subscription_id;
+        
+        // Delete the invitation
+        $invitation->delete();
+        
+        return redirect()->route('superadmin.subscriptions', ['expand_custom' => $customSubscriptionId])
+            ->with('success', 'Uitnodiging succesvol verwijderd.');
+    }

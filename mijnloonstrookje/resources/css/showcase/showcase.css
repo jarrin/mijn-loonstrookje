@@ -1,0 +1,1132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Navigation */
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+    max-width: 1540px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+.nav-brand img {
+    height: 4rem;
+}
+
+.logo {
+    font-size: 1.8rem;
+}
+
+.logo-text {
+    color: #1a1a1a;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+}
+
+.nav-menu a {
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-bottom: 4px;
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: #0052cc;
+}
+
+.nav-menu a:hover::after {
+    width: 100%;
+}
+
+.nav-button {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0, 82, 204, 0.3);
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 82, 204, 0.4);
+}
+
+.nav-button:hover::before {
+    left: 100%;
+}
+
+.nav-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 82, 204, 0.3);
+}
+
+/* Header Section */
+.header-section {
+    padding: 120px 20px 100px;
+    min-height: 600px;
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(0, 102, 255, 0.05) 100%);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.header-illustration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.9;
+    overflow: hidden;
+}
+
+.header-illustration svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.header-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.header-section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
+    z-index: 2;
+    pointer-events: none;
+}
+
+.header-container {
+    max-width: 900px;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    z-index: 3;
+}
+
+.header-title {
+    font-size: clamp(1.8rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    animation: slideInDown 0.8s ease-out;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.header-subtitle {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: #666;
+    margin-bottom: 0;
+    line-height: 1.7;
+    animation: slideInUp 0.8s ease-out 0.1s both;
+    text-align: center;
+    max-width: 100%;
+    padding: 0 10px;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    word-wrap: break-word;
+    padding: 0 10px;
+}
+
+.section-subtitle {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    text-align: center;
+    color: #666;
+    margin-bottom: 60px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+}
+
+/* Features Section */
+.features-section {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 82, 204, 0.02) 100%);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 40px 30px;
+    border-radius: 16px;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+    border: 2px solid transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: #0052cc;
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
+    border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+.feature-card:hover .feature-icon {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-icon svg {
+    width: 30px;
+    height: 30px;
+    color: #0052cc;
+    stroke: #0052cc;
+}
+
+.feature-card:hover .feature-icon svg {
+    stroke: white;
+    color: white;
+}
+
+.feature-card h3 {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.feature-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Admin Section */
+.admin-section {
+    padding: 100px 20px;
+}
+
+.admin-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.admin-features {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.admin-feature {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.admin-icon {
+    font-size: 2.5rem;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-feature h4 {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    margin-bottom: 8px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.admin-feature p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.admin-subscription-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.subscription-badge {
+    padding: 20px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.subscription-badge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.badge-color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.badge-content {
+    text-align: left;
+}
+
+.subscription-badge h4 {
+    margin-bottom: 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.subscription-badge p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #999;
+}
+
+.subscription-badge-a {
+    background: linear-gradient(135deg, #4a7c9e 0%, #2d5a7b 100%);
+}
+
+.subscription-badge-b {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+}
+
+.subscription-badge-c {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+/* Security Section */
+.security-section {
+    padding: 100px 20px;
+    background: linear-gradient(180deg, rgba(0, 82, 204, 0.02) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.security-header {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+}
+
+.security-icon-large {
+    font-size: 4rem;
+}
+
+.security-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.security-card {
+    padding: 40px 30px;
+    text-align: center;
+    border-radius: 16px;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+    border: 2px solid transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.security-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    border-color: #0052cc;
+}
+
+.security-card:hover::before {
+    transform: scaleX(1);
+}
+
+.security-icon {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 25px;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8f1ff 100%);
+    border-radius: 12px;
+    transition: all 0.4s ease;
+}
+
+.security-card:hover .security-icon {
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.security-icon svg {
+    width: 30px;
+    height: 30px;
+    color: #0052cc;
+    stroke: #0052cc;
+}
+
+.security-card:hover .security-icon svg {
+    stroke: white;
+    color: white;
+}
+
+.security-card h3 {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    margin-bottom: 15px;
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+.security-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Subscriptions Section */
+.subscriptions-section {
+    padding: 100px 20px;
+}
+
+.subscriptions-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.subscription-card {
+    background: white;
+    border-radius: 16px;
+    padding: 45px 35px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    border: 3px solid transparent;
+}
+
+.subscription-card.featured {
+    transform: scale(1.06);
+    box-shadow: 0 20px 50px rgba(0, 82, 204, 0.2);
+    border: 3px solid #0052cc;
+}
+
+.subscription-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.subscription-card.featured:hover {
+    transform: scale(1.06) translateY(-8px);
+}
+
+.featured-badge {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.3);
+}
+
+.subscription-name {
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+    margin-bottom: 25px;
+    color: #1a1a1a;
+    margin-top: 15px;
+    font-weight: 700;
+}
+
+.subscription-price {
+    margin-bottom: 35px;
+}
+
+.price-amount {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.price-period {
+    color: #999;
+    font-size: 1rem;
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+.subscription-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 35px;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.feature-item {
+    padding: 14px 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.feature-item:last-child {
+    border-bottom: none;
+}
+
+.feature-item::before {
+    content: '✓';
+    color: #2ecc71;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 1.3rem;
+}
+
+.subscription-button {
+    width: 100%;
+    padding: 16px 25px;
+    background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 82, 204, 0.2);
+}
+
+.subscription-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 82, 204, 0.3);
+}
+
+.subscription-button:active {
+    transform: translateY(-1px);
+}
+
+.subscriptions-footer {
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 40px;
+}
+
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f4ff 100%);
+    color: #666;
+    padding: 60px 20px 30px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    margin-top: 100px;
+}
+
+.footer-container {
+    max-width: 1510px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 50px;
+}
+
+.footer-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.footer-brand img {
+    height: 3.2rem;
+}
+
+.footer-brand svg {
+    width: 40px;
+    height: 40px;
+}
+
+.footer-brand span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.footer-column h5 {
+    font-size: 0.95rem;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.footer-column p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column ul li {
+    margin-bottom: 12px;
+}
+
+.footer-column ul li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-column ul li a:hover {
+    color: #0052cc;
+}
+
+.footer-bottom {
+    max-width: 1510px;
+    margin: 0 auto;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-bottom p {
+    color: #999;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.footer-payments {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.payment-label {
+    color: #999;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.payment-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.payment-item img {
+    height: clamp(35px, 8vw, 50px);
+    width: auto;
+    object-fit: contain;
+    max-width: 70px;
+}
+
+/* Responsive Design */
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 25px;
+    }
+
+    .nav-menu {
+        gap: 25px;
+    }
+
+    .features-grid,
+    .security-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+
+    .admin-content {
+        gap: 60px;
+    }
+
+    .subscriptions-container {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .footer {
+        padding: 40px 20px 20px;
+        margin-top: 60px;
+    }
+
+    .footer-container {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .footer-brand img {
+        height: 2.8rem;
+    }
+
+    .footer-column h5 {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+    }
+
+    .footer-column p,
+    .footer-column ul li a {
+        font-size: 0.85rem;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 10px;
+    }
+
+    .footer-bottom {
+        padding-top: 20px;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .nav-button {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    .header-section {
+        padding: 80px 20px 60px;
+        min-height: 450px;
+    }
+
+    .header-container {
+        max-width: 100%;
+    }
+
+    .section-subtitle {
+        margin-bottom: 40px;
+    }
+
+    .features-section,
+    .admin-section,
+    .security-section,
+    .subscriptions-section {
+        padding: 60px 20px;
+    }
+
+    .features-grid,
+    .security-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .admin-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .admin-feature {
+        flex-direction: row;
+        text-align: left;
+    }
+
+    .subscriptions-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .subscription-card {
+        max-width: 500px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .subscription-card.featured {
+        transform: scale(1);
+    }
+
+    .subscription-card.featured:hover {
+        transform: translateY(-8px);
+    }
+
+    .footer {
+        padding: 35px 20px 20px;
+        margin-top: 50px;
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin-bottom: 25px;
+    }
+
+    .footer-main {
+        grid-column: 1 / -1;
+    }
+
+    .footer-column h5 {
+        margin-bottom: 12px;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 8px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .footer-payments {
+        justify-content: center;
+    }
+}
+
+/* Small tablets and large phones */
+@media (max-width: 600px) {
+    .features-grid,
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .footer-main {
+        grid-column: 1;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .nav-container {
+        height: auto;
+        padding: 12px 15px;
+    }
+
+    .nav-brand img {
+        height: 3rem;
+    }
+
+    .nav-brand {
+        font-size: 1rem;
+    }
+
+    .nav-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    .header-section {
+        padding: 60px 15px 40px;
+        min-height: 400px;
+    }
+
+    .header-container {
+        padding: 0 10px;
+    }
+
+    .features-section,
+    .admin-section,
+    .security-section,
+    .subscriptions-section {
+        padding: 50px 15px;
+    }
+
+    .section-subtitle {
+        margin-bottom: 30px;
+    }
+
+    .features-grid,
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .feature-card,
+    .security-card {
+        padding: 25px 20px;
+    }
+
+    .feature-icon,
+    .security-icon {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto 20px;
+    }
+
+    .feature-icon svg,
+    .security-icon svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .admin-features {
+        gap: 25px;
+    }
+
+    .admin-feature {
+        gap: 15px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .admin-icon {
+        font-size: 2rem;
+        min-width: auto;
+        margin: 0 auto;
+    }
+
+    .subscription-card {
+        padding: 30px 20px;
+        max-width: 100%;
+    }
+
+    .subscription-features {
+        min-height: auto;
+    }
+
+    .feature-item {
+        padding: 12px 0;
+        font-size: 0.9rem;
+    }
+
+    .subscription-button {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+    }
+
+    .footer {
+        padding: 40px 15px 20px;
+        margin-top: 60px;
+    }
+
+    .footer-brand img {
+        height: 2.5rem;
+    }
+
+    .footer-column h5 {
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+    }
+
+    .footer-column p,
+    .footer-column ul li a {
+        font-size: 0.85rem;
+    }
+
+    .footer-bottom {
+        padding-top: 20px;
+    }
+
+    .footer-bottom p,
+    .payment-label {
+        font-size: 0.8rem;
+    }
+
+    .footer-payments {
+        gap: 10px;
+    }
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

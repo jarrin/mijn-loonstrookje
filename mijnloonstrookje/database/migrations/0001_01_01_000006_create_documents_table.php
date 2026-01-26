@@ -16,9 +16,11 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->foreignId('uploader_id')->constrained('users')->onDelete('cascade');
-            $table->enum('type', ['payslip', 'contract', 'other']);
-            $table->string('file_path');
-            $table->integer('version')->default(1);
+            $table->enum('type', ['payslip', 'annual_statement', 'other']);
+            $table->string('file_path'); // Encrypted file path
+            $table->string('original_filename'); // Original file name
+            $table->integer('file_size')->nullable(); // File size in bytes
+            $table->decimal('version', 3, 1)->default(1.0);
             $table->integer('year');
             $table->integer('month')->nullable();
             $table->integer('week')->nullable();

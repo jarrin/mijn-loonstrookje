@@ -13,8 +13,10 @@ class AuditLog extends Model
         'user_id',
         'company_id',
         'action',
+        'description',
         'target_type',
         'target_id',
+        'ip_address',
     ];
 
     protected function casts(): array

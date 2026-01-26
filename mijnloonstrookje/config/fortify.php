@@ -11,7 +11,7 @@ return [
     'username' => 'email',
     'email' => 'email',
     'views' => true,
-    'home' => '/employee/dashboard',
+    'home' => '/employee/documents',
     'prefix' => '',
     'domain' => null,
     'limiters' => [
@@ -26,7 +26,7 @@ return [
         Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
+            'confirmPassword' => false, // Geen wachtwoord bevestiging vereist tijdens onboarding
         ]),
     ],
 ];

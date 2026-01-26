@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, TwoFactorAuthenticatable, SoftDeletes;
 
@@ -52,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(Document::class, 'uploader_id');
     }
 
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'employee_id');
+    }
+
     public function employeeDocuments()
     {
         return $this->hasMany(Document::class, 'employee_id');
@@ -60,6 +66,18 @@ class User extends Authenticatable
     public function auditLogs()
     {
         return $this->hasMany(AuditLog::class);
+    }
+
+    public function sentInvitations()
+    {
+        return $this->hasMany(Invitation::class, 'employer_id');
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'company_admin_office', 'admin_office_id', 'company_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     // Role checking

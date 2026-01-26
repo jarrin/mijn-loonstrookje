@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Services\AuditLogService;
 
 class LoginController extends Controller
 {
@@ -29,6 +30,9 @@ class LoginController extends Controller
             
             $user = Auth::user();
             
+            // Log the login action
+            AuditLogService::logLogin($user->id, $user->company_id);
+            
             // Redirect based on role
             return $this->redirectBasedOnRole($user);
         }
@@ -49,6 +53,12 @@ class LoginController extends Controller
 
     private function redirectBasedOnRole($user)
     {
+        // Check of er een intended subscription in de sessie staat
+        if (session()->has('intended_subscription')) {
+            $subscriptionId = session()->pull('intended_subscription');
+            return redirect()->route('payment.start', ['subscription' => $subscriptionId]);
+        }
+
         if (isset($user->role)) {
             switch ($user->role) {
                 case 'super_admin':
@@ -59,11 +69,11 @@ class LoginController extends Controller
                     return redirect()->route('employer.dashboard');
                 case 'employee':
                 default:
-                    return redirect()->route('employee.dashboard');
+                    return redirect()->route('employee.documents');
             }
         }
         
         // Default redirect if no role is set
-        return redirect()->route('employee.dashboard');
+        return redirect()->route('employee.documents');
     }
 }

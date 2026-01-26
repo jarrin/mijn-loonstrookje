@@ -12,7 +12,7 @@ h1, h2, h3, h4, h5, h6 {
 .main-side-nav {
     width: 350px;
     background-color: white;
-    border-right: #3B7DE4 3px solid;
+    border-right: var(--primary-color) 3px solid;
     color: #121826;
     height: 100vh;
     padding: 1rem;
@@ -52,16 +52,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .main-side-nav .nav-tabs a:hover {
-    background-color: #f0f0f0;
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
+}
+
+.main-side-nav .nav-tabs a:hover svg {
+    color: var(--primary-color);
 }
 
 .main-side-nav .nav-tabs a.active {
-    background-color: #D4E6F7;
-    color: #3B7DE4;
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
 }
 
 .main-side-nav .nav-tabs a.active svg {
-    color: #3B7DE4;
+    color: var(--primary-color);
 }
 
 .main-side-nav .nav-tabs a span {
@@ -195,9 +200,9 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     text-align: left;
     padding: 0.75rem 1rem;
-    background: none;
+    background: var(--primary-color);
     border: none;
-    color: #121826;
+    color: white;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -205,5 +210,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .user-menu-dropdown .logout-button:hover {
-    background-color: #F6F7F8;
+    background-color: var(--light-bg-color);
+    color: var(--primary-color);
 }
