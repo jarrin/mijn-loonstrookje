@@ -154,9 +154,6 @@
     @endif
     
     <div class="documents-button-group">
-        <a href="{{ isset($company) ? route('documents.upload') . '?company=' . $company->id : route('documents.upload') }}" class="documents-primary-btn" style="background-color: var(--primary-color);">
-            Document Uploaden
-        </a>
         <a href="{{ isset($company) ? route('documents.deleted', ['company' => $company->id]) : route('documents.deleted') }}" class="documents-secondary-btn">
             Verwijderde Documenten
         </a>

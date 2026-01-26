@@ -85,28 +85,26 @@
 
 .documents-button-primary {
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
     text-decoration: none;
     display: inline-block;
-    border: none;
-    cursor: pointer;
-    font-weight: 500;
 }
 
 .documents-button-primary:hover {
     opacity: 0.9;
+    cursor: pointer;
 }
 
 .documents-button-secondary {
-    background-color: #6B7280;
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0.55rem 1rem 0rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #6B7280;
 }
 
 .documents-button-secondary:hover {
