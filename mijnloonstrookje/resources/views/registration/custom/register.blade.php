@@ -28,8 +28,6 @@
                     </div>
                 </div>
 
-                <!-- Line 1-2 -->
-                <div class="w-24 h-0.5 bg-gray-200 mx-2 -mt-6"></div>
 
                 <!-- Step 2 - Inactive -->
                 <div class="flex flex-col items-center">
@@ -43,8 +41,6 @@
                     </div>
                 </div>
 
-                <!-- Line 2-3 -->
-                <div class="w-24 h-0.5 bg-gray-200 mx-2 -mt-6"></div>
 
                 <!-- Step 3 - Inactive -->
                 <div class="flex flex-col items-center">
