@@ -53,8 +53,8 @@ class AuditLogService
     public static function logLogin(int $userId, int $companyId = null): AuditLog
     {
         return self::log(
-            action: 'login',
-            description: 'User logged in',
+            action: 'inloggen',
+            description: 'Gebruiker is ingelogd',
             userId: $userId,
             companyId: $companyId
         );
@@ -66,8 +66,8 @@ class AuditLogService
     public static function logDocumentUpload(int $documentId, int $employeeId, int $companyId): AuditLog
     {
         return self::log(
-            action: 'document_uploaded',
-            description: 'Document uploaded for employee',
+            action: 'document_geupload',
+            description: 'Document geüpload voor medewerker',
             targetType: 'Document',
             targetId: $documentId,
             companyId: $companyId
@@ -80,8 +80,8 @@ class AuditLogService
     public static function logDocumentRevision(int $documentId, int $companyId, float $version): AuditLog
     {
         return self::log(
-            action: 'document_revised',
-            description: "Document revised to version {$version}",
+            action: 'document_herzien',
+            description: "Document herzien naar versie {$version}",
             targetType: 'Document',
             targetId: $documentId,
             companyId: $companyId
@@ -94,8 +94,8 @@ class AuditLogService
     public static function logDocumentDeleted(int $documentId, int $companyId): AuditLog
     {
         return self::log(
-            action: 'document_deleted',
-            description: 'Document moved to trash',
+            action: 'document_verwijderd',
+            description: 'Document verplaatst naar prullenbak',
             targetType: 'Document',
             targetId: $documentId,
             companyId: $companyId
@@ -108,8 +108,8 @@ class AuditLogService
     public static function logDocumentRestored(int $documentId, int $companyId): AuditLog
     {
         return self::log(
-            action: 'document_restored',
-            description: 'Document restored from trash',
+            action: 'document_hersteld',
+            description: 'Document hersteld uit prullenbak',
             targetType: 'Document',
             targetId: $documentId,
             companyId: $companyId
@@ -122,8 +122,8 @@ class AuditLogService
     public static function logEmployeeCreated(int $employeeId, int $companyId, int $invitedBy): AuditLog
     {
         return self::log(
-            action: 'employee_created',
-            description: 'New employee account created',
+            action: 'medewerker_aangemaakt',
+            description: 'Nieuw medewerker account aangemaakt',
             targetType: 'User',
             targetId: $employeeId,
             userId: $invitedBy,
@@ -137,8 +137,8 @@ class AuditLogService
     public static function logAdminOfficeAdded(int $adminOfficeId, int $companyId, int $invitedBy): AuditLog
     {
         return self::log(
-            action: 'admin_office_added',
-            description: 'Administration office access granted',
+            action: 'admin_bureau_toegevoegd',
+            description: 'Administratiekantoor toegang verleend',
             targetType: 'User',
             targetId: $adminOfficeId,
             userId: $invitedBy,
