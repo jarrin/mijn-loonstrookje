@@ -22,6 +22,7 @@
                 $companyRoutes = [
                     'administration.company.employees',
                     'employer.employee.documents', // When admin views employee documents
+                    'documents.deleted', // When viewing deleted documents with company or employee context
                 ];
                 
                 if (in_array(request()->route()->getName(), $companyRoutes) && isset($company)) {
@@ -93,16 +94,20 @@
                     @if(auth()->user()->hasRole('administration_office'))
                         @php
                             // Check if viewing a specific company's employees or employee documents
-                            $viewingCompany = isset($company) && in_array(request()->route()->getName(), [
+                            $viewingCompany = in_array(request()->route()->getName(), [
                                 'administration.company.employees',
-                                'employer.employee.documents'
-                            ]);
+                                'employer.employee.documents',
+                                'documents.deleted'
+                            ]) && (isset($company) || isset($employee));
                             
                             // Determine routes based on context
                             if ($viewingCompany) {
                                 // When viewing a specific company, only show medewerkers tab
-                                $employeesRoute = route('administration.company.employees', $company->id);
-                                $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents');
+                                $companyForRoute = $company ?? (isset($employee) ? $employee->company : null);
+                                if ($companyForRoute) {
+                                    $employeesRoute = route('administration.company.employees', $companyForRoute->id);
+                                    $employeesActive = request()->routeIs('administration.company.employees') || request()->routeIs('employer.employee.documents') || request()->routeIs('documents.deleted');
+                                }
                             } else {
                                 // When on dashboard, only show home tab
                                 $homeRoute = route('administration.dashboard');

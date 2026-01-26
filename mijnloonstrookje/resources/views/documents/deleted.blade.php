@@ -26,89 +26,81 @@
         </div>
     @endif
     
-    <table>
-        <thead>
-            <tr>
-                <th>Medewerker</th>
-                <th>Document Naam</th>
-                <th>Type</th>
-                <th>Periode</th>
-                <th>Verwijderd op</th>
-                <th>Verwijderd door</th>
-                <th class="icon-cell">Acties</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($documents as $document)
-            <tr>
-                <td>{{ $document->employee->name ?? 'N/A' }}</td>
-                <td>{{ $document->display_name }}</td>
-                <td>
-                    @switch($document->type)
-                        @case('payslip')
-                            Loonstrook
-                            @break
-                        @case('annual_statement')
-                            Jaaroverzicht
-                            @break
-                        @case('other')
-                            Overig
-                            @break
-                        @default
-                            {{ ucfirst($document->type) }}
-                    @endswitch
-                </td>
-                <td>
-                    @if($document->month)
-                        {{ ['', 'Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][$document->month] }} {{ $document->year }}
-                    @elseif($document->week)
-                        Week {{ $document->week }}, {{ $document->year }}
-                    @else
-                        {{ $document->year }}
-                    @endif
-                </td>
-                <td>{{ $document->deleted_at ? $document->deleted_at->format('d-m-Y H:i') : 'N/A' }}</td>
-                <td>{{ $document->uploader->name ?? 'N/A' }}</td>
-                <td class="icon-cell">
-                    <form action="{{ route('documents.restore', $document->id) }}" 
-                          method="POST" 
-                          class="documents-action-form"
-                          onsubmit="return confirm('Weet je zeker dat je dit document wilt herstellen?');">
-                        @csrf
-                        <button type="submit" 
-                                title="Herstellen"
-                                class="documents-action-button"
-                                style="color: #10B981;">
-                            ↩️
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="7" style="text-align: center;">Geen verwijderde documenten gevonden</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+    <div class="documents-table-container">
+        <table class="documents-table">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 text-left">Medewerker</th>
+                    <th class="px-4 py-2 text-left">Document Naam</th>
+                    <th class="px-4 py-2 text-left">Type</th>
+                    <th class="px-4 py-2 text-left">Periode</th>
+                    <th class="px-4 py-2 text-left">Verwijderd op</th>
+                    <th class="px-4 py-2 text-left">Verwijderd door</th>
+                    <th class="px-4 py-2 text-left">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($documents as $document)
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2">{{ $document->employee->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2">{{ $document->display_name }}</td>
+                    <td class="px-4 py-2">
+                        @switch($document->type)
+                            @case('payslip')
+                                Loonstrook
+                                @break
+                            @case('annual_statement')
+                                Jaaroverzicht
+                                @break
+                            @case('other')
+                                Overig
+                                @break
+                            @default
+                                {{ ucfirst($document->type) }}
+                        @endswitch
+                    </td>
+                    <td class="px-4 py-2">
+                        @if($document->month)
+                            {{ ['', 'Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'][$document->month] }} {{ $document->year }}
+                        @elseif($document->week)
+                            Week {{ $document->week }}, {{ $document->year }}
+                        @else
+                            {{ $document->year }}
+                        @endif
+                    </td>
+                    <td class="px-4 py-2">{{ $document->deleted_at ? $document->deleted_at->format('d-m-Y H:i') : 'N/A' }}</td>
+                    <td class="px-4 py-2">{{ $document->uploader->name ?? 'N/A' }}</td>
+                    <td class="icon-cell">
+                        <form action="{{ route('documents.restore', $document->id) }}" 
+                              method="POST" 
+                              class="document-action-form"
+                              onsubmit="return confirm('Weet je zeker dat je dit document wilt herstellen?');">
+                            @csrf
+                            <button type="submit" 
+                                    title="Herstellen"
+                                    class="document-action-btn"
+                                    style="color: #10B981;">
+                                ↩️
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="px-4 py-8 text-center">Geen verwijderde documenten gevonden</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
     
     <div class="documents-footer-links">
         @if(isset($employee))
             <a href="{{ route('employer.employee.documents', $employee->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $employee->name }}</a>
-            <span class="documents-footer-separator">|</span>
-            <a href="{{ auth()->user()->role === 'administration_office' ? route('administration.dashboard') : route('employer.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
-        @elseif(isset($company) && auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.company.documents', $company->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $company->name }}</a>
-            <span class="documents-footer-separator">|</span>
-            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @elseif(auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
-            <span class="documents-footer-separator">|</span>
-            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
+            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Dashboard</a>
         @else
             <a href="{{ route('employer.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
-            <span class="documents-footer-separator">|</span>
-            <a href="{{ route('employer.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">Dashboard</a>
         @endif
     </div>
 </section>
