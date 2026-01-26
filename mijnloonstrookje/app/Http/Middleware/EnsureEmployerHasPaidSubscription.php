@@ -13,12 +13,16 @@ class EnsureEmployerHasPaidSubscription
         $user = $request->user();
 
         if ($user) {
-            // Skip 2FA check for test accounts
+            // Skip all checks for test accounts
             $testEmails = ['superadmin@test.com', 'admin@test.com', 'employer@test.com', 'employee@test.com'];
             $isTestAccount = in_array($user->email, $testEmails);
             
+            if ($isTestAccount) {
+                return $next($request);
+            }
+            
             // Check of 2FA is ingesteld (VOOR IEDEREEN behalve test accounts)
-            if (!$isTestAccount && !$user->two_factor_confirmed_at) {
+            if (!$user->two_factor_confirmed_at) {
                 return redirect()->route('onboarding.setup-2fa')
                     ->with('error', 'Je moet eerst twee-factor authenticatie inschakelen.');
             }
@@ -61,9 +65,9 @@ class EnsureEmployerHasPaidSubscription
                 }
             }
             
-            // Voor employee accounts: check 2FA en email verificatie
+            // Voor employee accounts: check email verificatie
             if ($user->role === 'employee') {
-                if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                if (!$user->hasVerifiedEmail()) {
                     return redirect()->route('employee.verify-and-secure');
                 }
             }
