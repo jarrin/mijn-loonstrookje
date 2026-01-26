@@ -14,6 +14,9 @@ class ProfileController extends Controller
         $user = auth()->user();
         $company = $user->role === 'employer' ? $user->company : null;
         
+        // Mark that we're on settings page for 2FA redirect
+        session(['two_factor_from_settings' => true]);
+        
         return view('profile.settings', [
             'user' => $user,
             'company' => $company

@@ -102,7 +102,7 @@
                             </div>
                         @endif
                         
-                        <form method="POST" action="{{ url('/user/two-factor-recovery-codes') }}">
+                        <form method="POST" action="{{ route('profile.two-factor-recovery-codes') }}">
                             @csrf
                             <button type="submit" class="btn btn-secondary">
                                 Nieuwe herstelcodes genereren
