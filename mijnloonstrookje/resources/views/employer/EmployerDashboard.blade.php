@@ -99,6 +99,8 @@
                                 'document_restored', 'document_hersteld' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
                                 'employee_created', 'medewerker_aangemaakt' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
                                 'admin_office_added', 'admin_bureau_toegevoegd' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                                'gebruiker_status_gewijzigd' => ['bg' => 'rgba(251, 191, 36, 0.3)', 'text' => '#F59E0B'],
+                                'inactief_inlogpoging' => ['bg' => 'rgba(239, 68, 68, 0.3)', 'text' => '#DC2626'],
                                 default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563']
                             };
                             
@@ -117,6 +119,8 @@
                                 'medewerker_aangemaakt' => 'Medewerker aangemaakt',
                                 'admin_office_added' => 'Admin bureau toegevoegd',
                                 'admin_bureau_toegevoegd' => 'Admin bureau toegevoegd',
+                                'gebruiker_status_gewijzigd' => 'Gebruiker status gewijzigd',
+                                'inactief_inlogpoging' => 'Inactief inlogpoging',
                             ];
                             
                             $displayAction = $actionTranslations[$log->action] ?? ucfirst(str_replace('_', ' ', $log->action));

@@ -145,4 +145,45 @@ class AuditLogService
             companyId: $companyId
         );
     }
+    
+    /**
+     * Log user status change
+     */
+    public static function logUserStatusChange(int $targetUserId, string $oldStatus, string $newStatus, ?int $companyId = null): AuditLog
+    {
+        $oldStatusLabel = match($oldStatus) {
+            'active' => 'actief',
+            'inactive' => 'inactief',
+            default => $oldStatus
+        };
+        
+        $newStatusLabel = match($newStatus) {
+            'active' => 'actief',
+            'inactive' => 'inactief',
+            default => $newStatus
+        };
+        
+        return self::log(
+            action: 'gebruiker_status_gewijzigd',
+            description: "Gebruiker status gewijzigd van {$oldStatusLabel} naar {$newStatusLabel}",
+            targetType: 'User',
+            targetId: $targetUserId,
+            companyId: $companyId
+        );
+    }
+    
+    /**
+     * Log failed login attempt for inactive user
+     */
+    public static function logInactiveLoginAttempt(int $userId, ?int $companyId = null): AuditLog
+    {
+        return self::log(
+            action: 'inactief_inlogpoging',
+            description: 'Inactieve gebruiker probeerde in te loggen',
+            targetType: 'User',
+            targetId: $userId,
+            userId: $userId,
+            companyId: $companyId
+        );
+    }
 }

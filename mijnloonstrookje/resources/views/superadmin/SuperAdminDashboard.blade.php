@@ -42,7 +42,18 @@
                     <td>{{ $user->company->name ?? '-' }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->role }}</td>
-                    <td><span class="status-label">Ready</span></td>
+                    <td>
+                        @php
+                            $statusColors = match($user->status ?? 'active') {
+                                'active' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D', 'label' => 'Actief'],
+                                'inactive' => ['bg' => 'rgba(107, 114, 128, 0.3)', 'text' => '#6B7280', 'label' => 'Inactief'],
+                                default => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D', 'label' => 'Actief']
+                            };
+                        @endphp
+                        <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; background-color: {{ $statusColors['bg'] }}; color: {{ $statusColors['text'] }};">
+                            {{ $statusColors['label'] }}
+                        </span>
+                    </td>
                     <td class="icon-cell">
                         <button class="document-action-edit" type="button" onclick='openEditUserModal(@json($user))' title="Bewerk gebruiker" class="superadmin-action-edit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen-icon lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>
@@ -107,9 +118,8 @@
                     <div>
                         <label for="editUserStatus" class="superadmin-form-label">Status</label>
                         <select id="editUserStatus" name="status" class="superadmin-form-select">
-                            <option value="active">Active</option>
-                            <option value="pending">Pending</option>
-                            <option value="inactive">Inactive</option>
+                            <option value="active">Actief</option>
+                            <option value="inactive">Inactief</option>
                         </select>
                     </div>
                 </div>
