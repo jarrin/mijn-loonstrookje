@@ -16,7 +16,7 @@
         @else
             <div class="admin-companies-grid">
                 @foreach($companies as $company)
-                    <a href="{{ route('administration.company.show', $company->id) }}" class="admin-company-card" 
+                    <a href="{{ route('administration.company.employees', $company->id) }}" class="admin-company-card" 
                        >
                         <div class="admin-company-card-content">
                             <div>
