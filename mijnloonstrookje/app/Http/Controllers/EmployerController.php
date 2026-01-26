@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Invitation;
 
 class EmployerController extends Controller
 {
@@ -24,8 +23,7 @@ class EmployerController extends Controller
             abort(403, 'Unauthorized access');
         }
         
-        // Load company with subscription relationships
-        $company = auth()->user()->company()->with(['subscription', 'customSubscription'])->first();
+        $company = auth()->user()->company;
         
         // Count employees for this company
         $employeeCount = User::where('role', 'employee')
@@ -33,22 +31,18 @@ class EmployerController extends Controller
                             ->count();
         
         // Get max employees based on subscription plan
-        $maxEmployees = 5; // Default for basic or no subscription
-        if ($company) {
-            if ($company->subscription) {
-                switch ($company->subscription->subscription_plan) {
-                    case 'basic':
-                        $maxEmployees = 5;
-                        break;
-                    case 'pro':
-                        $maxEmployees = 25;
-                        break;
-                    case 'premium':
-                        $maxEmployees = 999; // "Onbeperkt"
-                        break;
-                }
-            } elseif ($company->customSubscription) {
-                $maxEmployees = $company->customSubscription->max_employees ?? 999;
+        $maxEmployees = 50; // Default
+        if ($company && $company->subscription) {
+            switch ($company->subscription->subscription_plan) {
+                case 'basic':
+                    $maxEmployees = 5;
+                    break;
+                case 'pro':
+                    $maxEmployees = 25;
+                    break;
+                case 'premium':
+                    $maxEmployees = 999; // "Onbeperkt"
+                    break;
             }
         }
         

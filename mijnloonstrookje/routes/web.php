@@ -197,7 +197,7 @@ Route::middleware(['auth'])->group(function () {
         
         // If already verified and has 2FA, redirect to dashboard
         if ($user->hasVerifiedEmail() && $user->two_factor_confirmed_at) {
-            return redirect()->route('employee.documents');
+            return redirect()->route('employee.dashboard');
         }
         
         return view('registration.employee.verify-and-secure');
