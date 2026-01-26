@@ -70,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 'jaaroverzicht': ['annual_statement', 'annual statement', 'jaaroverzicht'],
                 'overig': ['other', 'overig']
             }
-        }
+        },
+        'admin-office-employees': {}
     };
     
     function detectPageType() {
@@ -86,6 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Employee pages
         if (document.querySelector('.employee-page-title')?.textContent.includes('Mijn Documenten')) return 'employee-dashboard';
+        
+        // Admin Office pages
+        if (document.querySelector('.employees-title')?.textContent.includes('Medewerkers -')) return 'admin-office-employees';
         
         return 'dashboard';
     }
@@ -213,6 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         showRow = applyEmployerActivityFilter(filterIndex, filterValue, cells, row);
                     } else if (pageType === 'employee-dashboard') {
                         showRow = applyEmployeeDashboardFilter(filterIndex, filterValue, cells, row);
+                    } else if (pageType === 'admin-office-employees') {
+                        showRow = applyAdminOfficeEmployeesFilter(filterIndex, filterValue, cells);
                     }
                 }
             });
@@ -239,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'employer-documents': return [0, 1]; // Document Naam (and Medewerker if present)
             case 'employer-activity': return [1, 3]; // Gebruiker, Beschrijving
             case 'employee-dashboard': return [0, 1]; // Document Naam, Type
+            case 'admin-office-employees': return [0, 1]; // Naam, Email
             default: return [0];
         }
     }
@@ -349,6 +356,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return filterByPeriod(filterValue, cells[5].textContent);
         }
         // Dropdown 2 is for sorting
+        return true;
+    }
+    
+    function applyAdminOfficeEmployeesFilter(filterIndex, filterValue, cells) {
+        // Dropdown 0 (Status) -> column 2 (Status)
+        if (filterIndex === '0' && cells[2]) {
+            const cellText = cells[2].textContent.toLowerCase();
+            return cellText.includes(filterValue.toLowerCase());
+        }
+        // Dropdown 1 is for sorting
         return true;
     }
     
@@ -483,6 +500,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     return aCells[0].textContent.localeCompare(bCells[0].textContent);
                 } else if (sortValueLower.includes('naam z-a')) {
                     return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                }
+            } else if (pageType === 'admin-office-employees') {
+                if (sortValueLower.includes('naam a-z')) {
+                    return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower.includes('naam z-a')) {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                } else if (sortValueLower.includes('nieuwste')) {
+                    // Could be enhanced with actual date comparison if available
+                    return 0;
+                } else if (sortValueLower.includes('oudste')) {
+                    return 0;
                 }
             }
             return 0;

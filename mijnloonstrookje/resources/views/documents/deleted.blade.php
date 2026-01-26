@@ -4,6 +4,16 @@
 
 @section('content')
 <section>
+    <div class="documents-footer-links">
+        @if(isset($employee))
+            <a href="{{ route('employer.employee.documents', $employee->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $employee->name }}</a>
+        @elseif(auth()->user()->role === 'administration_office')
+            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Dashboard</a>
+        @else
+            <a href="{{ route('employer.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
+        @endif
+    </div>
+    
     <h1 class="documents-page-title">
         @if(isset($employee))
             Verwijderde Documenten van {{ $employee->name }}
@@ -70,7 +80,7 @@
                     </td>
                     <td class="px-4 py-2">{{ $document->deleted_at ? $document->deleted_at->format('d-m-Y H:i') : 'N/A' }}</td>
                     <td class="px-4 py-2">{{ $document->uploader->name ?? 'N/A' }}</td>
-                    <td class="icon-cell">
+                    <td class="icon-cell-left">
                         <form action="{{ route('documents.restore', $document->id) }}" 
                               method="POST" 
                               class="document-action-form"
@@ -79,8 +89,8 @@
                             <button type="submit" 
                                     title="Herstellen"
                                     class="document-action-btn"
-                                    style="color: #10B981;">
-                                ↩️
+                                    style="color: var(--primary-color);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-undo2-icon lucide-undo-2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
                             </button>
                         </form>
                     </td>
@@ -92,16 +102,6 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-    
-    <div class="documents-footer-links">
-        @if(isset($employee))
-            <a href="{{ route('employer.employee.documents', $employee->id) }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar {{ $employee->name }}</a>
-        @elseif(auth()->user()->role === 'administration_office')
-            <a href="{{ route('administration.dashboard') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Dashboard</a>
-        @else
-            <a href="{{ route('employer.documents') }}" class="documents-footer-link" style="color: var(--primary-color);">← Terug naar Documenten</a>
-        @endif
     </div>
 </section>
 @endsection
