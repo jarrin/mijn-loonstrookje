@@ -116,6 +116,16 @@ class PaymentController extends Controller
     }
 
     /**
+     * Toon de custom checkout pagina
+     */
+    public function customCheckout(\App\Models\CustomSubscription $customSubscription)
+    {
+        return view('registration.custom.checkout', [
+            'customSubscription' => $customSubscription
+        ]);
+    }
+
+    /**
      * Gebruiker komt hier terug na betaling op Mollie
      */
     public function returnFromPayment(Request $request, Subscription $subscription)
@@ -172,8 +182,9 @@ class PaymentController extends Controller
                                 ]);
                                 
                                 // Redirect naar success pagina
-                                return view('onboarding.payment-success', [
-                                    'subscription' => $subscription
+                                return view('registration.shared.payment-success', [
+                                    'subscription' => $subscription,
+                                    'customSubscription' => null
                                 ]);
                             } else {
                                 // Niet ingelogd - vraag om te registreren/inloggen
@@ -267,5 +278,172 @@ class PaymentController extends Controller
 
             return response('Error', 500);
         }
+    }
+
+    /**
+     * Start een nieuwe betaling voor een custom abonnement
+     */
+    public function startCustomPayment(Request $request, \App\Models\CustomSubscription $customSubscription)
+    {
+        try {
+            Log::info('Custom payment start requested', [
+                'is_authenticated' => Auth::check(),
+                'user_id' => Auth::id(),
+                'custom_subscription_id' => $customSubscription->id,
+                'session_id' => session()->getId(),
+            ]);
+
+            // Check of gebruiker is ingelogd
+            if (!Auth::check()) {
+                return redirect()->route('register')
+                    ->with('info', 'Maak eerst een account aan om dit custom abonnement te kunnen aanschaffen.');
+            }
+
+            $user = Auth::user();
+            $company = $user->company;
+            
+            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
+            if ($company && ($company->subscription_id || $company->custom_subscription_id)) {
+                return redirect()->route('employer.dashboard')
+                    ->with('info', 'Je hebt al een actief abonnement.');
+            }
+
+            // Verify session has pending custom subscription
+            if (session('pending_custom_subscription_id') != $customSubscription->id) {
+                return redirect()->route('employer.dashboard')
+                    ->with('error', 'Ongeldige custom subscription toegang.');
+            }
+
+            if (!$company) {
+                // Maak automatisch een company aan
+                $company = Company::create([
+                    'name' => $user->name . "'s Bedrijf",
+                    'custom_subscription_id' => null,
+                ]);
+                
+                $user->company_id = $company->id;
+                $user->save();
+            }
+
+            $metadata = [
+                'custom_subscription_id' => $customSubscription->id,
+                'session_id' => session()->getId(),
+                'user_id' => $user->id,
+                'company_id' => $company->id,
+            ];
+
+            // Maak een Mollie betaling aan
+            $paymentData = [
+                'amount' => [
+                    'currency' => 'EUR',
+                    'value' => number_format($customSubscription->price, 2, '.', ''),
+                ],
+                'description' => 'Custom Abonnement - €' . number_format($customSubscription->price, 2, ',', '.') . ' ' . $customSubscription->billing_period,
+                'redirectUrl' => route('payment.return.custom', ['customSubscription' => $customSubscription->id]),
+                'metadata' => $metadata,
+            ];
+
+            // Voeg alleen webhook toe als de app URL publiek toegankelijk is
+            $appUrl = config('app.url');
+            if (!str_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1')) {
+                $paymentData['webhookUrl'] = route('payment.webhook');
+            }
+
+            $payment = $this->mollie->payments->create($paymentData);
+
+            $checkoutUrl = $payment->getCheckoutUrl();
+            
+            Log::info('Mollie custom payment created', [
+                'payment_id' => $payment->id,
+                'custom_subscription_id' => $customSubscription->id,
+                'checkout_url' => $checkoutUrl,
+                'amount' => $customSubscription->price,
+            ]);
+
+            // Redirect gebruiker naar Mollie checkout pagina
+            return redirect()->away($checkoutUrl);
+
+        } catch (\Exception $e) {
+            Log::error('Custom payment creation failed', [
+                'error' => $e->getMessage(),
+                'custom_subscription_id' => $customSubscription->id,
+            ]);
+
+            return back()->with('error', 'Er is iets misgegaan bij het aanmaken van de betaling: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Gebruiker komt hier terug na custom subscription betaling op Mollie
+     */
+    public function returnFromCustomPayment(Request $request, \App\Models\CustomSubscription $customSubscription)
+    {
+        // Check betaling status
+        if (str_contains(config('app.url'), 'localhost') || str_contains(config('app.url'), '127.0.0.1')) {
+            try {
+                $sessionId = session()->getId();
+                $payments = $this->mollie->payments->page();
+                
+                foreach ($payments as $payment) {
+                    $sessionMatch = isset($payment->metadata->session_id) && 
+                                   $payment->metadata->session_id == $sessionId;
+                    
+                    $customSubMatch = isset($payment->metadata->custom_subscription_id) && 
+                                     $payment->metadata->custom_subscription_id == $customSubscription->id;
+                    
+                    if ($sessionMatch && $customSubMatch) {
+                        Log::info('Custom payment checked after return', [
+                            'custom_subscription_id' => $customSubscription->id,
+                            'payment_id' => $payment->id,
+                            'payment_status' => $payment->status,
+                            'is_authenticated' => Auth::check(),
+                        ]);
+
+                        if ($payment->isPaid()) {
+                            // Betaling geslaagd!
+                            if (Auth::check()) {
+                                $user = Auth::user();
+                                
+                                // Sla custom_subscription_id op in company
+                                if ($user->company) {
+                                    $user->company->update([
+                                        'custom_subscription_id' => $customSubscription->id
+                                    ]);
+                                    
+                                    Log::info('Custom subscription activated for company', [
+                                        'company_id' => $user->company->id,
+                                        'custom_subscription_id' => $customSubscription->id,
+                                        'payment_id' => $payment->id,
+                                    ]);
+                                }
+                                
+                                // Verwijder pending_custom_subscription_id uit sessie
+                                session()->forget('pending_custom_subscription_id');
+                                
+                                // Redirect naar success pagina
+                                return view('registration.shared.payment-success', [
+                                    'subscription' => null,
+                                    'customSubscription' => $customSubscription
+                                ]);
+                            }
+                        } elseif ($payment->isFailed() || $payment->isCanceled()) {
+                            return redirect()->route('payment.custom-checkout', ['customSubscription' => $customSubscription->id])
+                                ->with('error', 'Betaling is niet voltooid.');
+                        }
+                        
+                        break;
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error('Error checking custom payment status', [
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        // Default redirect
+        $redirectRoute = Auth::check() ? 'employer.dashboard' : 'website';
+        return redirect()->route($redirectRoute)
+            ->with('info', 'Terug van Mollie. Check de logs voor betaling status.');
     }
 }

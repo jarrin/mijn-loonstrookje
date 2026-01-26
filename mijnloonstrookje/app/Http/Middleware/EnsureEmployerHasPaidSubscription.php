@@ -26,13 +26,34 @@ class EnsureEmployerHasPaidSubscription
             // Alleen voor employer accounts: check abonnement
             // Employees, admin_offices en super_admins hoeven niet te betalen
             if ($user->role === 'employer') {
-                // Check of bedrijf een actief abonnement heeft
-                if ($user->company && !$user->company->subscription_id) {
-                    // Check of er een pending subscription is
-                    if (session()->has('pending_subscription_id')) {
+                // Custom subscription flow: redirect naar verify-and-secure als 2FA of email niet is afgerond
+                if (session('pending_custom_subscription_id')) {
+                    if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                        return redirect()->route('registration.verify-and-secure');
+                    }
+                } else {
+                    // Regular employer flow: check 2FA en email verificatie
+                    if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                        return redirect()->route('employer.verify-and-secure');
+                    }
+                }
+                
+                // Check of bedrijf een actief abonnement heeft (regulier OF custom)
+                $hasSubscription = $user->company && ($user->company->subscription_id || $user->company->custom_subscription_id);
+                
+                if ($user->company && !$hasSubscription) {
+                    // Custom subscription pending?
+                    if (session('pending_custom_subscription_id')) {
+                        return redirect()->route('payment.custom-checkout', [
+                            'customSubscription' => session('pending_custom_subscription_id')
+                        ]);
+                    }
+                    
+                    // Regular subscription pending?
+                    if (session('pending_subscription_id')) {
                         return redirect()->route('payment.checkout', [
                             'subscription' => session('pending_subscription_id')
-                        ])->with('info', 'Je moet eerst je abonnement betalen.');
+                        ]);
                     }
                     
                     return redirect()->route('website')
@@ -40,8 +61,14 @@ class EnsureEmployerHasPaidSubscription
                 }
             }
             
-            // Employees, administration_office, en super_admin kunnen direct door
-            // Ze hebben geen eigen abonnement nodig
+            // Voor employee accounts: check 2FA en email verificatie
+            if ($user->role === 'employee') {
+                if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                    return redirect()->route('employee.verify-and-secure');
+                }
+            }
+            
+            // Administration office en super_admin kunnen direct door
         }
 
         return $next($request);

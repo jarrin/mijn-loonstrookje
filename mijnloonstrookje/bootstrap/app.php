@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\CheckRole::class,
             'paid.subscription' => \App\Http\Middleware\EnsureEmployerHasPaidSubscription::class,
+            'custom.flow' => \App\Http\Middleware\CustomSubscriptionFlowGuard::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

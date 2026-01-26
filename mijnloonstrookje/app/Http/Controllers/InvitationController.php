@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Invitation;
 use App\Models\User;
 use App\Mail\EmployeeInvitation;
@@ -89,7 +90,12 @@ class InvitationController extends Controller
         // Check if this is for an existing user (company_access type)
         if ($invitation->invitation_type === 'company_access') {
             // For existing users, show login page to accept invitation
-            return view('auth.accept-invitation', compact('invitation'));
+            return view('registration.employee.accept-invitation', compact('invitation'));
+        }
+
+        // Store custom subscription info in session if applicable
+        if ($invitation->invitation_type === 'custom_subscription_invite' && $invitation->custom_subscription_id) {
+            session(['pending_custom_subscription_id' => $invitation->custom_subscription_id]);
         }
 
         // For new account invitations, if user is logged in, log them out first
@@ -99,7 +105,12 @@ class InvitationController extends Controller
                 ->with('info', 'Je bent uitgelogd. Maak nu je nieuwe account aan.');
         }
 
-        return view('auth.register-invited', compact('invitation'));
+        // Use custom registration view for custom subscription invites
+        if ($invitation->invitation_type === 'custom_subscription_invite' && $invitation->custom_subscription_id) {
+            return view('registration.custom.register', compact('invitation'));
+        }
+
+        return view('registration.employee.register', compact('invitation'));
     }
 
     /**
@@ -199,32 +210,68 @@ class InvitationController extends Controller
                 ->with('error', 'Deze uitnodiging is verlopen of al gebruikt.');
         }
 
-        $request->validate([
+        $validation = [
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
-        ], [
+        ];
+        
+        $messages = [
             'name.required' => 'Naam is verplicht.',
             'password.required' => 'Wachtwoord is verplicht.',
             'password.min' => 'Wachtwoord moet minimaal 8 tekens lang zijn.',
             'password.confirmed' => 'Wachtwoorden komen niet overeen.',
-        ]);
+        ];
+        
+        // Add KVK and company name validation for employers with custom subscriptions
+        if ($invitation->role === 'employer' && $invitation->custom_subscription_id) {
+            $validation['company_name'] = 'required|string|max:255';
+            $validation['kvk_number'] = 'required|string|size:8|regex:/^[0-9]{8}$/';
+            
+            $messages['company_name.required'] = 'Bedrijfsnaam is verplicht.';
+            $messages['company_name.max'] = 'Bedrijfsnaam mag maximaal 255 tekens zijn.';
+            $messages['kvk_number.required'] = 'KVK nummer is verplicht.';
+            $messages['kvk_number.size'] = 'KVK nummer moet exact 8 cijfers zijn.';
+            $messages['kvk_number.regex'] = 'KVK nummer mag alleen cijfers bevatten.';
+        }
+        
+        $request->validate($validation, $messages);
 
         // Determine the role from invitation
         $role = $invitation->role ?? 'employee';
         
-        // Check if user with this email already exists
-        $existingUser = User::where('email', $invitation->email)->first();
+        // Check if user already exists with this email (including soft-deleted)
+        $existingUser = User::withTrashed()->where('email', $invitation->email)->first();
         
         if ($existingUser) {
-            // User already exists, update their details instead of creating new
-            $existingUser->update([
-                'name' => $request->name,
-                'password' => Hash::make($request->password),
-                'role' => $role,
-                'company_id' => $role === 'employee' ? $invitation->company_id : null,
-                'status' => 'active',
-            ]);
-            $user = $existingUser;
+            // If user was soft-deleted, restore them
+            if ($existingUser->trashed()) {
+                $existingUser->restore();
+            }
+            
+            // Check if user with this email already exists
+            $existingUser = User::where('email', $invitation->email)->first();
+
+            if ($existingUser) {
+                // User already exists, update their details instead of creating new
+                $existingUser->update([
+                    'name' => $request->name,
+                    'password' => Hash::make($request->password),
+                    'role' => $role,
+                    'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                    'status' => 'active',
+                ]);
+                $user = $existingUser;
+            } else {
+                // Create new user
+                $user = User::create([
+                    'name' => $request->name,
+                    'email' => $invitation->email,
+                    'password' => Hash::make($request->password),
+                    'role' => $role,
+                    'company_id' => $role === 'employee' ? $invitation->company_id : null,
+                    'status' => 'active',
+                ]);
+            }
         } else {
             // Create new user
             $user = User::create([
@@ -235,6 +282,21 @@ class InvitationController extends Controller
                 'company_id' => $role === 'employee' ? $invitation->company_id : null,
                 'status' => 'active',
             ]);
+        }
+
+        // If this is an employer with a custom subscription, create a company
+        if ($role === 'employer' && $invitation->custom_subscription_id) {
+            $company = \App\Models\Company::create([
+                'name' => $request->company_name,
+                'kvk_number' => $request->kvk_number,
+                'custom_subscription_id' => null, // Will be set after payment
+            ]);
+            
+            $user->company_id = $company->id;
+            $user->save();
+            
+            // Keep custom subscription ID in session for payment flow
+            session(['pending_custom_subscription_id' => $invitation->custom_subscription_id]);
         }
 
         // If this is an admin office, create the relationship with the company
@@ -261,7 +323,13 @@ class InvitationController extends Controller
         // Send email verification notification automatically
         $user->sendEmailVerificationNotification();
 
-        // Redirect to verification notice page
+        // For custom subscription invitations, redirect to combined verify-and-secure page
+        if ($role === 'employer' && $invitation->custom_subscription_id) {
+            return redirect()->route('registration.verify-and-secure')
+                ->with('success', 'Account succesvol aangemaakt! Voltooi de volgende stappen om je account te activeren.');
+        }
+
+        // For regular employee invitations, redirect to verification notice page
         return redirect()->route('verification.notice')
             ->with('success', 'Account succesvol aangemaakt! Check je inbox voor de verificatie email.');
     }

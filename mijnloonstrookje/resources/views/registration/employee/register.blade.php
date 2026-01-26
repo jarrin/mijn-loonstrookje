@@ -7,8 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-sky-50 min-h-screen">
-    <x-page-background />
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="w-full max-w-xl">
             <!-- Header -->
             <div class="text-center mb-8">
@@ -16,8 +15,14 @@
                 <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
             </div>
 
-            <!-- Step Progress -->
-            <x-registration.step-progress :currentStep="1" :showPaymentStep="true" />
+            <!-- Step Progress - 2 stappen voor employee -->
+            @php
+                $steps = [
+                    ['label' => 'Maak account', 'number' => 1],
+                    ['label' => 'Verifieer & beveilig', 'number' => 2],
+                ];
+            @endphp
+            <x-registration.step-progress :currentStep="1" :steps="$steps" :showPaymentStep="false" />
 
             <!-- Main Card -->
             <div class="bg-white rounded-2xl shadow-sm p-8">
@@ -31,25 +36,12 @@
                 </div>
 
                 <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Maak je account aan</h2>
-                <p class="text-gray-500 text-center mb-8">Vul je gegevens in om te beginnen</p>
+                <p class="text-gray-500 text-center mb-8">Je bent uitgenodigd door {{ $invitation->company->name ?? 'een werkgever' }}</p>
 
                 <x-registration.status-messages />
 
-                @if(session('subscription_id'))
-                    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
-                        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <p class="text-sm text-blue-600">Je hebt een abonnement gekozen. Maak eerst je account aan.</p>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('register') }}" class="space-y-5">
+                <form action="{{ route('invitation.register', $invitation->token) }}" method="POST" class="space-y-5">
                     @csrf
-                    
-                    @if(session('subscription_id'))
-                        <input type="hidden" name="subscription_id" value="{{ session('subscription_id') }}">
-                    @endif
 
                     <!-- Volledige naam -->
                     <div>
@@ -76,33 +68,7 @@
                         @enderror
                     </div>
 
-                    <!-- KVK Nummer -->
-                    <div>
-                        <label for="kvk_number" class="block text-sm font-medium text-gray-700 mb-1.5">KVK Nummer</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                </svg>
-                            </div>
-                            <input 
-                                type="text" 
-                                id="kvk_number" 
-                                name="kvk_number" 
-                                value="{{ old('kvk_number') }}"
-                                required
-                                maxlength="8"
-                                pattern="[0-9]{8}"
-                                placeholder="12345678"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            >
-                        </div>
-                        @error('kvk_number')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- E-mailadres -->
+                    <!-- E-mailadres (disabled) -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-1.5">E-mailadres</label>
                         <div class="relative">
@@ -114,17 +80,65 @@
                             <input 
                                 type="email" 
                                 id="email" 
-                                name="email" 
-                                value="{{ old('email') }}"
-                                required
-                                placeholder="jan@voorbeeld.nl"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                value="{{ $invitation->email }}"
+                                disabled
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-500 bg-gray-50 placeholder-gray-400"
                             >
                         </div>
-                        @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <p class="mt-1 text-xs text-gray-500">Dit e-mailadres kan niet worden gewijzigd</p>
                     </div>
+
+                    @if($invitation->role === 'employer' && $invitation->custom_subscription_id)
+                        <!-- Bedrijfsnaam -->
+                        <div>
+                            <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1.5">Bedrijfsnaam</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="company_name" 
+                                    name="company_name" 
+                                    value="{{ old('company_name') }}"
+                                    required
+                                    placeholder="Mijn Bedrijf BV"
+                                    class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            @error('company_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- KVK Nummer -->
+                        <div>
+                            <label for="kvk_number" class="block text-sm font-medium text-gray-700 mb-1.5">KVK Nummer</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="kvk_number" 
+                                    name="kvk_number" 
+                                    value="{{ old('kvk_number') }}"
+                                    required
+                                    maxlength="8"
+                                    pattern="[0-9]{8}"
+                                    placeholder="12345678"
+                                    class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                            </div>
+                            @error('kvk_number')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
 
                     <!-- Wachtwoord -->
                     <div>
