@@ -5,7 +5,7 @@
 /* Page Title & Headers */
 .superadmin-page-title {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 68px;
     margin-bottom: 1rem;
     color: #111827;
     font-weight: 600;
@@ -235,43 +235,9 @@
 
 /* Log Action Badges */
 .superadmin-log-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
     font-size: 0.75rem;
-    color: white;
-    display: inline-block;
-}
-
-.superadmin-log-badge-login {
-    background-color: #10B981;
-}
-
-.superadmin-log-badge-upload {
-    background-color: #3B82F6;
-}
-
-.superadmin-log-badge-revised {
-    background-color: #F59E0B;
-}
-
-.superadmin-log-badge-deleted {
-    background-color: #EF4444;
-}
-
-.superadmin-log-badge-restored {
-    background-color: #8B5CF6;
-}
-
-.superadmin-log-badge-created {
-    background-color: #06B6D4;
-}
-
-.superadmin-log-badge-added {
-    background-color: #EC4899;
-}
-
-.superadmin-log-badge-default {
-    background-color: #6B7280;
 }
 
 /* Pagination */
@@ -332,6 +298,9 @@
     width: 250px;
     background: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
 }
 
 .superadmin-subscription-tile p {
@@ -383,9 +352,25 @@
 }
 
 .superadmin-subscription-tile button:hover {
-    opacity: 0.9;
+    color: var(--primary-color);
+    background-color: var(--light-bg-color);
 }
 
 .superadmin-subscription-tile form div {
     margin-bottom: 0.5rem;
 }
+
+.superadmin-subs-actions {
+    margin-top: auto;
+}
+
+.superadmin-subs-actions button{
+    font-size: 16px;
+}
+
+.superadmin-subs-edit {
+    display: flex;
+    flex-direction: column;
+}   
+
+

@@ -59,6 +59,7 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
     Route::middleware('role:employer')->group(function () {
         Route::get('/employer/dashboard', [EmployerController::class, 'dashboard'])->name('employer.dashboard');
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
+        Route::delete('/employer/employees/{employee}', [EmployerController::class, 'destroyEmployee'])->name('employer.employee.destroy');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
         
         // Administration office management routes

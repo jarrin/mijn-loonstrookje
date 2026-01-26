@@ -71,4 +71,11 @@
 .employee-action-link {
     text-decoration: none;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+
+.employee-action-link img {
+    width: 24px;
+    height: 24px;
 }

@@ -6,12 +6,6 @@
 <section>
     <h1 class="superadmin-page-title">Abonnementen Beheer</h1>
     <p class="superadmin-page-subtitle">Hier komen alle abonnementen te staan.</p>
-    
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
-        <a href="{{ route('superadmin.logs') }}" class="superadmin-button-primary">Logs</a>
-        <a href="{{ route('superadmin.facturation') }}" class="superadmin-button-primary">Facturatie</a>
-    </div>
 </section>
 <section>
 
@@ -47,13 +41,13 @@
                 <p><strong>Plan:</strong></p>
                 <p>{{ $subscription->subscription_plan }}</p>
 
-                <form method="GET" action="{{ route('superadmin.subscriptions') }}">
+                <form class="superadmin-subs-actions" method="GET" action="{{ route('superadmin.subscriptions') }}">
                     <input type="hidden" name="edit" value="{{ $subscription->id }}">
                     <button type="submit">Bewerken</button>
                 </form>
             @else
                 {{-- Bewerk modus --}}
-                <form method="POST" action="{{ route('superadmin.subscriptions.update', $subscription->id) }}">
+                <form class="superadmin-subs-edit" method="POST" action="{{ route('superadmin.subscriptions.update', $subscription->id) }}">
                     @csrf
                     @method('PUT')
 
@@ -93,9 +87,9 @@
                         </p>
                     </div>
 
-                    <div>
+                    <div class="superadmin-subs-actions">
                         <button type="submit">Opslaan</button>
-                    </div>
+                    </div> 
                 </form>
             @endif
         </div>

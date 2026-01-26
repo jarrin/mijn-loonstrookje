@@ -35,4 +35,51 @@ tbody tr:nth-last-child(1){
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-inline: 0;
+    gap: 3px;
+}
+
+.icon-cell form{
+    display: flex;
+}
+
+.icon-cell button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+}
+
+.icon-cell svg {
+    display: block;
+    height: 22px;
+    width: 22px;
+}
+
+.document-action-view {
+    color: var(--primary-color);
+}
+
+.document-action-download {
+    color: var(--primary-color);
+}
+
+.document-action-edit {
+    color: var(--primary-color);
+}
+
+.document-action-delete {
+    color: #EF4444;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.icon-table-delete {
+    color: #EF4444;
+}
+
+tbody tr:hover {
+    background-color: var(--light-bg-color);
 }

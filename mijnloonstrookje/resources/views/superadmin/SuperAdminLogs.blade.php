@@ -5,46 +5,24 @@
 @section('content')
 <section>
     <h1 class="superadmin-page-title">Systeem Logs</h1>
-    
-    <!-- Filters -->
-    <form method="GET" class="superadmin-filter-form">
-        <div class="superadmin-filter-grid">
-            <div>
-                <label class="superadmin-filter-label">Actie</label>
-                <select name="action" class="superadmin-filter-select">
-                    <option value="">Alle acties</option>
-                    @foreach($actions as $action)
-                        <option value="{{ $action }}" {{ request('action') == $action ? 'selected' : '' }}>
-                            {{ ucfirst(str_replace('_', ' ', $action)) }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Bedrijf</label>
-                <select name="company_id" class="superadmin-filter-select">
-                    <option value="">Alle bedrijven</option>
-                    @foreach($companies as $company)
-                        <option value="{{ $company->id }}" {{ request('company_id') == $company->id ? 'selected' : '' }}>
-                            {{ $company->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Van Datum</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="superadmin-filter-input">
-            </div>
-            <div>
-                <label class="superadmin-filter-label">Tot Datum</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="superadmin-filter-input">
-            </div>
-        </div>
-        <div class="superadmin-filter-actions">
-            <button type="submit" class="superadmin-button-primary">Filter</button>
-            <a href="{{ route('superadmin.logs') }}" class="superadmin-button-secondary">Reset</a>
-        </div>
-    </form>
+    <p class="superadmin-page-subtitle">Bekijk en filter alle systeem activiteiten</p>
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Type actie',
+                'options' => ['Login', 'Document uploaded', 'Document revised', 'Document deleted', 'Document restored', 'Employee created', 'Admin office added']
+            ],
+            [
+                'label' => 'Alle logs',
+                'options' => ['Vandaag', 'Deze week', 'Deze maand', 'Dit jaar']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Nieuwste eerst', 'Oudste eerst', 'Gebruiker', 'Bedrijf']
+            ]
+        ]
+    ])
     
     <table>
         <thead>
@@ -85,18 +63,18 @@
                 </td>
                 <td>
                     @php
-                        $badgeClass = match($log->action) {
-                            'login' => 'superadmin-log-badge-login',
-                            'document_uploaded' => 'superadmin-log-badge-upload',
-                            'document_revised' => 'superadmin-log-badge-revised',
-                            'document_deleted' => 'superadmin-log-badge-deleted',
-                            'document_restored' => 'superadmin-log-badge-restored',
-                            'employee_created' => 'superadmin-log-badge-created',
-                            'admin_office_added' => 'superadmin-log-badge-added',
-                            default => 'superadmin-log-badge-default'
+                        $colors = match($log->action) {
+                            'login' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
+                            'document_uploaded' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
+                            'document_revised' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
+                            'document_deleted' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
+                            'document_restored' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
+                            'employee_created' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
+                            'admin_office_added' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                            default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563']
                         };
                     @endphp
-                    <span class="superadmin-log-badge {{ $badgeClass }}">
+                    <span class="superadmin-log-badge" style="background-color: {{ $colors['bg'] }}; color: {{ $colors['text'] }};">
                         {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                     </span>
                 </td>
@@ -113,10 +91,6 @@
     <!-- Pagination -->
     <div class="superadmin-pagination-wrapper">
         {{ $logs->links() }}
-    </div>
-    
-    <div class="superadmin-actions-container">
-        <a href="{{ route('superadmin.dashboard') }}" class="superadmin-button-secondary">Terug naar Dashboard</a>
     </div>
 </section>
 @endsection

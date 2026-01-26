@@ -18,6 +18,23 @@
             {{ session('error') }}
         </div>
     @endif
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Type document',
+                'options' => ['Loonstrook', 'Jaaroverzicht', 'Overig']
+            ],
+            [
+                'label' => 'Periode',
+                'options' => ['Deze maand', 'Vorige maand', 'Dit kwartaal', 'Dit jaar']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Nieuwste eerst', 'Oudste eerst', 'Naam A-Z', 'Naam Z-A']
+            ]
+        ]
+    ])
     
     <table>
         <thead>
@@ -101,15 +118,15 @@
                         <a href="{{ route('documents.view', $document->id) }}" 
                            target="_blank" 
                            title="Bekijken"
-                           class="employee-action-link"
+                            class="document-action-view"
                            style="color: var(--primary-color);">
-                            👁️
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
                         </a>
                         <a href="{{ route('documents.download', $document->id) }}" 
                            title="Downloaden"
-                           class="employee-action-link"
-                           style="color: #10B981;">
-                            ⬇️
+                           class="document-action-download"
+                           style="color: var(--primary-color);">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
                         </a>
                     </div>
                 </td>

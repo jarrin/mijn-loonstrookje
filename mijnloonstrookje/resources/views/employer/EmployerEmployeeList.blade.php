@@ -17,6 +17,20 @@
             {{ session('error') }}
         </div>
     @endif
+
+    @include('components.TableFilterBar', [
+        'filters' => [
+            [
+                'label' => 'Status',
+                'options' => ['Actief', 'Inactief', 'Uitgenodigd']
+            ],
+            [
+                'label' => 'Sorteer op',
+                'options' => ['Naam A-Z', 'Naam Z-A', 'Nieuwste eerst', 'Oudste eerst']
+            ]
+        ],
+        'actionButton' => '<button onclick="openInviteEmployeeModal()" class="employer-button-add">Medewerker Toevoegen</button>'
+    ])
     
     <table>
         <thead>
@@ -29,11 +43,19 @@
         </thead>
         <tbody>
             @forelse($employees ?? [] as $employee)
-            <tr style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">
-                <td>{{ $employee->name }}</td>
-                <td>{{ $employee->email }}</td>
-                <td>Actief</td>
-                <td class="icon-cell">{!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}</td>
+            <tr>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->name }}</td>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->email }}</td>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">Actief</td>
+                <td class="icon-cell">
+                    <form action="{{ route('employer.employee.destroy', $employee->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Weet je zeker dat je deze medewerker wilt verwijderen?');">
+                        @csrf
+                        @method('DELETE')
+                        <button class="document-action-delete" type="submit" style="background: none; border: none; cursor: pointer; padding: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2-icon lucide-trash-2"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </button>
+                    </form>
+                </td>
             </tr>
             @empty
             <tr>
@@ -42,12 +64,6 @@
             @endforelse
         </tbody>
     </table>
-    
-    <div class="employer-actions-container">
-        <button onclick="openInviteEmployeeModal()" class="employer-button-primary">Medewerker Toevoegen</button>
-        <a href="{{ route('employer.dashboard') }}" class="employer-button-secondary">Terug naar Dashboard</a>
-        {{-- <a href="{{ route('employer.documents') }}" class="employer-button-primary">Alle Documenten</a> --}}
-    </div>
 </section>
 
 <!-- Invite Employee Modal -->

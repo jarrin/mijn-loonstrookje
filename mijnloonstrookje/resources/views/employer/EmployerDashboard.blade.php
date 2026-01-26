@@ -57,6 +57,24 @@
     <!-- Recent Activity Logs -->
     <div class="employer-activity-section">
         <h2 class="employer-activity-title">Recente Activiteit</h2>
+        
+        @include('components.TableFilterBar', [
+            'filters' => [
+                [
+                    'label' => 'Type actie',
+                    'options' => ['Login', 'Document uploaded', 'Document revised', 'Document deleted', 'Document restored', 'Employee created']
+                ],
+                [
+                    'label' => 'Periode',
+                    'options' => ['Vandaag', 'Deze week', 'Deze maand']
+                ],
+                [
+                    'label' => 'Sorteer op',
+                    'options' => ['Nieuwste eerst', 'Oudste eerst', 'Gebruiker']
+                ]
+            ]
+        ])
+        
         <table>
             <thead>
                 <tr>
@@ -72,18 +90,19 @@
                     <td>{{ $log->created_at->format('d-m-Y H:i') }}</td>
                     <td>{{ $log->user ? $log->user->name : 'N/A' }}</td>
                     <td>
-                        <span class="employer-activity-badge" style="background-color: {{ 
-                            match($log->action) {
-                                'login' => '#10B981',
-                                'document_uploaded' => '#3B82F6',
-                                'document_revised' => '#F59E0B',
-                                'document_deleted' => '#EF4444',
-                                'document_restored' => '#8B5CF6',
-                                'employee_created' => '#06B6D4',
-                                'admin_office_added' => '#EC4899',
-                                default => '#6B7280'
-                            }
-                        }};">
+                        @php
+                            $colors = match($log->action) {
+                                'login' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
+                                'document_uploaded' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
+                                'document_revised' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
+                                'document_deleted' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
+                                'document_restored' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
+                                'employee_created' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
+                                'admin_office_added' => ['bg' => 'rgba(251, 207, 232, 0.3)', 'text' => '#DB2777'],
+                                default => ['bg' => 'rgba(229, 231, 235, 0.3)', 'text' => '#4B5563']
+                            };
+                        @endphp
+                        <span class="employer-activity-badge" style="background-color: {{ $colors['bg'] }}; color: {{ $colors['text'] }};">
                             {{ ucfirst(str_replace('_', ' ', $log->action)) }}
                         </span>
                     </td>
