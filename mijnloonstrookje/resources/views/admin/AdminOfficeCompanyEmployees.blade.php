@@ -26,7 +26,7 @@
                 ],
                 [
                     'label' => 'Sorteer op',
-                    'options' => ['Naam A-Z', 'Naam Z-A', 'Nieuwste eerst', 'Oudste eerst']
+                    'options' => ['Naam A-Z', 'Naam Z-A']
                 ]
             ]
         ])

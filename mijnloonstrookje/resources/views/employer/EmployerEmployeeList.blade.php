@@ -22,11 +22,11 @@
         'filters' => [
             [
                 'label' => 'Status',
-                'options' => ['Actief', 'Inactief', 'Uitgenodigd']
+                'options' => ['Actief', 'Inactief']
             ],
             [
                 'label' => 'Sorteer op',
-                'options' => ['Naam A-Z', 'Naam Z-A', 'Nieuwste eerst', 'Oudste eerst']
+                'options' => ['Naam A-Z', 'Naam Z-A']
             ]
         ],
         'actionButton' => '<button onclick="openInviteEmployeeModal()" class="filter-button-add">Medewerker Toevoegen</button>'

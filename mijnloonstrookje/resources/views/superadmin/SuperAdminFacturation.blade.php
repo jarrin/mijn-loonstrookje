@@ -11,7 +11,7 @@
         'filters' => [
             [
                 'label' => 'Status',
-                'options' => ['Betaald', 'Open', 'Vervallen', 'Geannuleerd']
+                'options' => ['Betaald', 'Open', 'Vervallen']
             ],
             [
                 'label' => 'Periode',

@@ -397,8 +397,15 @@
     color: #111827;
 }
 
-.employer-add-office{
-    margin-block: 1rem;
+.employer-office-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.employer-add-office {
+    flex-shrink: 0;
 }
 
 /* Footer Navigation */

@@ -14,12 +14,12 @@
                 'options' => ['Bedrijf', 'Werknemer', 'Administratie bureau']
             ],
             [
-                'label' => 'Alle gebruikers',
-                'options' => ['Actief', 'Inactief', 'In afwachting']
+                'label' => 'Status',
+                'options' => ['Actief', 'Inactief']
             ],
             [
-                'label' => 'Alle gebruikers',
-                'options' => ['Alfabetisch', 'Datum', 'Status']
+                'label' => 'Sorteer op',
+                'options' => ['A-Z', 'Z-A']
             ]
         ]
     ])
