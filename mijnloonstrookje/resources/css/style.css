@@ -560,10 +560,19 @@ table#super-admin-facturation {
 }
 
 .section-subtitle {
-    font-size: 18px;
+    font-size: 180px;
     color: #333;
     margin: 0 0 12px 0;
     font-weight: 600;
+    text-align: left;
+}
+
+/* Override showcase centering for settings page */
+.settings-page .section-subtitle {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: none;
+    padding: 0;
 }
 
 .section-description {

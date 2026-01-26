@@ -245,7 +245,6 @@ body {
 
 .section-subtitle {
     font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-    text-align: center;
     color: #666;
     margin-bottom: 60px;
     line-height: 1.6;
