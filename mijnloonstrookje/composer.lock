@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6312f601fd0b5dd872a1de4f3265e9e9",
+    "content-hash": "1a660cffc52eb443214ce7e7a46d2990",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2252,16 +2252,16 @@
         },
         {
             "name": "mollie/mollie-api-php",
-            "version": "v3.7.0",
+            "version": "v3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mollie/mollie-api-php.git",
-                "reference": "55f843fd3944c4c9ed08ac1d5929084305b82b8b"
+                "reference": "4a319d1c779fd9a1108402950482b009e681bb9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/55f843fd3944c4c9ed08ac1d5929084305b82b8b",
-                "reference": "55f843fd3944c4c9ed08ac1d5929084305b82b8b",
+                "url": "https://api.github.com/repos/mollie/mollie-api-php/zipball/4a319d1c779fd9a1108402950482b009e681bb9e",
+                "reference": "4a319d1c779fd9a1108402950482b009e681bb9e",
                 "shasum": ""
             },
             "require": {
@@ -2342,9 +2342,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mollie/mollie-api-php/issues",
-                "source": "https://github.com/mollie/mollie-api-php/tree/v3.7.0"
+                "source": "https://github.com/mollie/mollie-api-php/tree/v3.8.0"
             },
-            "time": "2025-12-01T09:03:27+00:00"
+            "time": "2026-01-06T18:53:26+00:00"
         },
         {
             "name": "monolog/monolog",
