@@ -266,7 +266,7 @@ class SuperAdminController extends Controller
             $query->whereDate('created_at', '<=', request('date_to'));
         }
 
-        $logs = $query->paginate(25)->withQueryString();
+        $logs = $query->paginate(20)->withQueryString();
         $actions = AuditLog::distinct()->pluck('action');
         $companies = Company::orderBy('name')->get();
 

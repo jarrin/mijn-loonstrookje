@@ -88,9 +88,10 @@
         </tbody>
     </table>
     
-    <!-- Pagination -->
+    @if($logs->hasPages())
     <div class="superadmin-pagination-wrapper">
-        {{ $logs->links() }}
+        {{ $logs->links('vendor.pagination.generic') }}
     </div>
+    @endif
 </section>
 @endsection
