@@ -30,7 +30,7 @@
     </div>
     @endif
 
-    <a href="{{ isset($company) ? route('documents.upload') . '?company=' . $company->id : route('documents.upload') }}" class="documents-primary-btn" style="background-color: var(--primary-color);">
+    <!-- <a href="{{ isset($company) ? route('documents.upload') . '?company=' . $company->id : route('documents.upload') }}" class="documents-primary-btn" style="background-color: var(--primary-color);">
         Document Uploaden
-    </a>
+    </a> -->
 </div>

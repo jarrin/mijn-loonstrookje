@@ -4,15 +4,17 @@
 
 @section('content')
 <section>
-    <div>
-        <h1 class="employer-page-title">Administratiekantoren</h1>
-        <p>Beheer hier de administratiekantoren die toegang hebben tot jouw bedrijf.</p>
-    </div>
-    
-    <div class="employer-add-office">
-        <button class="employer-button-primary" type="button" onclick="openAddAdminOfficeModal()">
-            Administratiekantoor toevoegen
-        </button>
+    <div class="employer-office-header">
+        <div>
+            <h1 class="employer-page-title">Administratiekantoren</h1>
+            <p>Beheer hier de administratiekantoren die toegang hebben tot jouw bedrijf.</p>
+        </div>
+        
+        <div class="employer-add-office">
+            <button class="employer-button-primary" type="button" onclick="openAddAdminOfficeModal()">
+                Administratiekantoor toevoegen
+            </button>
+        </div>
     </div>
 
     <table id="admin-office-table">

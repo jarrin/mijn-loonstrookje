@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         logs: {
             0: { // Type actie
-                'login': ['login'],
-                'document uploaded': ['document_uploaded', 'document uploaded'],
-                'document revised': ['document_revised', 'document revised'],
-                'document deleted': ['document_deleted', 'document deleted'],
-                'document restored': ['document_restored', 'document restored'],
-                'employee created': ['employee_created', 'employee created'],
-                'admin office added': ['admin_office_added', 'admin office added']
+                'login': ['login', 'inloggen'],
+                'document uploaded': ['document_uploaded', 'document uploaded', 'document_geupload', 'document geüpload'],
+                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien'],
+                'document deleted': ['document_deleted', 'document deleted', 'document_verwijderd', 'document verwijderd'],
+                'document restored': ['document_restored', 'document restored', 'document_hersteld', 'document hersteld'],
+                'employee created': ['employee_created', 'employee created', 'medewerker_aangemaakt', 'medewerker aangemaakt'],
+                'admin office added': ['admin_office_added', 'admin office added', 'admin_bureau_toegevoegd', 'admin bureau toegevoegd']
             }
         },
         facturation: {
@@ -56,12 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         'employer-activity': {
             0: { // Type actie (same as logs)
-                'login': ['login'],
-                'document uploaded': ['document_uploaded', 'document uploaded'],
-                'document revised': ['document_revised', 'document revised'],
-                'document deleted': ['document_deleted', 'document deleted'],
-                'document restored': ['document_restored', 'document restored'],
-                'employee created': ['employee_created', 'employee created']
+                'login': ['login', 'inloggen'],
+                'document uploaded': ['document_uploaded', 'document uploaded', 'document_geupload', 'document geüpload'],
+                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien'],
+                'document deleted': ['document_deleted', 'document deleted', 'document_verwijderd', 'document verwijderd'],
+                'document restored': ['document_restored', 'document restored', 'document_hersteld', 'document hersteld'],
+                'employee created': ['employee_created', 'employee created', 'medewerker_aangemaakt', 'medewerker aangemaakt']
             }
         },
         'employee-dashboard': {
@@ -70,7 +70,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 'jaaroverzicht': ['annual_statement', 'annual statement', 'jaaroverzicht'],
                 'overig': ['other', 'overig']
             }
-        }
+        },
+        'admin-office-employees': {}
     };
     
     function detectPageType() {
@@ -86,6 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Employee pages
         if (document.querySelector('.employee-page-title')?.textContent.includes('Mijn Documenten')) return 'employee-dashboard';
+        
+        // Admin Office pages
+        if (document.querySelector('.employees-title')?.textContent.includes('Medewerkers -')) return 'admin-office-employees';
         
         return 'dashboard';
     }
@@ -213,6 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         showRow = applyEmployerActivityFilter(filterIndex, filterValue, cells, row);
                     } else if (pageType === 'employee-dashboard') {
                         showRow = applyEmployeeDashboardFilter(filterIndex, filterValue, cells, row);
+                    } else if (pageType === 'admin-office-employees') {
+                        showRow = applyAdminOfficeEmployeesFilter(filterIndex, filterValue, cells);
                     }
                 }
             });
@@ -229,6 +235,22 @@ document.addEventListener('DOMContentLoaded', function() {
         applySorting(visibleRows);
     }
     
+    function compareDates(dateStr1, dateStr2) {
+        // Parse dates in format "dd-mm-yyyy" or "dd-mm-yyyy hh:mm"
+        const parseDate = (str) => {
+            const parts = str.trim().split(' ')[0].split('-');
+            if (parts.length === 3) {
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+            return new Date(0);
+        };
+        
+        const date1 = parseDate(dateStr1);
+        const date2 = parseDate(dateStr2);
+        
+        return date1 - date2;
+    }
+    
     function getSearchColumns(pageType) {
         // Return array of column indices to search in
         switch(pageType) {
@@ -239,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'employer-documents': return [0, 1]; // Document Naam (and Medewerker if present)
             case 'employer-activity': return [1, 3]; // Gebruiker, Beschrijving
             case 'employee-dashboard': return [0, 1]; // Document Naam, Type
+            case 'admin-office-employees': return [0, 1]; // Naam, Email
             default: return [0];
         }
     }
@@ -300,8 +323,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function applyEmployerDocumentsFilter(filterIndex, filterValue, cells, row) {
-        // Check if employee column exists (cells[0] would be employee in all-documents view)
-        const hasEmployeeColumn = !document.querySelector('.employer-page-title')?.textContent.match(/Documenten van [A-Z]/);
+        // Check if employee column exists (when showing all employees' documents)
+        const hasEmployeeColumn = document.querySelector('.employer-page-title')?.textContent.includes('Alle Medewerkers');
         const typeColumnIndex = hasEmployeeColumn ? 2 : 1;
         const dateColumnIndex = hasEmployeeColumn ? 6 : 5;
         
@@ -349,6 +372,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return filterByPeriod(filterValue, cells[5].textContent);
         }
         // Dropdown 2 is for sorting
+        return true;
+    }
+    
+    function applyAdminOfficeEmployeesFilter(filterIndex, filterValue, cells) {
+        // Dropdown 0 (Status) -> column 2 (Status)
+        if (filterIndex === '0' && cells[2]) {
+            const cellText = cells[2].textContent.toLowerCase();
+            return cellText.includes(filterValue.toLowerCase());
+        }
+        // Dropdown 1 is for sorting
         return true;
     }
     
@@ -411,8 +444,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const bCells = b.querySelectorAll('td');
             
             if (pageType === 'dashboard') {
-                if (sortValueLower.includes('alfabetisch')) {
+                if (sortValueLower.includes('alfabetisch') || sortValueLower === 'a-z') {
                     return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower === 'z-a') {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
                 } else if (sortValueLower.includes('datum')) {
                     // Assuming status or other date-related sorting
                     return 0; // Could be enhanced with actual date comparison
@@ -453,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return 0;
                 }
             } else if (pageType === 'employer-documents') {
-                const hasEmployeeColumn = !document.querySelector('.employer-page-title')?.textContent.match(/Documenten van [A-Z]/);
+                const hasEmployeeColumn = document.querySelector('.employer-page-title')?.textContent.includes('Alle Medewerkers');
                 const nameColumnIndex = hasEmployeeColumn ? 1 : 0;
                 const dateColumnIndex = hasEmployeeColumn ? 6 : 5;
                 
@@ -476,13 +511,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             } else if (pageType === 'employee-dashboard') {
                 if (sortValueLower.includes('nieuwste')) {
-                    return bCells[5].textContent.localeCompare(aCells[5].textContent);
+                    return compareDates(bCells[5].textContent, aCells[5].textContent);
                 } else if (sortValueLower.includes('oudste')) {
-                    return aCells[5].textContent.localeCompare(bCells[5].textContent);
+                    return compareDates(aCells[5].textContent, bCells[5].textContent);
                 } else if (sortValueLower.includes('naam a-z')) {
                     return aCells[0].textContent.localeCompare(bCells[0].textContent);
                 } else if (sortValueLower.includes('naam z-a')) {
                     return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                }
+            } else if (pageType === 'admin-office-employees') {
+                if (sortValueLower.includes('naam a-z')) {
+                    return aCells[0].textContent.localeCompare(bCells[0].textContent);
+                } else if (sortValueLower.includes('naam z-a')) {
+                    return bCells[0].textContent.localeCompare(aCells[0].textContent);
+                } else if (sortValueLower.includes('nieuwste')) {
+                    // Could be enhanced with actual date comparison if available
+                    return 0;
+                } else if (sortValueLower.includes('oudste')) {
+                    return 0;
                 }
             }
             return 0;

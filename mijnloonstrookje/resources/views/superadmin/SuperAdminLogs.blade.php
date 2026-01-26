@@ -14,7 +14,7 @@
                 'options' => ['Login', 'Document uploaded', 'Document revised', 'Document deleted', 'Document restored', 'Employee created', 'Admin office added']
             ],
             [
-                'label' => 'Alle logs',
+                'label' => 'Periode',
                 'options' => ['Vandaag', 'Deze week', 'Deze maand', 'Dit jaar']
             ],
             [

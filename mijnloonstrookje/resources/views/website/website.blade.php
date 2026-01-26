@@ -18,7 +18,7 @@
                 <li><a href="#veiligheid">Veiligheid</a></li>
                 <li><a href="#abonnement">Abonnementen</a></li>
             </ul>
-            <button class="nav-button">Inloggen</button>
+            <a href="{{ route('login') }}" class="nav-button">Inloggen</a>
         </div>
     </nav>
 
