@@ -73,7 +73,7 @@ class FortifyServiceProvider extends ServiceProvider
         // Redirects
         Fortify::redirects('login', function () {
             $user = auth()->user();
-            if (!$user) return route('employee.dashboard');
+            if (!$user) return route('employee.documents');
             
             if (!$user) {
                 return route('employee.documents');
