@@ -100,11 +100,6 @@
             <p class="documents-form-helper">Alleen PDF bestanden zijn toegestaan</p>
         </div>
         
-        <div class="documents-form-group">
-            <label for="note" class="documents-form-label">Notitie (optioneel)</label>
-            <textarea name="note" id="note" rows="3" 
-                      class="documents-form-textarea">{{ old('note') }}</textarea>
-        </div>
         
         <div class="documents-button-group">
             <button type="submit" class="documents-button-primary" style="background-color: var(--primary-color);">

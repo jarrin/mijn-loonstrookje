@@ -197,7 +197,6 @@ class DocumentController extends Controller
             'month' => $month,
             'week' => $week,
             'period_type' => $validated['period_type'],
-            'note' => $validated['note'],
         ]);
         
         // Log the document upload
@@ -544,7 +543,6 @@ class DocumentController extends Controller
             'period_type' => $validated['period_type'],
             'version' => $newVersion,
             'parent_document_id' => $parentId,
-            'note' => $validated['note'],
         ]);
         
         // Log the document revision

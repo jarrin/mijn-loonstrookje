@@ -95,10 +95,6 @@
             <small class="documents-form-helper">Maximaal 10MB, alleen PDF bestanden</small>
         </div>
         
-        <div class="documents-form-group">
-            <label for="note" class="documents-form-label">Notitie (optioneel)</label>
-            <textarea name="note" id="note" rows="3" class="documents-form-textarea" placeholder="Bijv: Gecorrigeerde bedragen, aangepaste uren, etc.">{{ old('note') }}</textarea>
-        </div>
         
         <div class="documents-button-group">
             <button type="submit" class="documents-button-primary" style="background-color: var(--primary-color);">
