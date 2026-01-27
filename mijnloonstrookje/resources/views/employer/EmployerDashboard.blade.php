@@ -130,7 +130,7 @@
                             $colors = match($log->action) {
                                 'login', 'inloggen' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D'],
                                 'document_uploaded', 'document_geupload' => ['bg' => 'rgba(0, 149, 255, 0.3)', 'text' => '#0095FF'],
-                                'document_revised', 'document_herzien' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
+                                'document_revised', 'document_herzien', 'document_revisie' => ['bg' => 'rgba(255, 132, 0, 0.3)', 'text' => '#FF8400'],
                                 'document_deleted', 'document_verwijderd' => ['bg' => 'rgba(255, 22, 22, 0.3)', 'text' => '#FF1616'],
                                 'document_restored', 'document_hersteld' => ['bg' => 'rgba(145, 0, 236, 0.3)', 'text' => '#9100EC'],
                                 'employee_created', 'medewerker_aangemaakt' => ['bg' => 'rgba(165, 243, 252, 0.3)', 'text' => '#0891B2'],
@@ -147,6 +147,7 @@
                                 'document_geupload' => 'Document geüpload',
                                 'document_revised' => 'Document herzien',
                                 'document_herzien' => 'Document herzien',
+                            'document_revisie' => 'Document revisie',
                                 'document_deleted' => 'Document verwijderd',
                                 'document_verwijderd' => 'Document verwijderd',
                                 'document_restored' => 'Document hersteld',
