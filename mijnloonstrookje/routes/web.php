@@ -292,3 +292,6 @@ Route::get('/payment/custom/return/{customSubscription}', [PaymentController::cl
 // Factuur betaling
 Route::post('/payment/invoice/{invoice}', [App\Http\Controllers\PaymentController::class, 'startInvoicePayment'])->name('payment.invoice');
 Route::get('/payment/invoice/return/{invoice}', [App\Http\Controllers\PaymentController::class, 'returnFromInvoicePayment'])->name('payment.invoice.return');
+
+// Accept invitation via login for existing users (admin office/company access)
+Route::post('/invitation/login-accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
