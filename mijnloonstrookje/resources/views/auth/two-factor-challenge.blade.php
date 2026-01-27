@@ -6,45 +6,48 @@
     <title>Twee-factor authenticatie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-sky-50 min-h-screen">
+<body class="registrationPage">
     <x-page-background />
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="w-full max-w-md">
+    <div class="registrationContainer">
+        <div class="registrationWrapper">
             <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Twee-factor authenticatie</h1>
-                <p class="mt-2 text-gray-500">Voer je code in om door te gaan</p>
+            <div class="registrationHeader">
+                <h1 class="registrationTitle">Twee-factor authenticatie</h1>
+                <p class="registrationSubtitle">Voer je code in om door te gaan</p>
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white rounded-2xl shadow-sm p-8">
+            <div class="registrationCard">
                 <!-- Header Icon -->
-                <div class="flex justify-center mb-4">
-                    <div class="w-14 h-14 bg-purple-100 rounded-full flex items-center justify-center">
-                        <svg class="w-7 h-7 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="cardIcon cardIcon--blue">
+                    <div class="cardIconCircle cardIconCircle--blue">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Bevestig je identiteit</h2>
-                <p class="text-gray-500 text-center mb-8">Voer de code uit je authenticator app in</p>
+                <h2 class="cardTitle">Bevestig je identiteit</h2>
+                <p class="cardSubtitle" style="margin-bottom: 1.5rem;">Voer de code uit je authenticator app in</p>
 
                 @if(session('error'))
-                    <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <p class="text-sm text-red-600">{{ session('error') }}</p>
+                    <div class="statusMessage statusMessage--error" style="margin-bottom: 1.5rem;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>{{ session('error') }}</p>
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('two-factor.login') }}" class="space-y-5" id="2fa-form">
+                <form method="POST" action="{{ route('two-factor.login') }}" class="formContainer" id="2fa-form">
                     @csrf
 
                     <!-- Authentication Code -->
-                    <div id="code-section">
-                        <label for="code" class="block text-sm font-medium text-gray-700 mb-1.5">Authenticatiecode</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="formGroup" id="code-section">
+                        <label for="code" class="formLabel">Authenticatiecode</label>
+                        <div class="inputWrapper">
+                            <div class="inputIcon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                 </svg>
                             </div>
@@ -58,31 +61,32 @@
                                 autocomplete="one-time-code"
                                 autofocus
                                 placeholder="123456"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center text-xl tracking-widest"
+                                class="formInput formInput--withIcon"
+                                style="text-align: center; font-size: 1.25rem; letter-spacing: 0.1em;"
                             >
                         </div>
                         @error('code')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="formError">{{ $message }}</p>
                         @enderror
-                        <p class="mt-1 text-xs text-gray-500">Voer de 6-cijferige code uit je authenticatie-app in</p>
+                        <p style="margin-top: 0.25rem; font-size: 0.75rem; color: rgb(107 114 128);">Voer de 6-cijferige code uit je authenticatie-app in</p>
                     </div>
 
                     <!-- Divider -->
-                    <div class="relative" id="divider-section">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200"></div>
+                    <div style="position: relative; margin: 1.25rem 0;" id="divider-section">
+                        <div style="position: absolute; inset: 0; display: flex; align-items: center;">
+                            <div style="width: 100%; border-top: 1px solid rgb(229 231 235);"></div>
                         </div>
-                        <div class="relative flex justify-center text-sm">
-                            <span class="px-2 bg-white text-gray-500">of</span>
+                        <div style="position: relative; display: flex; justify-content: center; font-size: 0.875rem;">
+                            <span style="padding: 0 0.5rem; background: white; color: rgb(107 114 128);">of</span>
                         </div>
                     </div>
 
                     <!-- Recovery Code -->
-                    <div id="recovery-section">
-                        <label for="recovery_code" class="block text-sm font-medium text-gray-700 mb-1.5">Herstelcode</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="formGroup" id="recovery-section">
+                        <label for="recovery_code" class="formLabel">Herstelcode</label>
+                        <div class="inputWrapper">
+                            <div class="inputIcon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
                                 </svg>
                             </div>
@@ -92,24 +96,24 @@
                                 name="recovery_code" 
                                 autocomplete="one-time-code"
                                 placeholder="abcde-fghij"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="formInput formInput--withIcon"
                             >
                         </div>
                         @error('recovery_code')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="formError">{{ $message }}</p>
                         @enderror
-                        <p class="mt-1 text-xs text-gray-500">Gebruik een herstelcode als je geen toegang hebt tot je app</p>
+                        <p style="margin-top: 0.25rem; font-size: 0.75rem; color: rgb(107 114 128);">Gebruik een herstelcode als je geen toegang hebt tot je app</p>
                     </div>
 
-                    <button type="submit" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors">
+                    <button type="submit" class="formButton">
                         Verifiëren
                     </button>
                 </form>
 
-                <div class="mt-6 text-center">
-                    <a href="{{ route('login') }}" class="text-sm text-gray-500 hover:text-gray-700">
-                        ← Terug naar inloggen
-                    </a>
+                <div class="centerText" style="margin-top: 1.5rem;">
+                    <p style="font-size: 0.875rem; color: rgb(107 114 128);">
+                        <a href="{{ route('login') }}" class="textLink" style="font-weight: 500;">← Terug naar inloggen</a>
+                    </p>
                 </div>
             </div>
         </div>

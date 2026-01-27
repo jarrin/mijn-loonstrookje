@@ -268,12 +268,6 @@
                        class="employer-form-input">
                 <p style="font-size: 0.875rem; color: #6B7280; margin-top: 0.25rem;">Alleen PDF bestanden zijn toegestaan</p>
             </div>
-            
-            <div class="employer-form-group">
-                <label for="upload_note" class="employer-form-label">Notitie (optioneel)</label>
-                <textarea name="note" id="upload_note" rows="3" 
-                          class="employer-form-input" style="resize: vertical;"></textarea>
-            </div>
 
             <div class="employer-modal-footer">
                 <button type="button" onclick="closeUploadModal()" class="employer-button-secondary">Annuleren</button>
@@ -357,13 +351,6 @@
                 <label for="edit_document" class="employer-form-label">Nieuw Document (PDF) *</label>
                 <input type="file" name="document" id="edit_document" accept=".pdf" required class="employer-form-input">
                 <p style="font-size: 0.875rem; color: #6B7280; margin-top: 0.25rem;">Maximaal 10MB, alleen PDF bestanden</p>
-            </div>
-            
-            <div class="employer-form-group">
-                <label for="edit_note" class="employer-form-label">Notitie (optioneel)</label>
-                <textarea name="note" id="edit_note" rows="3" 
-                          class="employer-form-input" style="resize: vertical;" 
-                          placeholder="Bijv: Gecorrigeerde bedragen, aangepaste uren, etc."></textarea>
             </div>
 
             <div class="employer-modal-footer">
