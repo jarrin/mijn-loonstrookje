@@ -173,31 +173,32 @@ class PaymentController extends Controller
                             // Betaling geslaagd!
                             if (Auth::check()) {
                                 $user = Auth::user();
-                                
                                 // Sla subscription_id op in company
                                 if ($user->company) {
                                     $user->company->update([
                                         'subscription_id' => $subscription->id
                                     ]);
-                                    
-                                    Log::info('Subscription activated for company', [
+                                    // Factuur genereren na succesvolle betaling
+                                    \App\Models\Invoice::create([
                                         'company_id' => $user->company->id,
                                         'subscription_id' => $subscription->id,
-                                        'payment_id' => $payment->id,
+                                        'invoice_number' => \App\Models\Invoice::generateInvoiceNumber(),
+                                        'amount' => $subscription->price,
+                                        'description' => 'Abonnement: ' . $subscription->subscription_plan,
+                                        'status' => 'paid',
+                                        'issued_date' => now(),
+                                        'due_date' => now(),
+                                        'paid_at' => now(),
                                     ]);
                                 }
-                                
                                 // Verwijder pending_subscription_id uit sessie
                                 session()->forget('pending_subscription_id');
-                                
                                 // Verstuur bevestigingsmail
                                 Mail::to($user->email)->send(new PaymentConfirmation($user, $subscription));
-                                
                                 Log::info('Payment confirmation email sent', [
                                     'user_email' => $user->email,
                                     'subscription_id' => $subscription->id,
                                 ]);
-                                
                                 // Redirect naar success pagina
                                 return view('registration.shared.payment-success', [
                                     'subscription' => $subscription,
