@@ -271,11 +271,7 @@ class DocumentController extends Controller
                 abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
             }
         } elseif ($user->role === 'administration_office') {
-            // Admin office can only delete documents they uploaded in companies they have access to
-            if ($document->uploader_id !== $user->id) {
-                abort(403, 'Je hebt geen toestemming om dit document te verwijderen');
-            }
-            
+            // Admin office can delete any document in companies they have access to
             $hasAccess = $user->companies()
                 ->where('companies.id', $document->company_id)
                 ->wherePivot('status', 'active')
@@ -387,11 +383,7 @@ class DocumentController extends Controller
                 abort(403, 'Je hebt geen toestemming om dit document te herstellen');
             }
         } elseif ($user->role === 'administration_office') {
-            // Admin office can only restore documents they uploaded in companies they have access to
-            if ($document->uploader_id !== $user->id) {
-                abort(403, 'Je hebt geen toestemming om dit document te herstellen');
-            }
-            
+            // Admin office can restore any document in companies they have access to
             $hasAccess = $user->companies()
                 ->where('companies.id', $document->company_id)
                 ->wherePivot('status', 'active')
