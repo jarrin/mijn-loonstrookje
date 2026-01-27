@@ -57,7 +57,7 @@ p, span, div, a, li, td, th {
     font-size: 18px;
 }
 input, button, select, textarea {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 input[type="text"]:focus,

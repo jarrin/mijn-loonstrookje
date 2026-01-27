@@ -120,9 +120,8 @@
                 <input type="number" name="max_users" placeholder="Aantal gebruikers" required min="1" style="width: 100%; padding: 12px 16px; border: 1px solid #D4D4D4; border-radius: 8px; font-size: 16px;">
             </div>
             <div style="margin-left: auto;">
-                <button type="submit" style="padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
-                    Toevoegen
-                    <span style="font-size: 18px;">+</span>
+                <button type="submit" class="superadmin-button-primary">
+                    Nieuw abonnement
                 </button>
             </div>
         </form>
