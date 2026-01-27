@@ -55,11 +55,6 @@ class GenerateRecurringInvoices extends Command
                     'due_date' => $today->copy()->addDays(14),
                 ]);
                 $count++;
-                // Stuur mail naar werkgever
-                $employer = $company->users()->where('role', 'employer')->first();
-                if ($employer) {
-                    Mail::to($employer->email)->send(new InvoiceCreated($invoice));
-                }
             }
         }
 
@@ -96,11 +91,6 @@ class GenerateRecurringInvoices extends Command
                     'due_date' => $today->copy()->addDays(14),
                 ]);
                 $count++;
-                // Stuur mail naar werkgever
-                $employer = $company->users()->where('role', 'employer')->first();
-                if ($employer) {
-                    Mail::to($employer->email)->send(new InvoiceCreated($invoice));
-                }
             }
         }
 

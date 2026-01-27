@@ -45,11 +45,7 @@ class CreateOpenInvoice extends Command
             'due_date' => now()->addDays(14),
         ]);
 
-        // Stuur mail naar werkgever
-        $employer = $company->users()->where('role', 'employer')->first();
-        if ($employer) {
-            Mail::to($employer->email)->send(new InvoiceCreated($invoice));
-        }
+        // Mail wordt automatisch verstuurd via Invoice::boot()
 
         $this->info('Openstaande factuur aangemaakt: #' . $invoice->invoice_number . ' voor bedrijf ' . $company->name . ' (€' . $amount . ')');
         return 0;
