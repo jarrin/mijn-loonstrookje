@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             0: { // Type actie
                 'login': ['login', 'inloggen'],
                 'document uploaded': ['document_uploaded', 'document uploaded', 'document_geupload', 'document geüpload'],
-                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien'],
+                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien', 'document_revisie', 'document revisie'],
                 'document deleted': ['document_deleted', 'document deleted', 'document_verwijderd', 'document verwijderd'],
                 'document restored': ['document_restored', 'document restored', 'document_hersteld', 'document hersteld'],
                 'employee created': ['employee_created', 'employee created', 'medewerker_aangemaakt', 'medewerker aangemaakt'],
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             0: { // Type actie (same as logs)
                 'login': ['login', 'inloggen'],
                 'document uploaded': ['document_uploaded', 'document uploaded', 'document_geupload', 'document geüpload'],
-                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien'],
+                'document revised': ['document_revised', 'document revised', 'document_herzien', 'document herzien', 'document_revisie', 'document revisie'],
                 'document deleted': ['document_deleted', 'document deleted', 'document_verwijderd', 'document verwijderd'],
                 'document restored': ['document_restored', 'document restored', 'document_hersteld', 'document hersteld'],
                 'employee created': ['employee_created', 'employee created', 'medewerker_aangemaakt', 'medewerker aangemaakt']
