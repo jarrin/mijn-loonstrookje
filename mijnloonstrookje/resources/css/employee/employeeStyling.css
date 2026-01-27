@@ -145,3 +145,220 @@
     outline: none;
     border-color: var(--primary-color);
 }
+
+/* ========================================
+   MOBILE RESPONSIVE STYLES
+   ======================================== */
+
+/* Mobile Back Button - Hidden by default */
+.mobile-back-button {
+    display: none;
+}
+
+@media screen and (max-width: 1150px) {
+    /* Show mobile back button */
+    .mobile-back-button {
+        display: flex !important;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        padding-top: 1rem;
+        background-color: white;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .mobile-back-button:hover {
+        background-color: var(--light-bg-color);
+    }
+
+    .btn {
+        font-size: 14px !important;
+        padding: 8px 12px !important;
+        width: 100%;
+    }
+
+    .settings-card {
+        padding: 1rem !important;
+    }
+
+    .settings-title {
+        font-size: 28px !important;
+        margin-bottom: 0.5rem !important;
+    }
+    /* Hide navigation items but keep container for user menu */
+    .main-side-nav {
+        width: 100% !important;
+        height: auto !important;
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-right: none !important;
+        border-top: 2px solid var(--primary-color) !important;
+        padding: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    /* Hide logo and nav tabs on mobile */
+    .main-side-nav .logo,
+    .main-side-nav .nav-tabs {
+        display: none !important;
+    }
+
+    /* Make buttons container take full width */
+    .main-side-nav .buttons {
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    /* Adjust main content to full width */
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 1rem !important;
+        padding-bottom: 100px !important; /* Space for bottom user menu */
+    }
+
+    /* Employee page title adjustments */
+    .employee-page-title {
+        font-size: 32px !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .employee-welcome-text {
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+
+    /* User menu container at bottom */
+    .user-menu-container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .user-header {
+        border-radius: 0 !important;
+        padding: 1rem !important;
+        margin: 0 !important;
+    }
+
+    .user-menu-dropdown {
+        position: fixed !important;
+        bottom: 80px !important;
+        left: 0 !important;
+        right: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        border: none !important;
+        border-top: 2px solid var(--primary-color) !important;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+        background-color: white !important;
+    }
+
+    /* Make tables responsive */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    table thead {
+        display: table-header-group;
+    }
+
+    table tbody {
+        display: table-row-group;
+    }
+
+    table tr {
+        display: table-row;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem !important;
+        font-size: 12px !important;
+    }
+
+    /* Action icons smaller on mobile */
+    .employee-actions-container svg {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* Modal adjustments for mobile */
+    .employer-modal-content {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 1rem !important;
+        padding: 1rem !important;
+    }
+
+    .employer-modal-header h2 {
+        font-size: 20px !important;
+    }
+
+    .employer-modal-footer {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+
+    .employer-modal-footer button {
+        width: 100% !important;
+    }
+
+    /* Filter bar adjustments */
+    .table-filter-bar {
+        padding: 0.75rem !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .search-container {
+        min-width: 100% !important;
+        padding: 8px 12px !important;
+    }
+
+    .search-input {
+        font-size: 14px !important;
+    }
+
+    .dropdown-container {
+        width: 100%;
+    }
+
+    .dropdown-button {
+        width: 100%;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        justify-content: space-between;
+    }
+
+    .table-filter-action {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+
+    .filter-button-add {
+        width: 100% !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+
+    /* Fixed bottom user menu - make sure it's visible */
+    body .user-menu-container {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+    }
+}
