@@ -883,6 +883,7 @@
 .subscriptionCard__title {
     font-weight: 600;
     color: rgb(17 24 39);
+    font-size: 20px;
 }
 
 .subscriptionCard__subtitle {
@@ -963,6 +964,7 @@
 .paymentCard__title {
     font-weight: 600;
     color: rgb(17 24 39);
+    font-size: 20px;
 }
 
 .paymentCard__text {

@@ -81,11 +81,6 @@
                     @if($subscription)
                         <div class="successCard--blue">
                             <div class="successCard__header">
-                                <div class="successCard__icon successCard__icon--blue">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </div>
                                 <div class="successCard__body">
                                     <h4 class="successCard__name">{{ $subscription->name }}</h4>
                                     <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; color: rgb(30 58 138);">
@@ -97,16 +92,11 @@
                             </div>
                         </div>
                     @elseif(isset($customSubscription))
-                        <div class="successCard--purple">
+                        <div class="successCard--blue">
                             <div class="successCard__header">
-                                <div class="successCard__icon successCard__icon--purple">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                </div>
                                 <div class="successCard__body">
                                     <h4 class="successCard__name">Custom Abonnement</h4>
-                                    <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; color: rgb(88 28 135);">
+                                    <div style="display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; color: rgb(30 58 138);">
                                         <p><strong>Prijs:</strong> €{{ number_format($customSubscription->price, 2, ',', '.') }} per {{ $customSubscription->billing_period }}</p>
                                         <p><strong>Max gebruikers:</strong> {{ $customSubscription->max_users }} gebruikers</p>
                                         <p><strong>Status:</strong> <span style="color: rgb(22 163 74); font-weight: 500;">✓ Actief</span></p>
