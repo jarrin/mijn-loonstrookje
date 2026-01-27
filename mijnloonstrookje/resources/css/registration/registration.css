@@ -16,7 +16,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 1.5rem;
+    padding: 2rem 1.5rem;
     /* Increased from 3rem to 4rem for more vertical space */
     position: relative;
     z-index: 10;
@@ -263,6 +263,12 @@
     /* mb-1 */
 }
 
+.cardTitle--large {
+    font-size: 2.5rem;
+    /* text-4xl */
+    margin-bottom: 1rem;
+}
+
 .cardSubtitle {
     color: rgb(107 114 128);
     /* text-gray-500 */
@@ -270,6 +276,12 @@
     margin-bottom: 2.5rem;
     /* Increased from 2rem to 2.5rem for more space before form/content */
     line-height: 1.5;
+}
+
+.cardSubtitle--large {
+    font-size: 1.25rem;
+    /* text-xl */
+    line-height: 1.75;
 }
 
 /* === FORM ELEMENTS === */
@@ -386,49 +398,55 @@
 .formButton {
     width: 100%;
     padding: 1rem 1.25rem;
-    /* Increased from 0.75rem to 1rem for larger click area */
-    background: linear-gradient(to right, rgb(59 130 246), rgb(37 99 235));
-    /* bg-blue-500 hover:bg-blue-600 */
+    background-color: rgb(59 130 246);
+    /* bg-blue-500 */
     color: white;
     font-weight: 500;
-    /* font-medium */
     border-radius: 0.5rem;
-    /* rounded-lg */
     border: none;
     cursor: pointer;
     transition: all 0.2s;
     font-size: 1rem;
-    /* Larger button text */
     margin-top: 0.5rem;
-    /* Add top margin for separation from last form field */
 }
 
 .formButton:hover {
-    background: linear-gradient(to right, rgb(37 99 235), rgb(29 78 216));
+    background-color: rgb(219 234 254);
+    /* bg-blue-100 */
+    color: rgb(59 130 246);
+    /* text-blue-500 */
+}
+
+.formButton--primary {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    background-color: rgb(59 130 246);
+    color: white;
+    margin-top: 1rem;
+}
+
+.formButton--primary:hover {
+    background-color: rgb(219 234 254);
+    color: rgb(59 130 246);
 }
 
 .formButton--secondary {
     display: inline-flex;
     align-items: center;
     padding: 0.75rem 1.5rem;
-    /* py-3 px-6 */
-    border: 1px solid rgb(229 231 235);
-    /* border-gray-300 */
+    border: none;
     font-size: 0.875rem;
-    /* text-sm */
     font-weight: 500;
-    /* font-medium */
     border-radius: 0.5rem;
-    /* rounded-lg */
-    color: rgb(55 65 81);
-    /* text-gray-700 */
-    background-color: white;
-    /* bg-white */
+    color: white;
+    background-color: rgb(59 130 246);
 }
 
 .formButton--secondary:hover {
-    background-color: rgb(249 250 251);
-    /* hover:bg-gray-50 */
+    background-color: rgb(219 234 254);
+    color: rgb(59 130 246);
 }
 
 /* === STATUS MESSAGES === */
@@ -674,7 +692,18 @@
     /* Better line height for readability */
 }
 
-.centerText button,
+.centerText button{
+    border: none;
+    padding: 0.5rem 1rem;
+    /* Add some padding for better click area */
+    cursor: pointer;
+    font-size: 0.875rem;
+    /* Match paragraph text size */
+    display: inline-block;
+    margin-top: 0.5rem;
+    /* Small top margin */
+}
+
 .centerText .textLink {
     background: none;
     border: none;
@@ -769,6 +798,7 @@
     font-weight: 600;
     color: rgb(17 24 39);
     margin-bottom: 0.25rem;
+    font-size: 20px;
 }
 
 .verificationCard__text {
