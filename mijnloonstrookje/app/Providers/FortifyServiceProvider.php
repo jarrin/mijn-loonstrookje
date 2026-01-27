@@ -43,23 +43,24 @@ class FortifyServiceProvider extends ServiceProvider
 
         Fortify::verifyEmailView(function () {
             $user = auth()->user();
-            
             // Custom subscription flow
             if (session('pending_custom_subscription_id') && $user) {
                 return redirect()->route('registration.verify-and-secure');
             }
-            
             // Employer flow
             if ($user && $user->role === 'employer') {
                 return redirect()->route('employer.verify-and-secure');
             }
-            
             // Employee flow
             if ($user && $user->role === 'employee') {
                 return redirect()->route('employee.verify-and-secure');
             }
-            
-            return view('auth.verify-email');
+            // Adminoffice flow
+            if ($user && in_array($user->role, ['adminoffice', 'administration_office'])) {
+                return redirect()->route('adminoffice.verify-and-secure');
+            }
+            // Fallback: stuur naar login of dashboard
+            return redirect()->route('login');
         });
 
         // Custom authentication
