@@ -38,8 +38,8 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-// Login POST route
-Route::post('/login', [LoginController::class, 'login']);
+// Logout route
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/home', function () {
     if (auth()->check()) {
