@@ -675,4 +675,28 @@ class DocumentController extends Controller
         // Download and delete temp file
         return response()->download($zipFilePath, $zipFileName)->deleteFileAfterSend(true);
     }
+    
+    /**
+     * Get document data as JSON (for modal)
+     */
+    public function getDocumentData($id)
+    {
+        $user = Auth::user();
+        $document = Document::with('employee')->findOrFail($id);
+        
+        // Check authorization
+        $this->authorizeDocument($user, $document);
+        
+        return response()->json([
+            'id' => $document->id,
+            'employee_name' => $document->employee->name,
+            'type' => $document->type,
+            'period_type' => $document->period_type,
+            'year' => $document->year,
+            'month' => $document->month,
+            'week' => $document->week,
+            'version' => $document->version,
+            'original_filename' => $document->original_filename,
+        ]);
+    }
 }
