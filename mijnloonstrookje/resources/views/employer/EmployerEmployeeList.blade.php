@@ -5,18 +5,6 @@
 @section('content')
 <section>
     <h1 class="employer-page-title">Medewerkers Lijst</h1>
-    
-    @if(session('success'))
-        <div class="employer-alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="employer-alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
 
     @include('components.TableFilterBar', [
         'filters' => [

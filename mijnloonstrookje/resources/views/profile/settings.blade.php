@@ -7,18 +7,6 @@
     <div class="settings-container">
         <h1 class="settings-title">Profiel Instellingen</h1>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-error">
-                {{ session('error') }}
-            </div>
-        @endif
-
         <!-- Password Change Section -->
         <div class="settings-card">
             <h2 class="settings-card-title">Wachtwoord Wijzigen</h2>
