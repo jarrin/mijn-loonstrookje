@@ -173,6 +173,17 @@ class DocumentController extends Controller
         // Store encrypted file
         Document::storeEncrypted($file, $filePath);
         
+        // Set month/week to null based on period type
+        $month = null;
+        $week = null;
+        
+        if ($validated['period_type'] === 'Maandelijks') {
+            $month = $validated['month'];
+        } elseif (in_array($validated['period_type'], ['Weekelijks', '2-wekelijks'])) {
+            $week = $validated['week'];
+        }
+        // For 'Jaarlijks', both remain null
+        
         // Create document record
         $document = Document::create([
             'employee_id' => $employee->id,
@@ -183,8 +194,8 @@ class DocumentController extends Controller
             'original_filename' => $originalFilename,
             'file_size' => $fileSize,
             'year' => $validated['year'],
-            'month' => $validated['month'],
-            'week' => $validated['week'],
+            'month' => $month,
+            'week' => $week,
             'period_type' => $validated['period_type'],
             'note' => $validated['note'],
         ]);
@@ -515,6 +526,17 @@ class DocumentController extends Controller
         // Store encrypted file
         Document::storeEncrypted($file, $filePath);
         
+        // Set month/week to null based on period type
+        $month = null;
+        $week = null;
+        
+        if ($validated['period_type'] === 'Maandelijks') {
+            $month = $validated['month'];
+        } elseif (in_array($validated['period_type'], ['Weekelijks', '2-wekelijks'])) {
+            $week = $validated['week'];
+        }
+        // For 'Jaarlijks', both remain null
+        
         // Create new document revision
         $newDocument = Document::create([
             'employee_id' => $originalDocument->employee_id,
@@ -525,8 +547,8 @@ class DocumentController extends Controller
             'original_filename' => $originalFilename,
             'file_size' => $fileSize,
             'year' => $validated['year'],
-            'month' => $validated['month'],
-            'week' => $validated['week'],
+            'month' => $month,
+            'week' => $week,
             'period_type' => $validated['period_type'],
             'version' => $newVersion,
             'parent_document_id' => $parentId,
