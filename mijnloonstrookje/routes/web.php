@@ -1,4 +1,23 @@
 <?php
+// Adminoffice registratie success stap
+Route::get('/adminoffice/success', function () {
+    return view('registration.adminoffice.success');
+})->name('adminoffice.success');
+// Adminoffice verify-and-secure route (Step 2)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/adminoffice/verify-and-secure', function () {
+        $user = auth()->user();
+        // Check if user is adminoffice
+        if (!$user || !in_array($user->role, ['adminoffice', 'administration_office'])) {
+            return redirect()->route('auth');
+        }
+        // Als al geverifieerd en 2FA, direct naar dashboard
+        if ($user->hasVerifiedEmail() && $user->two_factor_confirmed_at) {
+            return redirect()->route('administration.dashboard');
+        }
+        return view('registration.adminoffice.verify-and-secure');
+    })->name('adminoffice.verify-and-secure');
+});
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
@@ -141,26 +160,7 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
 
 // Email verification routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/email/verify', function () {
-        $user = auth()->user();
-        
-        // Custom subscription flow
-        if (session('pending_custom_subscription_id')) {
-            return redirect()->route('registration.verify-and-secure');
-        }
-        
-        // Employer flow
-        if ($user && $user->role === 'employer') {
-            return redirect()->route('employer.verify-and-secure');
-        }
-        
-        // Employee flow
-        if ($user && $user->role === 'employee') {
-            return redirect()->route('employee.verify-and-secure');
-        }
-        
-        return view('auth.verify-email');
-    })->name('verification.notice');
+    // Oude /email/verify flow verwijderd. Alleen verify-and-secure per rol is nu actief.
     
     Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\CustomVerifyEmailController::class, '__invoke'])
         ->middleware(['signed', 'throttle:6,1'])
