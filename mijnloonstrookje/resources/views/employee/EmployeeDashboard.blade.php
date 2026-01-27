@@ -6,18 +6,6 @@
 <section>
     <h1 class="employee-page-title">Mijn Documenten</h1>
     <p class="employee-welcome-text">Welkom {{ auth()->user()->name }}, hier vind je al je documenten.</p>
-    
-    @if(session('success'))
-        <div class="employee-alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="employee-alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
 
     @include('components.TableFilterBar', [
         'filters' => [
@@ -33,7 +21,8 @@
                 'label' => 'Sorteer op',
                 'options' => ['Nieuwste eerst', 'Oudste eerst', 'Naam A-Z', 'Naam Z-A']
             ]
-        ]
+        ],
+        'actionButton' => '<button onclick="openBulkExportModal()" class="filter-button-add">Bulk Export</button>'
     ])
     
     <table>
@@ -90,15 +79,7 @@
                         $versionCount = $allVersions->count();
                     @endphp
                     
-                    <div class="employee-version-container">
-                        <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
-                        
-                        @if($isLatest && $document->version > 1.0)
-                            <span class="employee-version-badge latest">
-                                NIEUWSTE
-                            </span>
-                        @endif
-                    </div>
+                    <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
                 </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
@@ -129,4 +110,77 @@
         </tbody>
     </table>
 </section>
+
+<!-- Bulk Export Modal -->
+<section>
+    <div id="bulkExportModal" class="employer-modal-overlay" style="display:none;">
+        <div class="employer-modal-content">
+            <div class="employer-modal-header">
+                <h2 class="employer-modal-title">Bulk Export</h2>
+                <button type="button" onclick="closeBulkExportModal()" aria-label="Sluiten" class="employer-modal-close">&times;</button>
+            </div>
+
+            <form id="bulkExportForm" action="{{ route('documents.bulk-download') }}" method="POST" class="employer-modal-body">
+                @csrf
+
+                <div class="employer-form-description">
+                    <p>
+                        Selecteer de filters om je documenten te exporteren als ZIP-bestand.
+                    </p>
+                </div>
+
+                <div class="employer-form-group">
+                    <label for="exportType" class="employer-form-label">Type document</label>
+                    <select id="exportType" name="type" required class="employer-form-input">
+                        <option value="all">Alle types</option>
+                        <option value="payslip">Loonstrook</option>
+                        <option value="annual_statement">Jaaroverzicht</option>
+                        <option value="other">Overig</option>
+                    </select>
+                </div>
+
+                <div class="employer-form-group">
+                    <label for="exportYear" class="employer-form-label">Jaar</label>
+                    <select id="exportYear" name="year" required class="employer-form-input">
+                        <option value="all">Alle jaren</option>
+                        @php
+                            $years = $documents->pluck('year')->unique()->sortDesc();
+                        @endphp
+                        @foreach($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="employer-modal-footer">
+                    <button type="button" onclick="closeBulkExportModal()" class="employer-button-secondary">Annuleren</button>
+                    <button type="submit" class="employer-button-primary">Exporteren</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@push('scripts')
+<script>
+    function openBulkExportModal() {
+        const modal = document.getElementById('bulkExportModal');
+        modal.style.display = 'flex';
+    }
+
+    function closeBulkExportModal() {
+        const modal = document.getElementById('bulkExportModal');
+        modal.style.display = 'none';
+        document.getElementById('bulkExportForm').reset();
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('bulkExportModal');
+        if (event.target === modal) {
+            closeBulkExportModal();
+        }
+    }
+</script>
+@endpush
 @endsection

@@ -44,10 +44,10 @@
                 <tbody>
                     @foreach($employees as $employee)
                         <tr class="border-t hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ $employee->name }}</td>
-                            <td class="px-4 py-2">{{ $employee->email }}</td>
-                            <td class="px-4 py-2">
-                                <span class="employee-status-badge active">
+                            <td class="px-4 py-2" style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->name }}</td>
+                            <td class="px-4 py-2" style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->email }}</td>
+                            <td class="px-4 py-2" style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">
+                                <span style="padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; background-color: rgba(4, 211, 0, 0.3); color: #00BC0D;">
                                     Actief
                                 </span>
                             </td>

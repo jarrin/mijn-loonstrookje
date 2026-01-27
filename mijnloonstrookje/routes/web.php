@@ -99,6 +99,7 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         Route::get('/documents/{id}/view', [\App\Http\Controllers\DocumentController::class, 'view'])->name('documents.view');
         Route::get('/documents/{id}/download', [\App\Http\Controllers\DocumentController::class, 'download'])->name('documents.download');
         Route::post('/documents/bulk-download', [\App\Http\Controllers\DocumentController::class, 'bulkDownload'])->name('documents.bulk-download');
+        Route::get('/api/documents/{id}', [\App\Http\Controllers\DocumentController::class, 'getDocumentData'])->name('api.documents.get');
     });
     
     // Document management routes - only for employer and administration_office

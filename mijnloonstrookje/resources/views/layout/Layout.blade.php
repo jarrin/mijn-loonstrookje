@@ -198,51 +198,77 @@
         @yield('content')
     </main>
 
-    <!-- Toast Notification -->
-    @if(session('success') || session('error') || session('info'))
-        <div id="toast" class="toast toast-{{ session('success') ? 'success' : (session('error') ? 'error' : 'info') }}">
-            <div class="toast-content">
-                <span class="toast-icon">
-                    @if(session('success'))
-                        ✓
-                    @elseif(session('error'))
-                        ✕
-                    @else
-                        ℹ
-                    @endif
-                </span>
-                <span class="toast-message">
-                    {{ session('success') ?? session('error') ?? session('info') }}
-                </span>
-            </div>
-            <button onclick="closeToast()" class="toast-close">×</button>
-        </div>
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    @if(session('success') || session('error') || session('info') || session('warning'))
         <script>
-            // Show toast and auto-hide after 5 seconds
             document.addEventListener('DOMContentLoaded', function() {
-                const toast = document.getElementById('toast');
-                if (toast) {
-                    setTimeout(() => {
-                        toast.classList.add('show');
-                    }, 100);
-                    
-                    setTimeout(() => {
-                        closeToast();
-                    }, 5000);
-                }
+                showToast({
+                    message: '{{ session('success') ?? session('error') ?? session('info') ?? session('warning') }}',
+                    type: '{{ session('success') ? 'success' : (session('error') ? 'error' : (session('warning') ? 'warning' : 'info')) }}'
+                });
             });
-            
-            function closeToast() {
-                const toast = document.getElementById('toast');
-                if (toast) {
-                    toast.classList.remove('show');
-                    setTimeout(() => {
-                        toast.remove();
-                    }, 300);
-                }
-            }
         </script>
     @endif
+
+    <script>
+        let toastCount = 0;
+
+        function showToast({ message, type = 'info', duration = 4000 }) {
+            const container = document.getElementById('toastContainer');
+            const toastId = `toast-${++toastCount}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                info: 'ℹ',
+                warning: '⚠'
+            };
+            
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type] || icons.info}</div>
+                <div class="toast-content">
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button onclick="closeToast('${toastId}')" class="toast-close">×</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto-hide after duration
+            if (duration > 0) {
+                setTimeout(() => {
+                    closeToast(toastId);
+                }, duration);
+            }
+            
+            return toastId;
+        }
+
+        function closeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+        }
+
+        // Make showToast globally available
+        window.showToast = showToast;
+        window.closeToast = closeToast;
+    </script>
 
     @stack('scripts')
 </body>

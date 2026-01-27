@@ -93,12 +93,12 @@ td,
 th {
   font-size: 18px;
 }
-
 input,
 button,
 select,
 textarea {
   font-size: 22px;
+}
 }
 
 input[type="text"]:focus,
