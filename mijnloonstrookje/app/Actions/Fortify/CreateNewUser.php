@@ -63,15 +63,7 @@ class CreateNewUser implements CreatesNewUsers
         }
 
         // Factuur direct genereren na account aanmaak
-        \App\Models\Invoice::create([
-            'company_id' => $company->id,
-            'invoice_number' => \App\Models\Invoice::generateInvoiceNumber(),
-            'amount' => 0, // Zet hier het juiste bedrag indien bekend
-            'description' => 'Startfactuur bij registratie',
-            'status' => 'pending',
-            'issued_date' => now(),
-            'due_date' => now()->addDays(14),
-        ]);
+        // VERWIJDERD: geen factuur van 0 euro meer aanmaken
 
         return $user;
     }
