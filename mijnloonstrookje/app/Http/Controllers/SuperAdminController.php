@@ -80,7 +80,8 @@ class SuperAdminController extends Controller
             $user->update($validated);
         }
 
-        return redirect()->route('superadmin.dashboard');
+        return redirect()->route('superadmin.dashboard')
+            ->with('success', 'Gebruiker succesvol bijgewerkt.');
     }
 
     /**
@@ -102,7 +103,8 @@ class SuperAdminController extends Controller
         // Soft delete gebruiker (vult deleted_at)
         $user->delete();
 
-        return redirect()->route('superadmin.dashboard');
+        return redirect()->route('superadmin.dashboard')
+            ->with('success', 'Gebruiker succesvol verwijderd.');
     }
 
     /**
@@ -140,7 +142,8 @@ class SuperAdminController extends Controller
 
         $subscription->update($data);
 
-        return redirect()->route('superadmin.subscriptions');
+        return redirect()->route('superadmin.subscriptions')
+            ->with('success', 'Abonnement succesvol bijgewerkt.');
     }
 
     /**
@@ -156,7 +159,7 @@ class SuperAdminController extends Controller
 
         CustomSubscription::create($data);
 
-        return back();
+        return back()->with('success', 'Custom abonnement succesvol aangemaakt.');
     }
 
     /**
@@ -172,7 +175,8 @@ class SuperAdminController extends Controller
 
         $customSubscription->update($data);
 
-        return redirect()->route('superadmin.subscriptions');
+        return redirect()->route('superadmin.subscriptions')
+            ->with('success', 'Custom abonnement succesvol bijgewerkt.');
     }
 
     /**
@@ -182,7 +186,8 @@ class SuperAdminController extends Controller
     {
         $customSubscription->delete();
 
-        return redirect()->route('superadmin.subscriptions');
+        return redirect()->route('superadmin.subscriptions')
+            ->with('success', 'Custom abonnement succesvol verwijderd.');
     }
 
     /**
@@ -198,7 +203,7 @@ class SuperAdminController extends Controller
         // Delete the invitation
         $invitation->delete();
         
-        return back();
+        return back()->with('success', 'Uitnodiging succesvol geannuleerd.');
     }
 
     /**
@@ -208,14 +213,14 @@ class SuperAdminController extends Controller
     {
         // Check if company actually has this custom subscription
         if ($company->custom_subscription_id !== $customSubscription->id) {
-            return back();
+            return back()->with('error', 'Bedrijf heeft dit abonnement niet.');
         }
         
         // Remove custom subscription from company
         $company->custom_subscription_id = null;
         $company->save();
         
-        return back();
+        return back()->with('success', 'Bedrijf succesvol verwijderd van abonnement.');
     }
 
     /**
@@ -238,7 +243,7 @@ class SuperAdminController extends Controller
             ->first();
 
         if ($existingInvitation) {
-            return back();
+            return back()->with('error', 'Er is al een actieve uitnodiging voor dit e-mailadres.');
         }
 
         // Create invitation
@@ -257,12 +262,13 @@ class SuperAdminController extends Controller
         try {
             Mail::to($request->email)->send(new CustomSubscriptionInvitation($invitation, $customSubscription));
             
-            return back();
+            return back()->with('success', 'Uitnodiging succesvol verzonden naar ' . $request->email);
         } catch (\Exception $e) {
             // Delete invitation if email fails
             $invitation->delete();
             
-            return back()->withInput();
+            return back()->with('error', 'Er is een fout opgetreden bij het verzenden van de uitnodiging.')
+                ->withInput();
         }
     }
 
