@@ -121,8 +121,7 @@
             </div>
             <div style="margin-left: auto;">
                 <button type="submit" class="superadmin-button-primary">
-                    Toevoegen
-                    <span style="font-size: 18px;">+</span>
+                    Nieuw abonnement
                 </button>
             </div>
         </form>
