@@ -52,8 +52,10 @@
                     @endif
 
 
-                    <!-- Volledige naam -->
-                    <div class="formGroup">
+                    <!-- Naam en Bedrijf -->
+                    <div class="formRow">
+                        <!-- Volledige naam -->
+                        <div class="formGroup">
                         <label for="name" class="formLabel">Volledige naam</label>
                         <div class="inputWrapper">
                             <div class="inputIcon">
@@ -75,14 +77,14 @@
                         @error('name')
                             <p class="formError">{{ $message }}</p>
                         @enderror
-                    </div>
+                        </div>
 
-                    <!-- Bedrijfsnaam -->
-                    <div>
-                        <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1.5">Bedrijfsnaam</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <!-- Bedrijfsnaam -->
+                        <div class="formGroup">
+                        <label for="company_name" class="formLabel">Bedrijfsnaam</label>
+                        <div class="inputWrapper">
+                            <div class="inputIcon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                             </div>
@@ -93,16 +95,19 @@
                                 value="{{ old('company_name') }}"
                                 required
                                 placeholder="Mijn Bedrijf BV"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="formInput formInput--withIcon"
                             >
                         </div>
                         @error('company_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="formError">{{ $message }}</p>
                         @enderror
+                        </div>
                     </div>
 
-                    <!-- KVK Nummer -->
-                    <div class="formGroup">
+                    <!-- KVK en Email -->
+                    <div class="formRow">
+                        <!-- KVK Nummer -->
+                        <div class="formGroup">
                         <label for="kvk_number" class="formLabel">KVK Nummer</label>
                         <div class="inputWrapper">
                             <div class="inputIcon">
@@ -125,10 +130,10 @@
                         @error('kvk_number')
                             <p class="formError">{{ $message }}</p>
                         @enderror
-                    </div>
+                        </div>
 
-                    <!-- E-mailadres -->
-                    <div class="formGroup">
+                        <!-- E-mailadres -->
+                        <div class="formGroup">
                         <label for="email" class="formLabel">E-mailadres</label>
                         <div class="inputWrapper">
                             <div class="inputIcon">
@@ -149,10 +154,13 @@
                         @error('email')
                             <p class="formError">{{ $message }}</p>
                         @enderror
+                        </div>
                     </div>
 
-                    <!-- Wachtwoord -->
-                    <div class="formGroup">
+                    <!-- Wachtwoorden -->
+                    <div class="formRow">
+                        <!-- Wachtwoord -->
+                        <div class="formGroup">
                         <label for="password" class="formLabel">Wachtwoord</label>
                         <div class="inputWrapper">
                             <div class="inputIcon">
@@ -173,10 +181,10 @@
                         @error('password')
                             <p class="formError">{{ $message }}</p>
                         @enderror
-                    </div>
+                        </div>
 
-                    <!-- Bevestig Wachtwoord -->
-                    <div class="formGroup">
+                        <!-- Bevestig Wachtwoord -->
+                        <div class="formGroup">
                         <label for="password_confirmation" class="formLabel">Bevestig wachtwoord</label>
                         <div class="inputWrapper">
                             <div class="inputIcon">
@@ -193,6 +201,7 @@
                                 placeholder="Herhaal je wachtwoord"
                                 class="formInput formInput--withIcon"
                             >
+                        </div>
                         </div>
                     </div>
 
