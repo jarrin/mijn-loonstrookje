@@ -46,8 +46,8 @@ class PaymentController extends Controller
 
             $user = Auth::user();
             
-            // Check if user has completed registration (email verification + 2FA)
-            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+            // Check if user has completed registration (email verification + 2FA) - skip for test accounts
+            if (!$user->isTestAccount() && (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at)) {
                 // User is still in registration flow - redirect back to their step
                 if ($user->role === 'employer') {
                     if (session('pending_custom_subscription_id')) {
@@ -324,8 +324,8 @@ class PaymentController extends Controller
 
             $user = Auth::user();
             
-            // Check if user has completed registration (email verification + 2FA)
-            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+            // Check if user has completed registration (email verification + 2FA) - skip for test accounts
+            if (!$user->isTestAccount() && (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at)) {
                 // User is still in registration flow - redirect back to their step
                 return redirect()->route('registration.verify-and-secure')
                     ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');

@@ -48,8 +48,8 @@ class CustomSubscriptionFlowGuard
             return 1;
         }
         
-        // Ingelogd maar email niet geverifieerd OF 2FA niet geactiveerd = stap 2
-        if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+        // Ingelogd maar email niet geverifieerd OF 2FA niet geactiveerd = stap 2 (skip for test accounts)
+        if (!$user->isTestAccount() && (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at)) {
             return 2;
         }
         

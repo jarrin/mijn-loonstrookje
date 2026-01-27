@@ -20,13 +20,6 @@
 
 :root {
   --font-body: 'body', ui-sans-serif, system-ui, sans-serif;
-
-  .subscription-tile p,
-  .subscription-tile input {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
   --font-body-medium: 'body-medium',
   ui-sans-serif,
   system-ui,
@@ -39,6 +32,12 @@
   ui-sans-serif,
   system-ui,
   sans-serif;
+}
+
+.subscription-tile p,
+.subscription-tile input {
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 h1,
@@ -98,7 +97,6 @@ button,
 select,
 textarea {
   font-size: 22px;
-}
 }
 
 input[type="text"]:focus,

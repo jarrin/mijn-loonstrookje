@@ -85,4 +85,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role === $role;
     }
+
+    // Check if this is a test account
+    public function isTestAccount()
+    {
+        $testEmails = ['superadmin@test.com', 'admin@test.com', 'employer@test.com', 'employee@test.com'];
+        return in_array($this->email, $testEmails);
+    }
 }

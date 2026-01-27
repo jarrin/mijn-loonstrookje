@@ -14,10 +14,7 @@ class EnsureEmployerHasPaidSubscription
 
         if ($user) {
             // Skip all checks for test accounts
-            $testEmails = ['superadmin@test.com', 'admin@test.com', 'employer@test.com', 'employee@test.com'];
-            $isTestAccount = in_array($user->email, $testEmails);
-            
-            if ($isTestAccount) {
+            if ($user->isTestAccount()) {
                 return $next($request);
             }
             

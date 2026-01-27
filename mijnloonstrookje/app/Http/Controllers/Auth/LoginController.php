@@ -61,8 +61,8 @@ class LoginController extends Controller
 
         // Check registration completion for employers and employees
         if (in_array($user->role, ['employer', 'employee'])) {
-            // Check if email is not verified or 2FA is not set up
-            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+            // Check if email is not verified or 2FA is not set up (skip for test accounts)
+            if (!$user->isTestAccount() && (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at)) {
                 // Redirect to the verify-and-secure step based on role
                 if ($user->role === 'employer') {
                     // Check if they have a pending custom subscription
