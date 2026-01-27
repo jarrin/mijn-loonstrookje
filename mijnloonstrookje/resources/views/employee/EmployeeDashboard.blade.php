@@ -6,18 +6,6 @@
 <section>
     <h1 class="employee-page-title">Mijn Documenten</h1>
     <p class="employee-welcome-text">Welkom {{ auth()->user()->name }}, hier vind je al je documenten.</p>
-    
-    @if(session('success'))
-        <div class="employee-alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="employee-alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
 
     @include('components.TableFilterBar', [
         'filters' => [

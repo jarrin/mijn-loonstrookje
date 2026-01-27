@@ -13,18 +13,6 @@
     @endif
     
     <h1 class="employer-page-title">Documenten van {{ $employee->name ?? 'Alle Medewerkers' }}</h1>
-    
-    @if(session('success'))
-        <div class="employer-alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="employer-alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
 
     @include('components.TableFilterBar', [
         'filters' => [

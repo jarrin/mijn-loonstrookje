@@ -24,18 +24,6 @@
         @endif
     </h1>
     
-    @if(session('success'))
-        <div class="documents-alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    
-    @if(session('error'))
-        <div class="documents-alert-error">
-            {{ session('error') }}
-        </div>
-    @endif
-    
     <div class="documents-table-container">
         <table class="documents-table">
             <thead class="bg-gray-100">
