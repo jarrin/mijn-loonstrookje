@@ -45,6 +45,9 @@
     padding: 1.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .dashboard-tile:hover {
@@ -77,12 +80,17 @@
 }
 
 .tile-icon {
-    width: 3rem;
-    height: 3rem;
+    width: 4rem;
+    height: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+}
+
+.tile-icon svg {
+    width: 2rem;
+    height: 2rem;
 }
 
 .tile-time {
