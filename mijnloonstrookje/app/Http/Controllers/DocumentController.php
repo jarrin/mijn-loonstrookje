@@ -547,12 +547,17 @@ class DocumentController extends Controller
             'note' => $validated['note'],
         ]);
         
+        // Move the old document to deleted documents
+        $originalDocument->is_deleted = true;
+        $originalDocument->deleted_at = now();
+        $originalDocument->save();
+        
         // Log the document revision
         AuditLogService::logDocumentRevision($newDocument->id, $newDocument->company_id, $newVersion);
         
         return redirect()
             ->route('employer.employee.documents', $originalDocument->employee_id)
-            ->with('success', "Document succesvol bijgewerkt naar versie " . number_format($newVersion, 1));
+            ->with('success', "Document succesvol bijgewerkt naar versie " . number_format($newVersion, 1) . ". De vorige versie is verplaatst naar verwijderde documenten.");
     }
     
     /**
