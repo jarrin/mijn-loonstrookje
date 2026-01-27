@@ -311,6 +311,7 @@
 
         <form id="editForm" method="POST" enctype="multipart/form-data" class="employer-modal-body">
             @csrf
+            @method('PUT')
             
             <div class="employer-alert-info" style="background-color: #DBEAFE; border: 1px solid #93C5FD; color: #1E40AF; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;">
                 <strong>Let op:</strong> Het originele document blijft bewaard. Er wordt een nieuwe versie aangemaakt.
