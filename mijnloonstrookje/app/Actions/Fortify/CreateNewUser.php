@@ -20,8 +20,10 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
                 'string',
@@ -41,7 +43,7 @@ class CreateNewUser implements CreatesNewUsers
 
         // Maak eerst het bedrijf aan
         $company = Company::create([
-            'name' => $input['name'] . "'s Bedrijf",
+            'name' => $input['company_name'],
             'email' => $input['email'],
             'kvk_number' => $input['kvk_number'],
             'subscription_id' => null, // Wordt later gezet na betaling
