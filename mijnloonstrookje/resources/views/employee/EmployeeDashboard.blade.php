@@ -91,15 +91,7 @@
                         $versionCount = $allVersions->count();
                     @endphp
                     
-                    <div class="employee-version-container">
-                        <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
-                        
-                        @if($isLatest && $document->version > 1.0)
-                            <span class="employee-version-badge latest">
-                                NIEUWSTE
-                            </span>
-                        @endif
-                    </div>
+                    <span class="employee-version-number">v{{ number_format($document->version, 1) }}</span>
                 </td>
                 <td>{{ $document->formatted_size }}</td>
                 <td>{{ $document->created_at->format('d-m-Y') }}</td>
