@@ -7,6 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="registrationPage">
+    <x-page-background />
     <div class="registrationContainer">
         <div class="registrationWrapper">
             <!-- Header -->
@@ -40,7 +41,7 @@
 
                 <x-registration.status-messages />
 
-                <form action="{{ route('invitation.register', $invitation->token) }}" method="POST" class="formContainer">\n                    @csrf
+                <form action="{{ route('invitation.register', $invitation->token) }}" method="POST" class="formContainer">           @csrf
 
                     <!-- Naam en Email -->
                     <div class="formRow">
