@@ -59,6 +59,37 @@ class LoginController extends Controller
             return redirect()->route('payment.start', ['subscription' => $subscriptionId]);
         }
 
+        // Check registration completion for employers and employees
+        if (in_array($user->role, ['employer', 'employee'])) {
+            // Check if email is not verified or 2FA is not set up
+            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                // Redirect to the verify-and-secure step based on role
+                if ($user->role === 'employer') {
+                    // Check if they have a pending custom subscription
+                    if (session('pending_custom_subscription_id')) {
+                        return redirect()->route('registration.verify-and-secure');
+                    }
+                    return redirect()->route('employer.verify-and-secure');
+                } elseif ($user->role === 'employee') {
+                    return redirect()->route('employee.verify-and-secure');
+                }
+            }
+            
+            // For employers: Check if they have completed payment (if needed)
+            if ($user->role === 'employer') {
+                // If they have a pending subscription in session, redirect to payment
+                if (session('pending_subscription_id')) {
+                    return redirect()->route('payment.checkout', ['subscription' => session('pending_subscription_id')]);
+                }
+                
+                // If they have a pending custom subscription, redirect to custom payment
+                if (session('pending_custom_subscription_id')) {
+                    return redirect()->route('payment.custom-checkout', ['customSubscription' => session('pending_custom_subscription_id')]);
+                }
+            }
+        }
+
+        // Normal redirect based on role if registration is complete
         if (isset($user->role)) {
             switch ($user->role) {
                 case 'super_admin':

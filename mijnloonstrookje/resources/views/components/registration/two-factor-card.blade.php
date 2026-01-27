@@ -9,7 +9,7 @@
     $user = $user ?? auth()->user();
 @endphp
 
-<div class="border-2 {{ !$emailVerified ? 'border-gray-200 opacity-60' : ($has2FAConfirmed ? 'border-green-200 bg-green-50' : 'border-blue-500') }} rounded-xl p-5 mb-6">
+<div class="border-2 {{ !$emailVerified ? 'border-gray-200 bg-gray-50' : ($has2FAConfirmed ? 'border-green-200 bg-green-50' : 'border-blue-500') }} rounded-xl p-5 mb-6">
     <div class="flex items-start gap-4">
         <div class="w-10 h-10 {{ $has2FAConfirmed ? 'bg-green-100' : 'bg-purple-100' }} rounded-lg flex items-center justify-center flex-shrink-0">
             @if($has2FAConfirmed)

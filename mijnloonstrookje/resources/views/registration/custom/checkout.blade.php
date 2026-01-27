@@ -6,75 +6,73 @@
     <title>Account Registratie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-sky-50 min-h-screen">
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-xl">
+<body class="registrationPage">
+    <div class="registrationContainer">
+        <div class="registrationWrapper">
             <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Account registratie</h1>
-                <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
+            <div class="registrationHeader">
+                <h1 class="registrationTitle">Account registratie</h1>
+                <p class="registrationSubtitle">Voltooi de stappen om je account te activeren</p>
             </div>
 
             <!-- Step Progress -->
-            <div class="flex items-center justify-center mb-10">
+            <div class="stepProgress">
                 <!-- Step 1 - Completed -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold text-sm">
+                <div class="stepItem">
+                    <div class="stepCircle stepCircle--completed">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-medium text-gray-700">Maak account</p>
-                        <p class="text-xs text-gray-400">Persoonlijke gegevens</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--completed">Maak account</p>
+                        <p class="stepLabel__secondary">Persoonlijke gegevens</p>
                     </div>
                 </div>
 
-                <!-- Line 1-2 - Completed -->
-                <div class="w-24 h-0.5 bg-blue-500 mx-2 -mt-6"></div>
+                <div class="stepConnector stepConnector--active"></div>
 
                 <!-- Step 2 - Completed -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold text-sm">
+                <div class="stepItem">
+                    <div class="stepCircle stepCircle--completed">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-medium text-gray-700">Verifieer &</p>
-                        <p class="text-sm font-medium text-gray-700">beveilig</p>
-                        <p class="text-xs text-gray-400">Email en 2FA</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--completed">Verifieer &</p>
+                        <p class="stepLabel__primary stepLabel__primary--completed">beveilig</p>
+                        <p class="stepLabel__secondary">Email en 2FA</p>
                     </div>
                 </div>
 
-                <!-- Line 2-3 - Completed -->
-                <div class="w-24 h-0.5 bg-blue-500 mx-2 -mt-6"></div>
+                <div class="stepConnector stepConnector--active"></div>
 
                 <!-- Step 3 - Active -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold text-sm ring-4 ring-blue-100">
+                <div class="stepItem">
+                    <div class="stepCircle stepCircle--active">
                         3
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-semibold text-blue-500">Betalen</p>
-                        <p class="text-xs text-gray-400">Voltooi registratie</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--active">Betalen</p>
+                        <p class="stepLabel__secondary">Voltooi registratie</p>
                     </div>
                 </div>
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white rounded-2xl shadow-sm p-8">
+            <div class="registrationCard">
                 <!-- Header Icon -->
-                <div class="flex justify-center mb-4">
-                    <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center">
-                        <svg class="w-7 h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="cardIcon">
+                    <div class="cardIconCircle" style="background-color: rgb(209 250 229);">
+                        <svg style="color: rgb(16 185 129); width: 1.75rem; height: 1.75rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Voltooi je betaling</h2>
-                <p class="text-gray-500 text-center mb-8">Laatste stap om je account te activeren</p>
+                <h2 class="cardTitle">Voltooi je betaling</h2>
+                <p class="cardSubtitle">Laatste stap om je account te activeren</p>
 
                 <!-- Subscription Details Card -->
                 <div class="border border-gray-200 rounded-xl p-5 mb-4">
@@ -152,7 +150,7 @@
                     <form method="POST" action="{{ route('payment.start.custom', ['customSubscription' => $customSubscription->id]) }}" class="flex-1">
                         @csrf
                         <button type="submit" 
-                                class="w-full inline-flex justify-center items-center px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors cursor-pointer">
+                                class="formButton" style="display: inline-flex; justify-content: center; align-items: center;">
                             Betaal €{{ number_format($customSubscription->price, 0, ',', '.') }} via iDEAL
                             <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>

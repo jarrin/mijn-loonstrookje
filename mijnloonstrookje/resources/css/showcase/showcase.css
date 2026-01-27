@@ -114,6 +114,8 @@ body {
     position: relative;
     overflow: hidden;
     white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .nav-button::before {

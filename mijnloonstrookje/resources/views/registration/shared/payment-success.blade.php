@@ -6,77 +6,75 @@
     <title>Account Registratie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-sky-50 min-h-screen">
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-xl">
+<body class="registrationPage">
+    <div class="registrationContainer">
+        <div class="registrationWrapper">
             <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Account registratie</h1>
-                <p class="mt-2 text-gray-500">Gefeliciteerd! Je account is klaar</p>
+            <div class="registrationHeader">
+                <h1 class="registrationTitle">Account registratie</h1>
+                <p class="registrationSubtitle">Gefeliciteerd! Je account is klaar</p>
             </div>
 
             <!-- Step Progress - All completed -->
-            <div class="flex items-center justify-center mb-10">
+            <div class="stepProgress">
                 <!-- Step 1 - Completed -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-semibold text-sm">
+                <div class="stepItem">
+                    <div class="stepCircle" style="background-color: rgb(34 197 94); color: white;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-medium text-gray-700">Maak account</p>
-                        <p class="text-xs text-gray-400">Persoonlijke gegevens</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--completed">Maak account</p>
+                        <p class="stepLabel__secondary">Persoonlijke gegevens</p>
                     </div>
                 </div>
 
-                <!-- Line 1-2 - Completed -->
-                <div class="w-24 h-0.5 bg-green-500 mx-2 -mt-6"></div>
+                <div class="stepConnector" style="background-color: rgb(34 197 94);"></div>
 
                 <!-- Step 2 - Completed -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-semibold text-sm">
+                <div class="stepItem">
+                    <div class="stepCircle" style="background-color: rgb(34 197 94); color: white;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-medium text-gray-700">Verifieer &</p>
-                        <p class="text-sm font-medium text-gray-700">beveilig</p>
-                        <p class="text-xs text-gray-400">Email en 2FA</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--completed">Verifieer &</p>
+                        <p class="stepLabel__primary stepLabel__primary--completed">beveilig</p>
+                        <p class="stepLabel__secondary">Email en 2FA</p>
                     </div>
                 </div>
 
-                <!-- Line 2-3 - Completed -->
-                <div class="w-24 h-0.5 bg-green-500 mx-2 -mt-6"></div>
+                <div class="stepConnector" style="background-color: rgb(34 197 94);"></div>
 
                 <!-- Step 3 - Completed -->
-                <div class="flex flex-col items-center">
-                    <div class="w-10 h-10 rounded-full bg-green-500 text-white flex items-center justify-center font-semibold text-sm">
+                <div class="stepItem">
+                    <div class="stepCircle" style="background-color: rgb(34 197 94); color: white;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
-                    <div class="mt-2 text-center">
-                        <p class="text-sm font-medium text-gray-700">Betalen</p>
-                        <p class="text-xs text-gray-400">Voltooi registratie</p>
+                    <div class="stepLabel">
+                        <p class="stepLabel__primary stepLabel__primary--completed">Betalen</p>
+                        <p class="stepLabel__secondary">Voltooi registratie</p>
                     </div>
                 </div>
             </div>
 
             <!-- Main Card -->
-            <div class="bg-white rounded-2xl shadow-sm p-8">
+            <div class="registrationCard">
                 <!-- Header Icon -->
-                <div class="flex justify-center mb-4">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-9 h-9 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="cardIcon">
+                    <div style="width: 4rem; height: 4rem; background-color: rgb(220 252 231); border-radius: 9999px; display: flex; align-items: center; justify-content: center;">
+                        <svg style="width: 2.25rem; height: 2.25rem; color: rgb(22 163 74);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-900 text-center mb-1">Betaling geslaagd!</h2>
-                <p class="text-gray-500 text-center mb-8">Je account is succesvol geactiveerd</p>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: rgb(17 24 39); text-align: center; margin-bottom: 0.25rem;">Betaling geslaagd!</h2>
+                <p class="cardSubtitle">Je account is succesvol geactiveerd</p>
 
                 <div class="text-center">
                     @if($subscription)
@@ -143,7 +141,7 @@
 
                     <!-- Call to Action -->
                     <a href="{{ route('employer.dashboard') }}" 
-                       class="block w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg text-center transition-colors mb-4">
+                       class="formButton" style="display: block; text-align: center;">
                         Ga naar Dashboard →
                     </a>
                     

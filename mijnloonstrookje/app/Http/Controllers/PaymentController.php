@@ -44,8 +44,25 @@ class PaymentController extends Controller
                     ->with('info', 'Maak eerst een account aan om dit abonnement te kunnen aanschaffen: ' . $subscription->name);
             }
 
-            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
             $user = Auth::user();
+            
+            // Check if user has completed registration (email verification + 2FA)
+            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                // User is still in registration flow - redirect back to their step
+                if ($user->role === 'employer') {
+                    if (session('pending_custom_subscription_id')) {
+                        return redirect()->route('registration.verify-and-secure')
+                            ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                    }
+                    return redirect()->route('employer.verify-and-secure')
+                        ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                } elseif ($user->role === 'employee') {
+                    return redirect()->route('employee.verify-and-secure')
+                        ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                }
+            }
+
+            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
             $company = $user->company;
             
             if ($company && $company->subscription_id) {
@@ -224,20 +241,27 @@ class PaymentController extends Controller
     {
         try {
             $paymentId = $request->input('id');
-            
             if (!$paymentId) {
                 Log::warning('Webhook called without payment ID');
                 return response('No payment ID', 400);
             }
-
             $payment = $this->mollie->payments->get($paymentId);
-            
             Log::info('Webhook received', [
                 'payment_id' => $paymentId,
                 'status' => $payment->status,
                 'metadata' => $payment->metadata,
             ]);
-
+            // Factuurbetaling verwerken
+            if ($payment->isPaid() && isset($payment->metadata->invoice_id)) {
+                $invoice = \App\Models\Invoice::find($payment->metadata->invoice_id);
+                if ($invoice && $invoice->status !== 'paid') {
+                    $invoice->markAsPaid();
+                    Log::info('Invoice marked as paid via webhook', [
+                        'invoice_id' => $invoice->id,
+                        'payment_id' => $paymentId,
+                    ]);
+                }
+            }
             // Als betaling is geslaagd - LOG maar activeer NIET (test mode)
             if ($payment->isPaid()) {
                 $metadata = $payment->metadata;
@@ -275,7 +299,6 @@ class PaymentController extends Controller
                 'error' => $e->getMessage(),
                 'payment_id' => $request->input('id'),
             ]);
-
             return response('Error', 500);
         }
     }
@@ -300,6 +323,14 @@ class PaymentController extends Controller
             }
 
             $user = Auth::user();
+            
+            // Check if user has completed registration (email verification + 2FA)
+            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                // User is still in registration flow - redirect back to their step
+                return redirect()->route('registration.verify-and-secure')
+                    ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+            }
+            
             $company = $user->company;
             
             // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
@@ -403,23 +434,33 @@ class PaymentController extends Controller
                             // Betaling geslaagd!
                             if (Auth::check()) {
                                 $user = Auth::user();
-                                
+                                $company = $user->company;
                                 // Sla custom_subscription_id op in company
-                                if ($user->company) {
-                                    $user->company->update([
+                                if ($company) {
+                                    $company->update([
                                         'custom_subscription_id' => $customSubscription->id
                                     ]);
-                                    
                                     Log::info('Custom subscription activated for company', [
-                                        'company_id' => $user->company->id,
+                                        'company_id' => $company->id,
                                         'custom_subscription_id' => $customSubscription->id,
                                         'payment_id' => $payment->id,
                                     ]);
+
+                                    // Factuur genereren na succesvolle betaling
+                                    \App\Models\Invoice::create([
+                                        'company_id' => $company->id,
+                                        'custom_subscription_id' => $customSubscription->id,
+                                        'invoice_number' => \App\Models\Invoice::generateInvoiceNumber(),
+                                        'amount' => $customSubscription->price,
+                                        'description' => 'Custom abonnement: ' . $customSubscription->billing_period,
+                                        'status' => 'paid',
+                                        'issued_date' => now(),
+                                        'due_date' => now(),
+                                        'paid_at' => now(),
+                                    ]);
                                 }
-                                
                                 // Verwijder pending_custom_subscription_id uit sessie
                                 session()->forget('pending_custom_subscription_id');
-                                
                                 // Redirect naar success pagina
                                 return view('registration.shared.payment-success', [
                                     'subscription' => null,
@@ -445,5 +486,61 @@ class PaymentController extends Controller
         $redirectRoute = Auth::check() ? 'employer.dashboard' : 'website';
         return redirect()->route($redirectRoute)
             ->with('info', 'Terug van Mollie. Check de logs voor betaling status.');
+    }
+
+    /**
+     * Start betaling voor een losse factuur
+     */
+    public function startInvoicePayment(Request $request, \App\Models\Invoice $invoice)
+    {
+        if ($invoice->status === 'paid') {
+            return back()->with('error', 'Deze factuur is al betaald.');
+        }
+        $user = auth()->user();
+        if (!$user || $user->company_id !== $invoice->company_id) {
+            abort(403);
+        }
+        $mollie = new \Mollie\Api\MollieApiClient();
+        $mollie->setApiKey(config('services.mollie.key'));
+        $paymentData = [
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => number_format($invoice->amount, 2, '.', ''),
+            ],
+            'description' => 'Factuur #' . $invoice->invoice_number,
+            'redirectUrl' => route('payment.invoice.return', $invoice),
+            'metadata' => [
+                'invoice_id' => $invoice->id,
+                'company_id' => $invoice->company_id,
+                'user_id' => $user->id,
+            ],
+        ];
+        $appUrl = config('app.url');
+        if (!str_contains($appUrl, 'localhost') && !str_contains($appUrl, '127.0.0.1')) {
+            $paymentData['webhookUrl'] = route('payment.webhook');
+        }
+        $payment = $mollie->payments->create($paymentData);
+        $invoice->mollie_payment_id = $payment->id;
+        $invoice->save();
+        return redirect($payment->getCheckoutUrl());
+    }
+
+    /**
+     * Gebruiker komt hier terug na betaling van een losse factuur op Mollie
+     */
+    public function returnFromInvoicePayment(Request $request, \App\Models\Invoice $invoice)
+    {
+        // Alleen lokaal: update direct als betaald als Mollie het aangeeft
+        if (str_contains(config('app.url'), 'localhost') || str_contains(config('app.url'), '127.0.0.1')) {
+            $mollie = new \Mollie\Api\MollieApiClient();
+            $mollie->setApiKey(config('services.mollie.key'));
+            if ($invoice->mollie_payment_id) {
+                $payment = $mollie->payments->get($invoice->mollie_payment_id);
+                if ($payment->isPaid() && $invoice->status !== 'paid') {
+                    $invoice->markAsPaid();
+                }
+            }
+        }
+        return redirect()->route('employer.invoices')->with('success', 'Terug van Mollie. Factuurstatus bijgewerkt.');
     }
 }

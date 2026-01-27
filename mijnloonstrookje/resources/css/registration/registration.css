@@ -1,0 +1,687 @@
+/* ========================================
+   Registration Pages CSS
+   Convert all Tailwind utilities to semantic classes
+   ======================================== */
+
+/* === BASE & LAYOUT === */
+.registrationPage {
+    background-color: rgb(240 249 255);
+    /* bg-sky-50 */
+    min-height: 100vh;
+}
+
+.registrationContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    /* Increased from 3rem to 4rem for more vertical space */
+    position: relative;
+    z-index: 10;
+}
+
+@media (min-width: 640px) {
+    .registrationContainer {
+        padding-left: 1.5rem;
+        /* sm:px-6 */
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .registrationContainer {
+        padding-left: 2rem;
+        /* lg:px-8 */
+        padding-right: 2rem;
+    }
+}
+
+.registrationWrapper {
+    width: 100%;
+    max-width: 36rem;
+    /* max-w-xl */
+}
+
+/* === HEADER === */
+.registrationHeader {
+    text-align: center;
+    margin-bottom: 3rem;
+    /* Increased from 2rem to 3rem for more space before step progress */
+}
+
+.registrationTitle {
+    font-size: 1.875rem;
+    /* text-3xl */
+    font-weight: 700;
+    /* font-bold */
+    color: rgb(17 24 39);
+    /* text-gray-900 */
+    margin-bottom: 0.5rem;
+    /* Add space between title and subtitle */
+}
+
+.registrationSubtitle {
+    color: rgb(107 114 128);
+    /* text-gray-500 */
+    font-size: 1rem;
+    /* Slightly larger for better readability */
+    line-height: 1.5;
+}
+
+/* === STEP PROGRESS === */
+.stepProgress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3.5rem;
+    /* Increased from 2.5rem to 3.5rem for more space before card */
+    gap: 0.75rem;
+    /* Add gap between step items */
+}
+
+.stepItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stepCircle {
+    width: 2.5rem;
+    /* w-10 */
+    height: 2.5rem;
+    /* h-10 */
+    border-radius: 9999px;
+    /* rounded-full */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    /* font-semibold */
+    font-size: 0.875rem;
+    /* text-sm */
+}
+
+/* Step States */
+.stepCircle--active {
+    background-color: rgb(59 130 246);
+    /* bg-blue-500 */
+    color: white;
+    box-shadow: 0 0 0 4px rgb(219 234 254);
+    /* ring-4 ring-blue-100 */
+}
+
+.stepCircle--completed {
+    background-color: rgb(59 130 246);
+    /* bg-blue-500 */
+    color: white;
+}
+
+.stepCircle--inactive {
+    background-color: white;
+    /* bg-white */
+    border: 2px solid rgb(229 231 235);
+    /* border-2 border-gray-200 */
+    color: rgb(156 163 175);
+    /* text-gray-400 */
+}
+
+.stepLabel {
+    margin-top: 0.5rem;
+    /* mt-2 */
+    text-align: center;
+}
+
+.stepLabel__primary {
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 600;
+    /* font-semibold */
+}
+
+.stepLabel__primary--active {
+    color: rgb(59 130 246);
+    /* text-blue-500 */
+}
+
+.stepLabel__primary--completed {
+    color: rgb(75 85 99);
+    /* text-gray-600 */
+    font-weight: 500;
+    /* font-medium */
+}
+
+.stepLabel__primary--inactive {
+    color: rgb(156 163 175);
+    /* text-gray-400 */
+    font-weight: 500;
+    /* font-medium */
+}
+
+.stepLabel__secondary {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: rgb(156 163 175);
+    /* text-gray-400 */
+}
+
+.stepConnector {
+    width: 6rem;
+    /* w-24 */
+    height: 0.125rem;
+    /* h-0.5 */
+    margin-left: 0.5rem;
+    /* mx-2 */
+    margin-right: 0.5rem;
+    margin-top: -1.5rem;
+    /* -mt-6 */
+}
+
+.stepConnector--active {
+    background-color: rgb(59 130 246);
+    /* bg-blue-500 */
+}
+
+.stepConnector--inactive {
+    background-color: rgb(229 231 235);
+    /* bg-gray-200 */
+}
+
+/* === MAIN CARD === */
+.registrationCard {
+    background-color: white;
+    /* bg-white */
+    border-radius: 1rem;
+    /* rounded-2xl */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    /* shadow-sm */
+    padding: 2.5rem;
+    /* Increased from 2rem to 2.5rem for more breathing room inside card */
+}
+
+.cardIcon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    /* Increased from 1rem to 1.5rem for more space after icon */
+    /* mb-4 */
+}
+
+.cardIconCircle {
+    width: 3.5rem;
+    /* w-14 */
+    height: 3.5rem;
+    /* h-14 */
+    border-radius: 9999px;
+    /* rounded-full */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardIconCircle--blue {
+    background-color: rgb(239 246 255);
+    /* bg-blue-50 */
+}
+
+.cardIconCircle--purple {
+    background-color: rgb(250 245 255);
+    /* bg-purple-100 */
+}
+
+.cardIcon svg {
+    width: 1.75rem;
+    /* w-7 */
+    height: 1.75rem;
+    /* h-7 */
+}
+
+.cardIcon--blue svg {
+    color: rgb(59 130 246);
+    /* text-blue-500 */
+}
+
+.cardIcon--purple svg {
+    color: rgb(147 51 234);
+    /* text-purple-600 */
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    /* text-xl */
+    font-weight: 700;
+    /* font-bold */
+    color: rgb(17 24 39);
+    margin-bottom: 0.5rem;
+    /* Add spacing after title */
+    /* text-gray-900 */
+    text-align: center;
+    margin-bottom: 0.25rem;
+    /* mb-1 */
+}
+
+.cardSubtitle {
+    color: rgb(107 114 128);
+    /* text-gray-500 */
+    text-align: center;
+    margin-bottom: 2.5rem;
+    /* Increased from 2rem to 2.5rem for more space before form/content */
+    line-height: 1.5;
+}
+
+/* === FORM ELEMENTS === */
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    /* Replaces space-y-5 - consistent gap between all form fields */
+}
+
+.formGroup {
+    margin-bottom: 1.75rem;
+    /* Increased from 1.25rem to 1.75rem for more space between fields */
+}
+
+.formLabel {
+    display: block;
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 500;
+    /* font-medium */
+    color: rgb(55 65 81);
+    /* text-gray-700 */
+    margin-bottom: 0.5rem;
+    /* Increased from 0.375rem to 0.5rem for better separation */
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.inputIcon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    padding-left: 0.75rem;
+    /* pl-3 */
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+}
+
+.inputIcon svg {
+    height: 1.25rem;
+    /* h-5 */
+    width: 1.25rem;
+    /* w-5 */
+    color: rgb(156 163 175);
+    /* text-gray-400 */
+}
+
+.formInput {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 0.75rem;
+    /* Increased vertical padding from 0.75rem to 0.875rem for taller inputs */
+    border: 1px solid rgb(229 231 235);
+    /* border-gray-200 */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    color: rgb(17 24 39);
+    /* text-gray-900 */
+    font-size: 0.9375rem;
+    /* Slightly larger text for better readability */
+}
+
+.formInput::placeholder {
+    color: rgb(156 163 175);
+    /* placeholder-gray-400 */
+}
+
+.formInput:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(59 130 246);
+    /* ring-2 ring-blue-500 */
+    border-color: transparent;
+    /* border-transparent */
+}
+
+.formInput--withIcon {
+    padding-left: 2.5rem;
+    /* pl-10 */
+}
+
+.formInput--disabled {
+    color: rgb(107 114 128);
+    /* text-gray-500 */
+    background-color: rgb(249 250 251);
+    /* bg-gray-50 */
+}
+
+.formError {
+    margin-top: 0.5rem;
+    /* Increased from 0.25rem to 0.5rem for better separation */
+    font-size: 0.875rem;
+    /* text-sm */
+    color: rgb(220 38 38);
+    /* text-red-600 */
+}
+
+.formButton {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    /* Increased from 0.75rem to 1rem for larger click area */
+    background: linear-gradient(to right, rgb(59 130 246), rgb(37 99 235));
+    /* bg-blue-500 hover:bg-blue-600 */
+    color: white;
+    font-weight: 500;
+    /* font-medium */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+    /* Larger button text */
+    margin-top: 0.5rem;
+    /* Add top margin for separation from last form field */
+}
+
+.formButton:hover {
+    background: linear-gradient(to right, rgb(37 99 235), rgb(29 78 216));
+}
+
+.formButton--secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    /* py-3 px-6 */
+    border: 1px solid rgb(229 231 235);
+    /* border-gray-300 */
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 500;
+    /* font-medium */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    color: rgb(55 65 81);
+    /* text-gray-700 */
+    background-color: white;
+    /* bg-white */
+}
+
+.formButton--secondary:hover {
+    background-color: rgb(249 250 251);
+    /* hover:bg-gray-50 */
+}
+
+/* === STATUS MESSAGES === */
+.statusMessage {
+    margin-bottom: 2rem;
+    /* Increased from 1.5rem to 2rem for more separation */
+    padding: 1.125rem;
+    /* Increased from 1rem to 1.125rem for more comfortable reading */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    display: flex;
+    align-items: flex-start;
+    gap: 0.875rem;
+    /* Increased gap from 0.75rem to 0.875rem */
+}
+
+.statusMessage--success {
+    background-color: rgb(240 253 244);
+    /* bg-green-50 */
+    border: 1px solid rgb(187 247 208);
+    /* border-green-200 */
+}
+
+.statusMessage--error {
+    background-color: rgb(254 242 242);
+    /* bg-red-50 */
+    border: 1px solid rgb(254 202 202);
+    /* border-red-200 */
+}
+
+.statusMessage--info {
+    background-color: rgb(239 246 255);
+    /* bg-blue-50 */
+    border: 1px solid rgb(191 219 254);
+    /* border-blue-200 */
+}
+
+.statusMessage svg {
+    width: 1.25rem;
+    /* w-5 */
+    height: 1.25rem;
+    /* h-5 */
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    /* mt-0.5 */
+}
+
+.statusMessage--success svg {
+    color: rgb(22 163 74);
+    /* text-green-600 */
+}
+
+.statusMessage--error svg {
+    color: rgb(220 38 38);
+    /* text-red-600 */
+}
+
+.statusMessage--info svg {
+    color: rgb(37 99 235);
+    /* text-blue-600 */
+}
+
+.statusMessage p {
+    font-size: 0.875rem;
+    /* text-sm */
+}
+
+.statusMessage--success p {
+    color: rgb(22 163 74);
+    /* text-green-600 */
+}
+
+.statusMessage--error p {
+    color: rgb(220 38 38);
+    /* text-red-600 */
+}
+
+.statusMessage--info p {
+    color: rgb(37 99 235);
+    /* text-blue-600 */
+}
+
+/* === STATUS CARDS === */
+.statusCard {
+    border: 2px solid;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    padding: 1.25rem;
+    /* p-5 */
+    margin-bottom: 2rem;
+    /* Increased for better separation between cards */
+    /* mb-6 */
+}
+
+.statusCard--pending {
+    border-color: rgb(229 231 235);
+    /* border-gray-200 */
+    background-color: rgb(249 250 251);
+    /* bg-gray-50 */
+}
+
+.statusCard--active {
+    border-color: rgb(59 130 246);
+    /* border-blue-500 */
+}
+
+.statusCard--success {
+    border-color: rgb(187 247 208);
+    /* border-green-200 */
+    background-color: rgb(240 253 244);
+    /* bg-green-50 */
+}
+
+.statusCardContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    /* gap-4 */
+}
+
+.statusCardIcon {
+    width: 2.5rem;
+    /* w-10 */
+    height: 2.5rem;
+    /* h-10 */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.statusCardIcon--blue {
+    background-color: rgb(219 234 254);
+    /* bg-blue-100 */
+}
+
+.statusCardIcon--purple {
+    background-color: rgb(243 232 255);
+    /* bg-purple-100 */
+}
+
+.statusCardIcon--green {
+    background-color: rgb(220 252 231);
+    /* bg-green-100 */
+}
+
+.statusCardIcon svg {
+    width: 1.25rem;
+    /* w-5 */
+    height: 1.25rem;
+    /* h-5 */
+}
+
+.statusCardIcon--blue svg {
+    color: rgb(37 99 235);
+    /* text-blue-600 */
+}
+
+.statusCardIcon--purple svg {
+    color: rgb(147 51 234);
+    /* text-purple-600 */
+}
+
+.statusCardIcon--green svg {
+    color: rgb(22 163 74);
+    /* text-green-600 */
+}
+
+.statusCardBody {
+    flex: 1;
+}
+
+.statusCardTitle {
+    font-weight: 600;
+    /* font-semibold */
+    color: rgb(17 24 39);
+    /* text-gray-900 */
+}
+
+.statusCardText {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: rgb(107 114 128);
+    /* text-gray-500 */
+    margin-top: 0.25rem;
+    /* mt-1 */
+}
+
+.statusCardText--success {
+    color: rgb(22 163 74);
+    /* text-green-600 */
+}
+
+.statusCardText--muted {
+    font-size: 0.75rem;
+    /* text-xs */
+    color: rgb(156 163 175);
+    /* text-gray-400 */
+    margin-top: 0.5rem;
+    /* mt-2 */
+    font-style: italic;
+}
+
+.statusCardActions {
+    display: flex;
+    gap: 0.75rem;
+    /* gap-3 */
+    margin-top: 1rem;
+    /* mt-4 */
+}
+
+/* === LINKS === */
+.textLink {
+    color: rgb(59 130 246);
+    /* text-blue-500 */
+    font-weight: 500;
+    /* font-medium */
+    transition: color 0.2s;
+    text-decoration: none;
+}
+
+.textLink:hover {
+    color: rgb(37 99 235);
+    /* hover:text-blue-600 */
+    text-decoration: underline;
+}
+
+.centerText {
+    text-align: center;
+    margin-top: 2rem;
+    /* Increased from 1.5rem to 2rem for more space above */
+}
+
+.centerText p {
+    font-size: 0.875rem;
+    /* text-sm */
+    color: rgb(107 114 128);
+    /* text-gray-500 */
+    line-height: 1.5;
+    /* Better line height for readability */
+}
+
+.centerText button,
+.centerText .textLink {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    /* Add some padding for better click area */
+    cursor: pointer;
+    font-size: 0.875rem;
+    /* Match paragraph text size */
+    display: inline-block;
+    margin-top: 0.5rem;
+    /* Small top margin */
+}
+
+/* === RESPONSIVE HELPERS === */
+@media (max-width: 640px) {
+    .registrationCard {
+        padding: 1.5rem;
+        /* Smaller padding on mobile */
+    }
+
+    .stepProgress {
+        font-size: 0.75rem;
+        /* Smaller text on mobile */
+    }
+}
