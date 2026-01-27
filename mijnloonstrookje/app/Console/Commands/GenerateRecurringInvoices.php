@@ -8,6 +8,8 @@ use App\Models\Invoice;
 use App\Models\Subscription;
 use App\Models\CustomSubscription;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvoiceCreated;
 
 class GenerateRecurringInvoices extends Command
 {
@@ -42,7 +44,7 @@ class GenerateRecurringInvoices extends Command
                 }
             }
             if ($shouldGenerate) {
-                Invoice::create([
+                $invoice = Invoice::create([
                     'company_id' => $company->id,
                     'subscription_id' => $subscription->id,
                     'invoice_number' => Invoice::generateInvoiceNumber(),
@@ -53,6 +55,11 @@ class GenerateRecurringInvoices extends Command
                     'due_date' => $today->copy()->addDays(14),
                 ]);
                 $count++;
+                // Stuur mail naar werkgever
+                $employer = $company->users()->where('role', 'employer')->first();
+                if ($employer) {
+                    Mail::to($employer->email)->send(new InvoiceCreated($invoice));
+                }
             }
         }
 
@@ -78,7 +85,7 @@ class GenerateRecurringInvoices extends Command
                 }
             }
             if ($shouldGenerate) {
-                Invoice::create([
+                $invoice = Invoice::create([
                     'company_id' => $company->id,
                     'custom_subscription_id' => $custom->id,
                     'invoice_number' => Invoice::generateInvoiceNumber(),
@@ -89,6 +96,11 @@ class GenerateRecurringInvoices extends Command
                     'due_date' => $today->copy()->addDays(14),
                 ]);
                 $count++;
+                // Stuur mail naar werkgever
+                $employer = $company->users()->where('role', 'employer')->first();
+                if ($employer) {
+                    Mail::to($employer->email)->send(new InvoiceCreated($invoice));
+                }
             }
         }
 

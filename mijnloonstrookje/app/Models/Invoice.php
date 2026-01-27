@@ -77,4 +77,19 @@ class Invoice extends Model
             'status' => 'cancelled',
         ]);
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($invoice) {
+            $company = $invoice->company;
+            if ($company) {
+                $employer = $company->users()->where('role', 'employer')->first();
+                if ($employer) {
+                    \Mail::to($employer->email)->send(new \App\Mail\InvoiceCreated($invoice));
+                }
+            }
+        });
+    }
 }

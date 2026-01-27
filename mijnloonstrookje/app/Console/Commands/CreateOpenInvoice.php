@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use App\Models\Company;
 use App\Models\Invoice;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvoiceCreated;
 
 class CreateOpenInvoice extends Command
 {
@@ -39,9 +41,15 @@ class CreateOpenInvoice extends Command
             'amount' => $amount,
             'description' => $description,
             'status' => 'pending',
-            'issued_date' => Carbon::today(),
-            'due_date' => Carbon::today()->addDays(14),
+            'issued_date' => now(),
+            'due_date' => now()->addDays(14),
         ]);
+
+        // Stuur mail naar werkgever
+        $employer = $company->users()->where('role', 'employer')->first();
+        if ($employer) {
+            Mail::to($employer->email)->send(new InvoiceCreated($invoice));
+        }
 
         $this->info('Openstaande factuur aangemaakt: #' . $invoice->invoice_number . ' voor bedrijf ' . $company->name . ' (€' . $amount . ')');
         return 0;
