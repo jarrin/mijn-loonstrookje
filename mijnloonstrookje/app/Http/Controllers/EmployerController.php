@@ -89,7 +89,35 @@ class EmployerController extends Controller
                             ->paginate(10)
                             ->appends(request()->query());
         
-        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice', 'recentLogs'));
+        // Bepaal volgende abonnementsbetaling (datum en bedrag)
+        $nextPaymentAmount = null;
+        $nextPaymentDate = null;
+        if ($company) {
+            if ($company->subscription) {
+                $nextPaymentAmount = $company->subscription->price;
+                // Zoek laatste factuur voor dit jaar/maand
+                $lastInvoice = $company->invoices()
+                    ->where('subscription_id', $company->subscription->id)
+                    ->orderByDesc('issued_date')
+                    ->first();
+                if ($lastInvoice) {
+                    $interval = $company->subscription->subscription_plan === 'jaarlijks' ? 'year' : 'month';
+                    $nextPaymentDate = $lastInvoice->issued_date->copy()->add($interval === 'year' ? '1 year' : '1 month');
+                }
+            } elseif ($company->customSubscription) {
+                $nextPaymentAmount = $company->customSubscription->price;
+                $lastInvoice = $company->invoices()
+                    ->where('custom_subscription_id', $company->customSubscription->id)
+                    ->orderByDesc('issued_date')
+                    ->first();
+                if ($lastInvoice) {
+                    $interval = $company->customSubscription->billing_period === 'jaarlijks' ? 'year' : 'month';
+                    $nextPaymentDate = $lastInvoice->issued_date->copy()->add($interval === 'year' ? '1 year' : '1 month');
+                }
+            }
+        }
+
+        return view('employer.EmployerDashboard', compact('company', 'employeeCount', 'maxEmployees', 'nextInvoice', 'recentLogs', 'nextPaymentAmount', 'nextPaymentDate'));
     }
 
     /**
