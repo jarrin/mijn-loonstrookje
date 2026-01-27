@@ -72,35 +72,11 @@
                 <!-- iDEAL Payment Card -->
                 <div class="paymentCard">
                     <div class="paymentCard__header">
-                        <div class="paymentCard__logo">
-                            <span>iDEAL</span>
-                        </div>
                         <div class="paymentCard__content">
-                            <h3 class="paymentCard__title">Veilig betalen met iDEAL</h3>
+                            <h3 class="paymentCard__title">Veilig betalen met Mollie</h3>
                             <p class="paymentCard__text">
-                                Je wordt doorgestuurd naar Mollie om veilig te betalen met iDEAL. Kies je eigen bank en voltooi de betaling in je vertrouwde bankieromgeving.
+                                Je wordt doorgestuurd naar Mollie om veilig te betalen. Kies je favoriete betaalmethode zoals iDEAL, creditcard of andere opties.
                             </p>
-                        </div>
-                    </div>
-
-                    <div class="paymentCard__features">
-                        <div class="paymentCard__feature paymentCard__feature--secure">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                            SSL beveiligd
-                        </div>
-                        <div class="paymentCard__feature paymentCard__feature--confirmed">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Direct bevestiging
-                        </div>
-                        <div class="paymentCard__feature paymentCard__feature--confirmed">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                            Gratis transactie
                         </div>
                     </div>
                 </div>
@@ -112,7 +88,7 @@
                         <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                         </svg>
-                        Betaal €{{ number_format($subscription->price, 2, ',', '.') }} via iDEAL
+                        Betaal €{{ number_format($subscription->price, 2, ',', '.') }} met Mollie
                     </button>
                 </form>
 
