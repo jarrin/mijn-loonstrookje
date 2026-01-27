@@ -278,7 +278,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Public invitation routes (not requiring authentication)
 Route::get('/invitation/accept/{token}', [InvitationController::class, 'acceptInvitation'])->name('invitation.accept');
-Route::post('/invitation/register/{token}', [InvitationController::class, 'register'])->name('invitation.register');
+Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');
 
 // Payment routes
 Route::post('/payment/start/{subscription}', [PaymentController::class, 'startPayment'])->name('payment.start');
