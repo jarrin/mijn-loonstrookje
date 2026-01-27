@@ -10,47 +10,83 @@
     <div class="dashboard-tiles">
         <!-- Tile 1: Company Info with Date/Time -->
         <div class="dashboard-tile">
-            <h3 class="tile-company-name">{{ $company ? $company->name : 'DMG' }}</h3>
-            <div class="tile-time" id="current-time">12:38</div>
-            <div class="tile-date" id="current-date">Dinsdag, 29-10</div>
+            <div class="tile-top">
+                <div class="tile-header">
+                    <h3 class="tile-company-name">{{ $company ? $company->name : 'DMG' }}</h3>
+                    <div class="tile-icon" style="background-color: rgba(139, 92, 246, 0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-icon lucide-clock"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-bottom">
+                <div class="tile-time" id="current-time">12:38</div>
+                <div class="tile-date" id="current-date">Dinsdag, 29-10</div>
+            </div>
         </div>
 
         <!-- Tile 2: Total Employees -->
         <div class="dashboard-tile">
-            <h3 class="tile-title">Totaal aantal<br>werknemers</h3>
-            <div class="tile-number">{{ $employeeCount }}</div>
-            <div class="tile-subtitle">van de {{ $maxEmployees }}</div>
+            <div class="tile-top">
+                <div class="tile-header">
+                    <h3 class="tile-title">Totaal aantal<br>werknemers</h3>
+                    <div class="tile-icon" style="background-color: rgba(59, 130, 246, 0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-icon lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><path d="M16 3.128a4 4 0 0 1 0 7.744"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-bottom">
+                <div class="tile-number">{{ $employeeCount }}</div>
+                <div class="tile-subtitle">van de {{ $maxEmployees }}</div>
+            </div>
         </div>
 
         <!-- Tile 3: Subscription Plan -->
         <div class="dashboard-tile">
-            <h3 class="tile-title">Mijn huidige<br>abonnement</h3>
-            @php
-                $subscriptionName = 'Geen abonnement';
-                $subscriptionPrice = 0;
-                
-                if ($company && $company->subscription) {
-                    $subscriptionName = ucfirst($company->subscription->subscription_plan);
-                    $subscriptionPrice = $company->subscription->price;
-                } elseif ($company && $company->customSubscription) {
-                    $subscriptionName = $company->customSubscription->title;
-                    $subscriptionPrice = $company->customSubscription->price;
-                }
-            @endphp
-            <div class="tile-plan-name">{{ $subscriptionName }}</div>
-            <div class="tile-price">€{{ number_format($subscriptionPrice, 2, ',', '.') }}</div>
+            <div class="tile-top">
+                <div class="tile-header">
+                    <h3 class="tile-title">Mijn huidige<br>abonnement</h3>
+                    <div class="tile-icon" style="background-color: rgba(34, 197, 94, 0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-icon lucide-package"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-bottom">
+                @php
+                    $subscriptionName = 'Geen abonnement';
+                    $subscriptionPrice = 0;
+                    
+                    if ($company && $company->subscription) {
+                        $subscriptionName = ucfirst($company->subscription->subscription_plan);
+                        $subscriptionPrice = $company->subscription->price;
+                    } elseif ($company && $company->customSubscription) {
+                        $subscriptionName = $company->customSubscription->title;
+                        $subscriptionPrice = $company->customSubscription->price;
+                    }
+                @endphp
+                <div class="tile-plan-name">{{ $subscriptionName }}</div>
+                <div class="tile-price">€{{ number_format($subscriptionPrice, 2, ',', '.') }}</div>
+            </div>
         </div>
 
         <!-- Tile 4: Next Payment -->
         <div class="dashboard-tile">
-            <h3 class="tile-title">Eerstvolgende<br>betaling</h3>
-            @if($nextInvoice)
-                <div class="tile-amount">€{{ number_format($nextInvoice->amount, 2, ',', '.') }}</div>
-                <div class="tile-due-date">{{ $nextInvoice->due_date->format('j F Y') }}</div>
-            @else
-                <div class="tile-amount">€0,00</div>
-                <div class="tile-due-date">Geen openstaande facturen</div>
-            @endif
+            <div class="tile-top">
+                <div class="tile-header">
+                    <h3 class="tile-title">Eerstvolgende<br>betaling</h3>
+                    <div class="tile-icon" style="background-color: rgba(251, 191, 36, 0.1);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="tile-bottom">
+                @if($nextInvoice)
+                    <div class="tile-amount">€{{ number_format($nextInvoice->amount, 2, ',', '.') }}</div>
+                    <div class="tile-due-date">{{ $nextInvoice->due_date->format('j F Y') }}</div>
+                @else
+                    <div class="tile-amount">€0,00</div>
+                    <div class="tile-due-date">Geen openstaande facturen</div>
+                @endif
+            </div>
         </div>
     </div>
     
