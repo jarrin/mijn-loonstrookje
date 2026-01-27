@@ -63,7 +63,13 @@
                         $subscriptionPrice = $company->customSubscription->price;
                     }
                 @endphp
-                <div class="tile-plan-name">{{ $subscriptionName }}</div>
+                <div class="tile-plan-name">
+                    @if($company && $company->customSubscription)
+                        Custom {{ $subscriptionName }}
+                    @else
+                        {{ $subscriptionName }}
+                    @endif
+                </div>
                 <div class="tile-price">€{{ number_format($subscriptionPrice, 2, ',', '.') }}</div>
             </div>
         </div>
@@ -72,19 +78,19 @@
         <div class="dashboard-tile">
             <div class="tile-top">
                 <div class="tile-header">
-                    <h3 class="tile-title">Eerstvolgende<br>betaling</h3>
+                    <h3 class="tile-title">Eerstvolgende<br>factuur</h3>
                     <div class="tile-icon" style="background-color: rgba(251, 191, 36, 0.1);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days-icon lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
                     </div>
                 </div>
             </div>
             <div class="tile-bottom">
-                @if($nextInvoice)
-                    <div class="tile-amount">€{{ number_format($nextInvoice->amount, 2, ',', '.') }}</div>
-                    <div class="tile-due-date">{{ $nextInvoice->due_date->format('j F Y') }}</div>
+                @if($nextPaymentAmount && $nextPaymentDate)
+                    <div class="tile-amount">€{{ number_format($nextPaymentAmount, 2, ',', '.') }}</div>
+                    <div class="tile-due-date">{{ $nextPaymentDate->format('j F Y') }}</div>
                 @else
                     <div class="tile-amount">€0,00</div>
-                    <div class="tile-due-date">Geen openstaande facturen</div>
+                    <div class="tile-due-date">Geen toekomstige betaling gepland</div>
                 @endif
             </div>
         </div>
