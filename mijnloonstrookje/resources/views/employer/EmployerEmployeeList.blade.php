@@ -46,7 +46,11 @@
             <tr>
                 <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->name }}</td>
                 <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">{{ $employee->email }}</td>
-                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">Actief</td>
+                <td style="cursor: pointer;" onclick="window.location='{{ route('employer.employee.documents', $employee->id) }}'">
+                    <span style="padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-block; background-color: rgba(4, 211, 0, 0.3); color: #00BC0D;">
+                        Actief
+                    </span>
+                </td>
                 <td class="icon-cell">
                     <form action="{{ route('employer.employee.destroy', $employee->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Weet je zeker dat je deze medewerker wilt verwijderen?');">
                         @csrf
