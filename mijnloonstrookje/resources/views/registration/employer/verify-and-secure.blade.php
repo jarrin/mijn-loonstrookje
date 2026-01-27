@@ -32,8 +32,6 @@
                 <h2 class="cardTitle">Verifieer en beveilig</h2>
                 <p class="cardSubtitle">Bevestig je e-mail en activeer tweestapsverificatie</p>
 
-                <x-registration.status-messages />
-
                 @php
                     $user = auth()->user();
                     $emailVerified = $user && $user->hasVerifiedEmail();

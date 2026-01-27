@@ -33,8 +33,6 @@
                 <h2 class="cardTitle">Maak je account aan</h2>
                 <p class="cardSubtitle" style="margin-bottom: 1.5rem;">Vul je gegevens in om te beginnen</p>
 
-                <x-registration.status-messages />
-
                 @if(session('subscription_id'))
                     <!-- <div class="statusMessage statusMessage--info">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
