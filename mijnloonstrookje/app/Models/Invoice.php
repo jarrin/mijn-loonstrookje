@@ -12,8 +12,14 @@ class Invoice extends Model
     protected $fillable = [
         'company_id',
         'mollie_invoice_id',
+        'mollie_payment_id',
+        'subscription_id',
+        'custom_subscription_id',
+        'invoice_number',
         'amount',
+        'description',
         'status',
+        'issued_date',
         'due_date',
         'paid_at',
     ];
@@ -22,6 +28,7 @@ class Invoice extends Model
     {
         return [
             'amount' => 'decimal:2',
+            'issued_date' => 'date',
             'due_date' => 'date',
             'paid_at' => 'datetime',
         ];
@@ -31,5 +38,43 @@ class Invoice extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
+    }
+
+    public function customSubscription()
+    {
+        return $this->belongsTo(CustomSubscription::class);
+    }
+
+    // Helper methods
+    public static function generateInvoiceNumber()
+    {
+        $year = now()->year;
+        $lastInvoice = self::whereYear('created_at', $year)
+            ->orderBy('id', 'desc')
+            ->first();
+        
+        $number = $lastInvoice ? (int) substr($lastInvoice->invoice_number, -4) + 1 : 1;
+        
+        return 'INV-' . $year . '-' . str_pad($number, 4, '0', STR_PAD_LEFT);
+    }
+
+    public function markAsPaid()
+    {
+        $this->update([
+            'status' => 'paid',
+            'paid_at' => now(),
+        ]);
+    }
+
+    public function markAsCancelled()
+    {
+        $this->update([
+            'status' => 'cancelled',
+        ]);
     }
 }

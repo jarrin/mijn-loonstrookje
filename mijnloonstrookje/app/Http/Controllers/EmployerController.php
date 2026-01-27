@@ -8,6 +8,26 @@ use App\Models\User;
 
 class EmployerController extends Controller
 {
+    /**
+     * Toon alle facturen van het bedrijf van de werkgever.
+     */
+    public function invoices()
+    {
+        if (auth()->user()->role !== 'employer') {
+            abort(403, 'Unauthorized access');
+        }
+
+        $company = auth()->user()->company;
+        if (!$company) {
+            $invoices = collect();
+        } else {
+            $invoices = \App\Models\Invoice::where('company_id', $company->id)
+                ->orderByDesc('issued_date')
+                ->get();
+        }
+
+        return view('employer.EmployerInvoices', compact('invoices', 'company'));
+    }
     public function __construct()
     {
         // Authentication and role verification handled by route middleware

@@ -428,23 +428,33 @@ class PaymentController extends Controller
                             // Betaling geslaagd!
                             if (Auth::check()) {
                                 $user = Auth::user();
-                                
+                                $company = $user->company;
                                 // Sla custom_subscription_id op in company
-                                if ($user->company) {
-                                    $user->company->update([
+                                if ($company) {
+                                    $company->update([
                                         'custom_subscription_id' => $customSubscription->id
                                     ]);
-                                    
                                     Log::info('Custom subscription activated for company', [
-                                        'company_id' => $user->company->id,
+                                        'company_id' => $company->id,
                                         'custom_subscription_id' => $customSubscription->id,
                                         'payment_id' => $payment->id,
                                     ]);
+
+                                    // Factuur genereren na succesvolle betaling
+                                    \App\Models\Invoice::create([
+                                        'company_id' => $company->id,
+                                        'custom_subscription_id' => $customSubscription->id,
+                                        'invoice_number' => \App\Models\Invoice::generateInvoiceNumber(),
+                                        'amount' => $customSubscription->price,
+                                        'description' => 'Custom abonnement: ' . $customSubscription->billing_period,
+                                        'status' => 'paid',
+                                        'issued_date' => now(),
+                                        'due_date' => now(),
+                                        'paid_at' => now(),
+                                    ]);
                                 }
-                                
                                 // Verwijder pending_custom_subscription_id uit sessie
                                 session()->forget('pending_custom_subscription_id');
-                                
                                 // Redirect naar success pagina
                                 return view('registration.shared.payment-success', [
                                     'subscription' => null,

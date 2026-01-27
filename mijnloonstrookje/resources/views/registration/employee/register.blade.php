@@ -6,14 +6,13 @@
     <title>Account Registratie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="registrationPage">
-    <x-page-background />
-    <div class="registrationContainer">
-        <div class="registrationWrapper">
+<body class="bg-sky-50 min-h-screen">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-xl">
             <!-- Header -->
-            <div class="registrationHeader">
-                <h1 class="registrationTitle">Account registratie</h1>
-                <p class="registrationSubtitle">Voltooi de stappen om je account te activeren</p>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Account registratie</h1>
+                <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
             </div>
 
             <!-- Step Progress - 2 stappen voor employee -->
@@ -26,30 +25,30 @@
             <x-registration.step-progress :currentStep="1" :steps="$steps" :showPaymentStep="false" />
 
             <!-- Main Card -->
-            <div class="registrationCard">
+            <div class="bg-white rounded-2xl shadow-sm p-8">
                 <!-- Header Icon -->
-                <div class="cardIcon cardIcon--blue">
-                    <div class="cardIconCircle cardIconCircle--blue">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex justify-center mb-4">
+                    <div class="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="cardTitle">Maak je account aan</h2>
-                <p class="cardSubtitle">Je bent uitgenodigd door {{ $invitation->company->name ?? 'een werkgever' }}</p>
+                <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Maak je account aan</h2>
+                <p class="text-gray-500 text-center mb-8">Je bent uitgenodigd door {{ $invitation->company->name ?? 'een werkgever' }}</p>
 
                 <x-registration.status-messages />
 
-                <form action="{{ route('invitation.register', $invitation->token) }}" method="POST" class="formContainer">
+                <form action="{{ route('invitation.register', $invitation->token) }}" method="POST" class="space-y-5">
                     @csrf
 
                     <!-- Volledige naam -->
-                    <div class="formGroup">
-                        <label for="name" class="formLabel">Volledige naam</label>
-                        <div class="inputWrapper">
-                            <div class="inputIcon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1.5">Volledige naam</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
                             </div>
@@ -61,11 +60,11 @@
                                 required
                                 autofocus
                                 placeholder="Jan Jansen"
-                                class="formInput formInput--withIcon"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             >
                         </div>
                         @error('name')
-                            <p class="formError">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -186,15 +185,15 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="formButton">
+                    <button type="submit" class="w-full py-3 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors">
                         Account aanmaken
                     </button>
                 </form>
 
-                <div class="centerText">
-                    <p>
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-500">
                         Heb je al een account? 
-                        <a href="{{ route('login') }}" class="textLink">Log hier in</a>
+                        <a href="{{ route('login') }}" class="text-blue-500 hover:text-blue-600 font-medium">Log hier in</a>
                     </p>
                 </div>
             </div>

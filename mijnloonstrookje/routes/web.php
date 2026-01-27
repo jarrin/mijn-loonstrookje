@@ -69,6 +69,8 @@ Route::middleware(['auth', 'verified', 'paid.subscription'])->group(function () 
         Route::get('/employer/employees', [EmployerController::class, 'employees'])->name('employer.employees');
         Route::delete('/employer/employees/{employee}', [EmployerController::class, 'destroyEmployee'])->name('employer.employee.destroy');
         Route::get('/employer/documents', [EmployerController::class, 'documents'])->name('employer.documents');
+        // Facturen overzicht voor werkgever
+        Route::get('/employer/invoices', [App\Http\Controllers\EmployerController::class, 'invoices'])->name('employer.invoices');
         
         // Administration office management routes
         Route::get('/employer/admin-offices', [EmployerController::class, 'adminOffices'])->name('employer.admin-offices');

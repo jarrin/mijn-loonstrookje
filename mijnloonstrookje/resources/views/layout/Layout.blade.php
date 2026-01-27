@@ -144,6 +144,10 @@
                             {!! file_get_contents(resource_path('assets/icons/documents.svg')) !!}
                             <span>Documenten</span>
                         </a>
+                        <a href="{{ route('employer.invoices') }}" class="{{ request()->routeIs('employer.invoices*') ? 'active' : '' }}">
+                            {!! file_get_contents(resource_path('assets/icons/invoice.svg')) !!}
+                            <span>Facturen</span>
+                        </a>
                         <a href="{{ route('employer.admin-offices') }}" class="{{ request()->routeIs('employer.admin-offices') ? 'active' : '' }}">
                             {!! file_get_contents(resource_path('assets/icons/briefcase.svg')) !!}
                             <span>Administratiebureau's</span>
