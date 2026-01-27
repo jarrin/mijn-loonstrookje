@@ -34,15 +34,15 @@
                     <td>{{ $office->email }}</td>
                     <td>
                         @php
-                            $status = $office->pivot->status ?? 'pending';
-                            $statusLabels = [
-                                'active' => 'Actief',
-                                'pending' => 'In behandeling',
-                                'inactive' => 'Inactief'
-                            ];
+                            $status = $office->pivot->status ?? 'active';
+                            $statusColors = match($status) {
+                                'active' => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D', 'label' => 'Actief'],
+                                'inactive' => ['bg' => 'rgba(107, 114, 128, 0.3)', 'text' => '#6B7280', 'label' => 'Inactief'],
+                                default => ['bg' => 'rgba(4, 211, 0, 0.3)', 'text' => '#00BC0D', 'label' => 'Actief']
+                            };
                         @endphp
-                        <span class="employer-status-badge employer-status-{{ $status }}">
-                            {{ $statusLabels[$status] ?? ucfirst($status) }}
+                        <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; background-color: {{ $statusColors['bg'] }}; color: {{ $statusColors['text'] }};">
+                            {{ $statusColors['label'] }}
                         </span>
                     </td>
                     <td class="icon-cell">
@@ -66,14 +66,18 @@
                 <tr>
                     <td style="opacity: 0.6;">{{ $invitation->invitation_type === 'new_account' ? 'Nieuw account' : 'Bestaand account' }}</td>
                     <td>{{ $invitation->email }}</td>
-                    <td><span class="status-label" style="background-color: #FFA500;">Uitnodiging verstuurd</span></td>
+                    <td>
+                        <span style="display: inline-block; padding: 0.3rem 0.8rem; border-radius: 50px; font-size: 0.75rem; background-color: rgba(255, 165, 0, 0.3); color: #FF8C00;">
+                            Uitnodiging verstuurd
+                        </span>
+                    </td>
                     <td class="icon-cell">
                         <form action="{{ route('invitation.delete', $invitation->id) }}" method="POST" style="display: inline;" 
                               onsubmit="return confirm('Weet je zeker dat je de uitnodiging voor {{ $invitation->email }} wilt verwijderen?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="icon-btn icon-btn-destructive" title="Uitnodiging verwijderen">
-                                {!! file_get_contents(resource_path('assets/icons/trashbin.svg')) !!}
+                            <button type="submit" class="document-action-delete" title="Uitnodiging verwijderen">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
                             </button>
                         </form>
                     </td>
@@ -147,9 +151,8 @@
                 <div class="employer-form-group">
                     <div>
                         <label for="editAdminOfficeStatus" class="employer-form-label">Toegangsstatus</label>
-                        <select id="editAdminOfficeStatus" name="status" required class="employer-form-select">
+                        <select id="editAdminOfficeStatus" name="status" required class="employer-form-input">
                             <option value="active">Actief</option>
-                            <option value="pending">In behandeling</option>
                             <option value="inactive">Inactief</option>
                         </select>
                     </div>
@@ -185,7 +188,7 @@
 
         document.getElementById('editAdminOfficeName').textContent = office.name || '';
         document.getElementById('editAdminOfficeEmail').textContent = office.email || '';
-        document.getElementById('editAdminOfficeStatus').value = office.pivot?.status || 'pending';
+        document.getElementById('editAdminOfficeStatus').value = office.pivot?.status || 'active';
 
         modal.style.display = 'flex';
     }
