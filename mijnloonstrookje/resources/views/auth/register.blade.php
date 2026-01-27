@@ -51,6 +51,7 @@
                         <input type="hidden" name="subscription_id" value="{{ session('subscription_id') }}">
                     @endif
 
+
                     <!-- Volledige naam -->
                     <div class="formGroup">
                         <label for="name" class="formLabel">Volledige naam</label>
@@ -73,6 +74,30 @@
                         </div>
                         @error('name')
                             <p class="formError">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Bedrijfsnaam -->
+                    <div>
+                        <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1.5">Bedrijfsnaam</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="company_name" 
+                                name="company_name" 
+                                value="{{ old('company_name') }}"
+                                required
+                                placeholder="Mijn Bedrijf BV"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                        </div>
+                        @error('company_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 

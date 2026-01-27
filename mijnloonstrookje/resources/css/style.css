@@ -855,3 +855,16 @@ table#super-admin-facturation {
     background: #FEF3C7;
     color: #F59E0B;
 }
+
+
+
+
+
+
+
+@media screen and (max-width: 1150px) {
+    .loginContainer {
+        padding: 40px 30px;
+        margin: 1rem;
+    }
+}

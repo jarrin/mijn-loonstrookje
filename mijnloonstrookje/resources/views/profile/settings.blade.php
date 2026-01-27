@@ -5,6 +5,26 @@
 @section('content')
 <div class="settings-page">
     <div class="settings-container">
+        <!-- Mobile Back Button -->
+        @auth
+            @if(auth()->user()->hasRole('employee'))
+                <a href="{{ route('employee.documents') }}" class="mobile-back-button">
+                    <label>←</label>
+                    Terug naar Documenten
+                </a>
+            @elseif(auth()->user()->hasRole('employer'))
+                <a href="{{ route('employer.documents') }}" class="mobile-back-button">
+                    <label>←</label>
+                    Terug naar Documenten
+                </a>
+            @elseif(auth()->user()->hasRole('administration_office'))
+                <a href="{{ route('administration.dashboard') }}" class="mobile-back-button">
+                    <label>←</label>
+                    Terug naar Dashboard
+                </a>
+            @endif
+        @endauth
+
         <h1 class="settings-title">Profiel Instellingen</h1>
 
         <!-- Password Change Section -->
