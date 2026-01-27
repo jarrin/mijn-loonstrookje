@@ -94,12 +94,6 @@
                     
                     <div class="document-version-container">
                         <span class="document-version-number">v{{ number_format($document->version, 1) }}</span>
-                        
-                        @if($isLatest && $document->version > 1.0)
-                            <span class="document-version-badge document-version-latest">
-                                NIEUWSTE
-                            </span>
-                        @endif
                     </div>
                 </td>
                 <td>{{ $document->formatted_size }}</td>
