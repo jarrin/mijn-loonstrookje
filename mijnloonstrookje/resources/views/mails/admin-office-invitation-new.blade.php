@@ -1,131 +1,74 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="nl">
+<!DOCTYPE html>
+<html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta content="width=device-width, initial-scale=1" name="viewport">
-  <meta name="x-apple-disable-message-reformatting">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta content="telephone=no" name="format-detection">
-  <title>Uitnodiging voor Mijn Loonstrookje</title>
-  <style type="text/css">
-    body {
-      width: 100%;
-      font-family: 'Arial', 'Helvetica Neue', Helvetica, sans-serif;
-      -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
-      padding: 0;
-      margin: 0;
-    }
-    table {
-      mso-table-lspace: 0pt;
-      mso-table-rspace: 0pt;
-      border-collapse: collapse;
-      border-spacing: 0px;
-    }
-    .es-button {
-      mso-style-priority: 100 !important;
-      text-decoration: none !important;
-    }
-    a {
-      text-decoration: underline;
-    }
-    .content-block {
-      padding: 20px;
-    }
-    .main-container {
-      max-width: 600px;
-      margin: 0 auto;
-      background-color: #ffffff;
-    }
-    .header {
-      background-color: #4A90E2;
-      padding: 30px 20px;
-      text-align: center;
-    }
-    .header h1 {
-      color: #ffffff;
-      margin: 0;
-      font-size: 28px;
-    }
-    .button {
-      background-color: #4A90E2;
-      color: #ffffff;
-      padding: 15px 40px;
-      text-decoration: none;
-      border-radius: 5px;
-      display: inline-block;
-      margin: 20px 0;
-      font-weight: bold;
-    }
-    .footer {
-      background-color: #f4f4f4;
-      padding: 20px;
-      text-align: center;
-      font-size: 12px;
-      color: #666666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #2563eb;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            background-color: #f9fafb;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+        }
+        .button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+    </style>
 </head>
 <body>
-  <table width="100%" cellspacing="0" cellpadding="0" style="background-color: #f4f4f4; padding: 20px 0;">
-    <tr>
-      <td align="center">
-        <table class="main-container" width="600" cellspacing="0" cellpadding="0">
-          <!-- Header -->
-          <tr>
-            <td class="header">
-              <h1>Mijn Loonstrookje</h1>
-            </td>
-          </tr>
-          
-          <!-- Content -->
-          <tr>
-            <td class="content-block">
-              <h2 style="color: #333333;">Welkom bij Mijn Loonstrookje!</h2>
-              
-              <p style="color: #555555; line-height: 1.6;">
-                Hallo,
-              </p>
-              
-              <p style="color: #555555; line-height: 1.6;">
-                Je bent uitgenodigd door <strong>{{ $employerName }}</strong> van <strong>{{ $companyName }}</strong> om als administratiekantoor toegang te krijgen tot hun bedrijfsgegevens op het Mijn Loonstrookje platform.
-              </p>
-              
-              <p style="color: #555555; line-height: 1.6;">
-                Om je account te activeren en je wachtwoord in te stellen, klik je op de onderstaande knop:
-              </p>
-              
-              <p style="text-align: center;">
-                <a href="{{ $activationUrl }}" class="button">Account Aanmaken</a>
-              </p>
-              
-              <p style="color: #555555; line-height: 1.6; font-size: 14px;">
-                Of kopieer deze link naar je browser:<br>
-                <a href="{{ $activationUrl }}" style="color: #4A90E2; word-break: break-all;">{{ $activationUrl }}</a>
-              </p>
-              
-              <p style="color: #555555; line-height: 1.6;">
-                Deze uitnodiging is <strong>7 dagen</strong> geldig.
-              </p>
-              
-              <p style="color: #999999; font-size: 12px; line-height: 1.6; margin-top: 30px; border-top: 1px solid #eeeeee; padding-top: 20px;">
-                Als je deze uitnodiging niet hebt verwacht, kun je deze e-mail negeren.
-              </p>
-            </td>
-          </tr>
-          
-          <!-- Footer -->
-          <tr>
-            <td class="footer">
-              <p style="margin: 0;">© 2025 Mijn Loonstrookje. Alle rechten voorbehouden.</p>
-              <p style="margin: 10px 0 0 0;">
-                Dit is een automatisch gegenereerde e-mail. Reageer hier niet op.
-              </p>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+    <div class="header">
+        <h1>Uitnodiging voor Mijn Loonstrookje</h1>
+    </div>
+    <div class="content">
+        <p>Hallo,</p>
+        <p>Je bent uitgenodigd door <strong>{{ $employerName }}</strong> van <strong>{{ $companyName }}</strong> om als administratiekantoor toegang te krijgen tot hun bedrijfsgegevens op het Mijn Loonstrookje platform.</p>
+        <p>Om je account te activeren en je wachtwoord in te stellen, klik je op de onderstaande knop:</p>
+        <div style="text-align: center;">
+            <a href="{{ $activationUrl }}" class="button">Account Aanmaken</a>
+        </div>
+        <p style="font-size: 14px;">
+            Of kopieer deze link naar je browser:<br>
+            <a href="{{ $activationUrl }}" style="color: #2563eb; word-break: break-all;">{{ $activationUrl }}</a>
+        </p>
+        <p>Deze uitnodiging is <strong>7 dagen</strong> geldig.</p>
+        <p style="color: #999; font-size: 12px; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+            Als je deze uitnodiging niet hebt verwacht, kun je deze e-mail negeren.
+        </p>
+    </div>
+    <div class="footer">
+        <p>Dit is een automatisch gegenereerde e-mail. Je hoeft hier niet op te reageren.</p>
+        <p>Vragen? Neem contact op via <a href="mailto:support@mijnloonstrookje.nl">support@mijnloonstrookje.nl</a></p>
+        <p>&copy; {{ date('Y') }} Mijn Loonstrookje. Alle rechten voorbehouden.</p>
+    </div>
 </body>
 </html>
