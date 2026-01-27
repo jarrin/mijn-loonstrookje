@@ -330,7 +330,7 @@
                 </select>
             </div>
             
-            <div class="employer-form-group">
+            <div id="edit_period_type_field" class="employer-form-group">
                 <label for="edit_period_type" class="employer-form-label">Periode Type *</label>
                 <select name="period_type" id="edit_period_type" required class="employer-form-input">
                     <option value="">Selecteer periode type</option>
@@ -448,6 +448,18 @@ function openEditModal(documentId) {
             document.getElementById('edit_month').value = data.month || '';
             document.getElementById('edit_week').value = data.week || '';
             
+            // Handle document type specific logic
+            const periodTypeField = document.getElementById('edit_period_type_field');
+            const periodTypeSelect = document.getElementById('edit_period_type');
+            
+            if (data.type === 'annual_statement') {
+                periodTypeField.style.display = 'none';
+                periodTypeSelect.removeAttribute('required');
+            } else {
+                periodTypeField.style.display = 'block';
+                periodTypeSelect.setAttribute('required', 'required');
+            }
+            
             // Trigger period type change to show/hide correct fields
             updateEditPeriodFields();
             
@@ -507,6 +519,27 @@ function updateUploadPeriodFields() {
         weekInput.setAttribute('required', 'required');
     }
 }
+
+// Edit Modal Document Type Logic
+document.getElementById('edit_document_type').addEventListener('change', function() {
+    const documentType = this.value;
+    const periodTypeField = document.getElementById('edit_period_type_field');
+    const periodTypeSelect = document.getElementById('edit_period_type');
+    
+    if (documentType === 'annual_statement') {
+        periodTypeField.style.display = 'none';
+        periodTypeSelect.removeAttribute('required');
+        periodTypeSelect.value = 'Jaarlijks';
+        document.getElementById('edit_month_field').style.display = 'none';
+        document.getElementById('edit_week_field').style.display = 'none';
+        document.getElementById('edit_month').removeAttribute('required');
+        document.getElementById('edit_week').removeAttribute('required');
+    } else {
+        periodTypeField.style.display = 'block';
+        periodTypeSelect.setAttribute('required', 'required');
+        updateEditPeriodFields();
+    }
+});
 
 // Edit Modal Period Logic
 document.getElementById('edit_period_type').addEventListener('change', updateEditPeriodFields);
