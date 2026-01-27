@@ -287,6 +287,6 @@ Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('pa
 Route::post('/payment/custom/start/{customSubscription}', [PaymentController::class, 'startCustomPayment'])->name('payment.start.custom');
 Route::get('/payment/custom/return/{customSubscription}', [PaymentController::class, 'returnFromCustomPayment'])->name('payment.return.custom');
 
-// Invitation routes
-Route::post('/invitation/accept/{token}', [InvitationController::class, 'loginAndAcceptInvitation'])->name('invitation.login.accept');
-Route::post('/invitation/register/{token}', [InvitationController::class, 'registerInvitedEmployee'])->name('invitation.register');
+// Factuur betaling
+Route::post('/payment/invoice/{invoice}', [App\Http\Controllers\PaymentController::class, 'startInvoicePayment'])->name('payment.invoice');
+Route::get('/payment/invoice/return/{invoice}', [App\Http\Controllers\PaymentController::class, 'returnFromInvoicePayment'])->name('payment.invoice.return');

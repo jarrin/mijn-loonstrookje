@@ -125,12 +125,20 @@
         @endif
         
         <!-- Action Buttons -->
-        <div style="margin-top: 2.5rem; display: flex; gap: 1rem;">
+        <div style="margin-top: 2.5rem; display: flex; gap: 1rem; align-items: center;">
             <a href="{{ route('employer.invoices') }}" 
                class="btn-primary" 
                style="padding: 0.75rem 1.5rem; text-decoration: none;">
                 Terug naar overzicht
             </a>
+            @if(in_array($invoice->status, ['pending', 'overdue']))
+                <form method="POST" action="{{ route('payment.invoice', $invoice) }}">
+                    @csrf
+                    <button type="submit" class="btn-secondary" style="padding: 0.75rem 1.5rem; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        Betaal deze factuur
+                    </button>
+                </form>
+            @endif
             <!-- Future: Download PDF button -->
             <!-- <button class="btn-secondary" style="padding: 0.75rem 1.5rem;">Download PDF</button> -->
         </div>

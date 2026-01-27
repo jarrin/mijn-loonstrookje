@@ -42,6 +42,13 @@
                         <td>
                             @if($invoice->paid_at)
                                 {{ $invoice->paid_at->format('d-m-Y H:i') }}
+                            @elseif(in_array($invoice->status, ['pending', 'overdue']))
+                                <form method="POST" action="{{ route('payment.invoice', $invoice) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="employer-button-primary" style="padding: 0.35rem 0.9rem; font-size: 0.95rem; min-width: 0;">
+                                        Betaal
+                                    </button>
+                                </form>
                             @else
                                 <span style="color: #9CA3AF;">-</span>
                             @endif
