@@ -27,18 +27,13 @@ class GenerateRecurringInvoices extends Command
             $subscription = $company->subscription;
             if (!$subscription) continue;
 
-            // Zoek laatste factuur
-            $lastInvoice = Invoice::where('company_id', $company->id)
-                ->where('subscription_id', $subscription->id)
-                ->orderByDesc('issued_date')
-                ->first();
-
-            $interval = $subscription->subscription_plan === 'jaarlijks' ? 'year' : 'month';
+            // Website-abonnementen zijn altijd maandelijks
+            $interval = 'month';
             $shouldGenerate = false;
-            if (!$lastInvoice) {
+            if (!$subscription->is_active) {
                 $shouldGenerate = true;
             } else {
-                $nextDate = $lastInvoice->issued_date->copy()->add($interval === 'year' ? '1 year' : '1 month');
+                $nextDate = $subscription->next_invoice_date;
                 if ($today->greaterThanOrEqualTo($nextDate)) {
                     $shouldGenerate = true;
                 }
@@ -58,7 +53,7 @@ class GenerateRecurringInvoices extends Command
             }
         }
 
-        // Custom abonnementen
+        // Custom abonnementen: maand of jaar
         $companies = Company::whereNotNull('custom_subscription_id')->get();
         foreach ($companies as $company) {
             $custom = $company->customSubscription;
