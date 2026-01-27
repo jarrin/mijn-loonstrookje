@@ -44,8 +44,25 @@ class PaymentController extends Controller
                     ->with('info', 'Maak eerst een account aan om dit abonnement te kunnen aanschaffen: ' . $subscription->name);
             }
 
-            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
             $user = Auth::user();
+            
+            // Check if user has completed registration (email verification + 2FA)
+            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                // User is still in registration flow - redirect back to their step
+                if ($user->role === 'employer') {
+                    if (session('pending_custom_subscription_id')) {
+                        return redirect()->route('registration.verify-and-secure')
+                            ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                    }
+                    return redirect()->route('employer.verify-and-secure')
+                        ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                } elseif ($user->role === 'employee') {
+                    return redirect()->route('employee.verify-and-secure')
+                        ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+                }
+            }
+
+            // Als gebruiker al een actief abonnement heeft, redirect naar dashboard
             $company = $user->company;
             
             if ($company && $company->subscription_id) {
@@ -300,6 +317,14 @@ class PaymentController extends Controller
             }
 
             $user = Auth::user();
+            
+            // Check if user has completed registration (email verification + 2FA)
+            if (!$user->hasVerifiedEmail() || !$user->two_factor_confirmed_at) {
+                // User is still in registration flow - redirect back to their step
+                return redirect()->route('registration.verify-and-secure')
+                    ->with('error', 'Voltooi eerst je account registratie voordat je een abonnement kunt aanschaffen.');
+            }
+            
             $company = $user->company;
             
             // Als gebruiker al een actief abonnement heeft, redirect naar dashboard

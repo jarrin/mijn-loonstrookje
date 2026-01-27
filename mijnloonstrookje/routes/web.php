@@ -33,6 +33,14 @@ Route::get('/', function () {
     return view('auth.login');
 })->name('auth');
 
+// Login page route
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
+
+// Login POST route
+Route::post('/login', [LoginController::class, 'login']);
+
 Route::get('/home', function () {
     if (auth()->check()) {
         $user = auth()->user();

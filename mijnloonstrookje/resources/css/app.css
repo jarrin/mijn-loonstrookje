@@ -15,55 +15,96 @@
 @import './employee/employeeStyling.css';
 @import './employer/employerStyling.css';
 @import './superadmin/superadminStyling.css';
+@import './registration/registration.css';
 
 
 :root {
   --font-body: 'body', ui-sans-serif, system-ui, sans-serif;
-.subscription-tile p,
-.subscription-tile input {
-  font-size: 1rem;
-  line-height: 1.5;
-}
-  --font-body-medium: 'body-medium', ui-sans-serif, system-ui, sans-serif;
-  --font-body-bold: 'body-bold', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'head', ui-sans-serif, system-ui, sans-serif;
+
+  .subscription-tile p,
+  .subscription-tile input {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  --font-body-medium: 'body-medium',
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-body-bold: 'body-bold',
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
+  --font-heading: 'head',
+  ui-sans-serif,
+  system-ui,
+  sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
 h1 {
-    font-size: 72px;
-    font-weight: bold;
-}
-h2 {
-    font-size: 48px;
-    font-weight: bold;
-}
-h3 {
-    font-size: 36px;
-    font-weight: bold;
-}
-h4 {
-    font-size: 30px;
-    font-weight: bold;
+  font-size: 72px;
+  font-weight: bold;
 }
 
-p, span, div, a, li, td, th, input, button, select, textarea {
-    font-family: var(--font-body);
+h2 {
+  font-size: 48px;
+  font-weight: bold;
 }
-p, span, div, a, li, td, th {
-    font-size: 18px;
+
+h3 {
+  font-size: 36px;
+  font-weight: bold;
 }
-input, button, select, textarea {
-    font-size: 22px;
+
+h4 {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+p,
+span,
+div,
+a,
+li,
+td,
+th,
+input,
+button,
+select,
+textarea {
+  font-family: var(--font-body);
+}
+
+p,
+span,
+div,
+a,
+li,
+td,
+th {
+  font-size: 18px;
+}
+
+input,
+button,
+select,
+textarea {
+  font-size: 22px;
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus {
-    outline: none;
-    border-color: var(--primary-color);
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 /* @theme {
@@ -76,12 +117,14 @@ input[type="number"]:focus {
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'body-medium';
   src: url('../fonts/Inter_18pt-Medium.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'body-bold';
   src: url('../fonts/Inter_18pt-Bold.ttf') format('truetype');

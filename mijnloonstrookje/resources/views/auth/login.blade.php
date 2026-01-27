@@ -3,18 +3,6 @@
 @section('title', 'Inloggen - Mijn Loonstrookje')
 
 @section('content')
-@if(auth()->check())
-    <script>
-        window.location.href = "{{ match(auth()->user()->role) {
-            'super_admin' => route('superadmin.dashboard'),
-            'administration_office' => route('administration.dashboard'),
-            'employer' => route('employer.dashboard'),
-            'employee' => route('employee.documents'),
-            default => route('employee.documents'),
-        } }}";
-    </script>
-@endif
-
 <section class="loginPage">
     <x-page-background />
     

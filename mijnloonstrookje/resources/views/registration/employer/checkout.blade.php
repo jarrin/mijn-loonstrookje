@@ -6,31 +6,31 @@
     <title>Account Registratie - Mijn Loonstrookje</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-sky-50 min-h-screen">
-    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="w-full max-w-xl">
+<body class="registrationPage">
+    <div class="registrationContainer">
+        <div class="registrationWrapper">
             <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Account registratie</h1>
-                <p class="mt-2 text-gray-500">Voltooi de stappen om je account te activeren</p>
+            <div class="registrationHeader">
+                <h1 class="registrationTitle">Account registratie</h1>
+                <p class="registrationSubtitle">Voltooi de stappen om je account te activeren</p>
             </div>
 
             <!-- Step Progress -->
             <x-registration.step-progress :currentStep="3" :showPaymentStep="true" />
 
             <!-- Main Card -->
-            <div class="bg-white rounded-2xl shadow-sm p-8">
+            <div class="registrationCard">
                 <!-- Header Icon -->
-                <div class="flex justify-center mb-4">
-                    <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center">
-                        <svg class="w-7 h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="cardIcon">
+                    <div class="cardIconCircle" style="background-color: rgb(209 250 229);">
+                        <svg style="color: rgb(16 185 129); width: 1.75rem; height: 1.75rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                         </svg>
                     </div>
                 </div>
 
-                <h2 class="text-xl font-bold text-gray-900 text-center mb-1">Voltooi je betaling</h2>
-                <p class="text-gray-500 text-center mb-8">Laatste stap om je account te activeren</p>
+                <h2 class="cardTitle">Voltooi je betaling</h2>
+                <p class="cardSubtitle">Laatste stap om je account te activeren</p>
 
                 <x-registration.status-messages />
 
@@ -108,7 +108,7 @@
                 <!-- Payment Button -->
                 <form method="POST" action="{{ route('payment.start', ['subscription' => $subscription->id]) }}">
                     @csrf
-                    <button type="submit" class="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+                    <button type="submit" class="formButton" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                         </svg>
@@ -116,10 +116,10 @@
                     </button>
                 </form>
 
-                <div class="mt-6 text-center">
+                <div class="centerText">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
+                        <button type="submit" class="textLink" style="font-size: 0.875rem;">
                             Uitloggen
                         </button>
                     </form>
