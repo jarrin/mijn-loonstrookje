@@ -75,33 +75,33 @@
                 <p class="cardSubtitle">Laatste stap om je account te activeren</p>
 
                 <!-- Subscription Details Card -->
-                <div class="border border-gray-200 rounded-xl p-5 mb-4">
-                    <div class="flex justify-between items-start">
+                <div class="subscriptionCard">
+                    <div class="subscriptionCard__header">
                         <div>
-                            <h3 class="font-semibold text-gray-900">Custom Abonnement</h3>
-                            <p class="text-sm text-gray-500">{{ ucfirst($customSubscription->billing_period) }} abonnement</p>
+                            <h3 class="subscriptionCard__title">Custom Abonnement</h3>
+                            <p class="subscriptionCard__subtitle">{{ ucfirst($customSubscription->billing_period) }} abonnement</p>
                         </div>
-                        <div class="text-right">
-                            <p class="text-2xl font-bold text-blue-500">€{{ number_format($customSubscription->price, 0, ',', '.') }}</p>
-                            <p class="text-xs text-gray-400">per {{ $customSubscription->billing_period == 'maandelijks' ? 'maand' : 'jaar' }}</p>
+                        <div class="subscriptionCard__price">
+                            <p class="subscriptionCard__priceAmount">€{{ number_format($customSubscription->price, 0, ',', '.') }}</p>
+                            <p class="subscriptionCard__pricePeriod">per {{ $customSubscription->billing_period == 'maandelijks' ? 'maand' : 'jaar' }}</p>
                         </div>
                     </div>
 
-                    <div class="mt-4 space-y-2">
-                        <div class="flex items-center text-sm text-gray-600">
-                            <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="subscriptionCard__features">
+                        <div class="subscriptionCard__feature">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             {{ $customSubscription->max_users }} gebruikers
                         </div>
-                        <div class="flex items-center text-sm text-gray-600">
-                            <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="subscriptionCard__feature">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             Onbeperkt documenten uploaden
                         </div>
-                        <div class="flex items-center text-sm text-gray-600">
-                            <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="subscriptionCard__feature">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             Veilige opslag
@@ -110,34 +110,34 @@
                 </div>
 
                 <!-- iDEAL Payment Card -->
-                <div class="border border-gray-200 rounded-xl p-5 mb-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-16 h-10 bg-gradient-to-r from-pink-500 to-pink-400 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span class="text-white font-bold text-xs">iDEAL</span>
+                <div class="paymentCard">
+                    <div class="paymentCard__header">
+                        <div class="paymentCard__logo">
+                            <span>iDEAL</span>
                         </div>
-                        <div class="flex-1">
-                            <h3 class="font-semibold text-gray-900">Veilig betalen met iDEAL</h3>
-                            <p class="text-sm text-gray-500 mt-1">
+                        <div class="paymentCard__content">
+                            <h3 class="paymentCard__title">Veilig betalen met iDEAL</h3>
+                            <p class="paymentCard__text">
                                 Je wordt doorgestuurd naar Mollie om veilig te betalen met iDEAL. Kies je eigen bank en voltooi de betaling in je vertrouwde bankieromgeving.
                             </p>
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-6 mt-4 text-xs text-gray-500">
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="paymentCard__features">
+                        <div class="paymentCard__feature paymentCard__feature--secure">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                             SSL beveiligd
                         </div>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="paymentCard__feature paymentCard__feature--confirmed">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             Direct bevestiging
                         </div>
-                        <div class="flex items-center">
-                            <svg class="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="paymentCard__feature paymentCard__feature--confirmed">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                             </svg>
                             Gratis transactie
@@ -146,21 +146,18 @@
                 </div>
 
                 <!-- Bottom Navigation -->
-                <div class="flex gap-4">
-                    <form method="POST" action="{{ route('payment.start.custom', ['customSubscription' => $customSubscription->id]) }}" class="flex-1">
-                        @csrf
-                        <button type="submit" 
-                                class="formButton" style="display: inline-flex; justify-content: center; align-items: center;">
-                            Betaal €{{ number_format($customSubscription->price, 0, ',', '.') }} via iDEAL
-                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </button>
-                    </form>
-                </div>
+                <form method="POST" action="{{ route('payment.start.custom', ['customSubscription' => $customSubscription->id]) }}">
+                    @csrf
+                    <button type="submit" class="formButton formButton--flex">
+                        Betaal €{{ number_format($customSubscription->price, 0, ',', '.') }} via iDEAL
+                        <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                    </button>
+                </form>
 
                 <!-- Footer note -->
-                <p class="text-center text-xs text-gray-400 mt-4">
+                <p class="successFooter">
                     🔒 Na succesvolle betaling wordt je account direct geactiveerd
                 </p>
             </div>

@@ -68,11 +68,11 @@
                     </div>
 
                     <!-- Wachtwoord -->
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Wachtwoord</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="formGroup">
+                        <label for="password" class="formLabel">Wachtwoord</label>
+                        <div class="inputWrapper">
+                            <div class="inputIcon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                                 </svg>
                             </div>
@@ -82,11 +82,11 @@
                                 name="password" 
                                 required
                                 placeholder="Je wachtwoord"
-                                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="formInput formInput--withIcon"
                             >
                         </div>
                         @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="formError">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -95,8 +95,8 @@
                     </button>
                 </form>
 
-                <div class="mt-6 text-center">
-                    <p class="text-xs text-gray-500">
+                <div class="centerText" style="margin-top: 1.5rem;">
+                    <p style="font-size: 0.75rem; color: rgb(107 114 128);">
                         Deze uitnodiging is geldig tot {{ $invitation->expires_at->format('d-m-Y') }}
                     </p>
                 </div>
