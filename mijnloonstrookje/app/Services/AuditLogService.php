@@ -80,8 +80,8 @@ class AuditLogService
     public static function logDocumentRevision(int $documentId, int $companyId, float $version): AuditLog
     {
         return self::log(
-            action: 'document_herzien',
-            description: "Document herzien naar versie {$version}",
+            action: 'document_revisie',
+            description: "Document revisie naar versie {$version}",
             targetType: 'Document',
             targetId: $documentId,
             companyId: $companyId
